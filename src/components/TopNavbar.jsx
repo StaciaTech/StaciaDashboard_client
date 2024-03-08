@@ -1,0 +1,61 @@
+import React from "react";
+import styled from "styled-components";
+import staciaLogo from "../assets/StaciaLogo.svg";
+import helloLogo from "../assets/helloLogo.svg";
+import { Avatar, Box, IconButton } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import profilePic from "../assets/ProfilePic.svg";
+
+const TopNavbard = () => {
+  return (
+    <>
+      <TopNaveBard>
+        <StaciaLogo>
+          <img
+            src={staciaLogo}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            alt="staciaLogo"
+          />
+        </StaciaLogo>
+        <WellCome>
+          Welcome, Manju Parkavi <img src={helloLogo} alt="" />
+        </WellCome>
+        <div style={{ position: "absolute", right: "23px" }}>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src={profilePic} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </div>
+      </TopNaveBard>
+    </>
+  );
+};
+
+
+
+export default TopNavbard;
+const TopNaveBard = styled.div`
+  width: 100vw;
+  height: 85px;
+  background-color: #0d0225;
+  display: flex;
+  align-items: center;
+`;
+const StaciaLogo = styled.div`
+  width: 201px;
+  height: 24.291px;
+  padding-left: 57px;
+  /* background: red; */
+`;
+const WellCome = styled.div`
+  color: #fff;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  padding-left: 75px;
+  font-weight: 600;
+  /* line-height: normal; */
+`;
