@@ -19,6 +19,8 @@ const AddNewData = () => {
   const history = useNavigate();
   const [productImg, setProductImg] = useState("");
   const dispatch = useDispatch();
+  
+  const product = useSelector((state) => state.product.productList)
   useEffect(() => {
     setProductImg(formData.image);
   }, [setProductImg, formData.image]);
@@ -100,7 +102,7 @@ const AddNewData = () => {
         body: JSON.stringify(data),
       });
       // const resData = await res.json();
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -124,11 +126,30 @@ const AddNewData = () => {
         body: JSON.stringify(data),
       });
       // const resData = await res.json();
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as") {
       setBtnStatus(value);
       setShow(false);
+      // const { waterMark, heading, des, altText } = formik.values;
+
+      // const data = {
+      //   title: heading,
+      //   image: productImg,
+      //   des: des,
+      //   waterMark: waterMark,
+      //   altText: altText,
+      //   position: product.length+1,
+      //   draft: false,
+      //   archive: false,
+      // };
+      // const res = await fetch("http://localhost:8000/product/draftAndArchive", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(data),
+      // });
     }
   };
   return (

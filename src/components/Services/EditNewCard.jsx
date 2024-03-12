@@ -78,7 +78,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -102,7 +102,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as") {
       setBtnStatus(value);

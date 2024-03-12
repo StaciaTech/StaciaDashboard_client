@@ -35,6 +35,7 @@ const EditPrimaryShowcaseCard = () => {
   // Replace this with your actual data fetching logic
   const selectedEditCard = products.find((item) => item._id === id);
 
+  const product = useSelector((state) => state.product.productList)
   const onChange = async (e) => {
     const { url } = await fetch("http://localhost:8000/upload").then((res) =>
       res.json()
@@ -159,7 +160,7 @@ const EditPrimaryShowcaseCard = () => {
         body: JSON.stringify(newData),
       });
       // const resData = await res.json();
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as Darft") {
       setBtnStatus(value);
@@ -189,11 +190,36 @@ const EditPrimaryShowcaseCard = () => {
         },
         body: JSON.stringify(newData),
       });
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as") {
       setBtnStatus(value);
       setShow(false);
+      const newData = {
+        id: id,
+        title: formData.heading,
+        des: formData.des,
+        image: formData,
+        archive: false,
+        primaryShowcase: false,
+        waterMark: formData.heading,
+        position: product.length + 1,
+        draft: false,
+        altText: formData.altText,
+        PHeading: heading,
+        pImage: productImg,
+        PDomainName: domainName,
+        pDes1: des1,
+        pDes2: des2,
+        pAltText: altText,
+      };
+      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+      });
     }
   };
   return (
@@ -685,10 +711,10 @@ const EditPrimaryShowcaseCard = () => {
               Previous
             </div>
             {formik.values.pHeading !== "" &&
-            formik.values.PDomainName !== "" &&
-            formik.values.des1 !== "" &&
-            formik.values.des2 !== "" &&
-            formik.values.pAltText !== "" ? (
+              formik.values.PDomainName !== "" &&
+              formik.values.des1 !== "" &&
+              formik.values.des2 !== "" &&
+              formik.values.pAltText !== "" ? (
               <div
                 className="save_button"
                 style={{

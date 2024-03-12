@@ -130,7 +130,7 @@ const AddPrimaryShowcase = () => {
         body: JSON.stringify(newData),
       });
       // const resData = await res.json();
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as Darft") {
       setBtnStatus(value);
@@ -160,7 +160,7 @@ const AddPrimaryShowcase = () => {
         body: JSON.stringify(newData),
       });
       // const resData = await res.json();
-      history("/ProductPage/AllProduct");
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as") {
       setBtnStatus(value);

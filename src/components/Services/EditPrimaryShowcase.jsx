@@ -111,7 +111,7 @@ const EditPrimaryShowcase = ({ onPrevious, formDatas, onSubmitValue, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -138,7 +138,7 @@ const EditPrimaryShowcase = ({ onPrevious, formDatas, onSubmitValue, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as") {
       setBtnStatus(value);

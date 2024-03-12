@@ -36,7 +36,6 @@ export const Container = ({
     setClickedArray(clickedArrays);
   }, [products, clickedArrays]);
 
-
   // drag and drop card...
   const moveCard = async (id, position) => {
     const dragedId = cards.filter((items) => items.position === id)[0];

@@ -61,7 +61,7 @@ function FormContainer({ onPrevious, onNext, savedData }) {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -84,7 +84,7 @@ function FormContainer({ onPrevious, onNext, savedData }) {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as") {
       setBtnStatus(value);

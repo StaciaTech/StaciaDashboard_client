@@ -35,7 +35,7 @@ export const Card = ({
   const [, drop] = useDrop(
     () => ({
       accept: "card",
-      hover(item) {},
+      hover(item) { },
       drop: (item) => {
         moveCard(item.position, position);
       },
@@ -190,10 +190,12 @@ export const Card = ({
             </div>
           </div>
         ) : (
-          <div style={{ width: "100%", position: "relative", display: "flex" }}>
+          <div
+            ref={(node) => drag(drop(node))}
+            style={{ width: "100%", position: "relative", display: "flex" }}>
             <div style={{ padding: "12px 22px", width: "238px" }}>
               <img
-                ref={(node) => drag(drop(node))}
+
                 src={dragAndDrop}
                 alt=""
                 style={{ cursor: "move" }}
@@ -354,9 +356,9 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
             top: "166px",
             bottom: "200px",
           }}
-          // onClick={() => {
-          //   setFreezeCardOff(false);
-          // }}
+        // onClick={() => {
+        //   setFreezeCardOff(false);
+        // }}
         >
           <img
             src={Edit}

@@ -19,7 +19,7 @@ const EditData = () => {
   const { id } = useParams();
   const [productImg, setProductImg] = useState("");
   const products = useSelector((state) => state.product.allProduct);
-
+  const product = useSelector((state) => state.product.productList)
   const selectedEditCard = products.find((item) => item._id === id);
   useEffect(() => {
     setProductImg(selectedEditCard.image);
@@ -48,21 +48,21 @@ const EditData = () => {
     },
   });
 
-  const onChange = async(e) => {
+  const onChange = async (e) => {
     const { url } = await fetch("http://localhost:8000/upload").then((res) =>
-        res.json()
-      );
+      res.json()
+    );
 
-      await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        body: e.target.files[0]
-      });
+    await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: e.target.files[0]
+    });
 
-      const imageUrl = url.split("?")[0];
-      setProductImg(imageUrl);
+    const imageUrl = url.split("?")[0];
+    setProductImg(imageUrl);
   };
 
   // onhover Notification bar
@@ -89,7 +89,7 @@ const EditData = () => {
         waterMark: waterMark,
         des: des,
         heading: heading,
-        altText: altText,
+        altText: altText, primaryShowcase: false,
         position: 0,
         id: id,
         draft: true,
@@ -102,8 +102,8 @@ const EditData = () => {
         },
         body: JSON.stringify(data),
       });
-      await res.json();
-      history("/ProductPage/AllProduct");
+      // await res.json();
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -114,7 +114,7 @@ const EditData = () => {
         des: des,
         heading: heading,
         image: productImg,
-        altText: altText,
+        altText: altText, primaryShowcase: false,
         id: id,
         position: 0,
         archive: true,
@@ -127,12 +127,31 @@ const EditData = () => {
         },
         body: JSON.stringify(data),
       });
-      await res.json();
-      history("/ProductPage/AllProduct");
+      // await res.json();
+      // history("/ProductPage/AllProduct");
     }
     if (value === "Save as") {
       setBtnStatus(value);
       setShow(false);
+      const { waterMark, des, heading, altText } = formik.values;
+      const data = {
+        waterMark: waterMark,
+        des: des,
+        heading: heading,
+        altText: altText, 
+        primaryShowcase: false,
+        position: selectedEditCard.position,
+        id: id,
+        draft: false,
+        archive: false,
+      };
+      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
     }
   };
   return (
@@ -565,9 +584,9 @@ const EditData = () => {
               Cancel
             </div>
             {formik.values.waterMark !== "" &&
-            formik.values.heading !== "" &&
-            formik.values.altText !== "" &&
-            formik.values.des !== "" ? (
+              formik.values.heading !== "" &&
+              formik.values.altText !== "" &&
+              formik.values.des !== "" ? (
               <div
                 className="save_button"
                 style={{

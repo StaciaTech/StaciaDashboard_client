@@ -114,7 +114,7 @@ const AddServicePrimaryShowcase = ({
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -140,7 +140,7 @@ const AddServicePrimaryShowcase = ({
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as") {
       setBtnStatus(value);

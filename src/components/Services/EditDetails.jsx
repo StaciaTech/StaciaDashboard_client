@@ -58,7 +58,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as Archive") {
       setBtnStatus(value);
@@ -82,7 +82,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
         },
         body: JSON.stringify(data),
       });
-      history("/ServicePage/AllService");
+      // history("/ServicePage/AllService");
     }
     if (value === "Save as") {
       setBtnStatus(value);

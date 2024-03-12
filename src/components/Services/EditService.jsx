@@ -31,7 +31,6 @@ const EditService = () => {
   };
 
   const handleSubmit = async (data) => {
-    console.log(formDatas, "hello")
     // Submit the form data
     const res = await fetch(
       `http://localhost:8000/service/selectedProduct/${id.id}`,
