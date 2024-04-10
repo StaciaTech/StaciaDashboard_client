@@ -12,7 +12,14 @@ const initialStates = {
   heading:"",
   des:"",
   altText:"",
-  image:""
+  image:"",
+  pDes1:'',
+  pDes2:"",
+  pImage:"",
+  pAltText:"",
+  heading:"",
+  domainName:"",
+  hashTag:[],
 }
 
 export const productSlice = createSlice({

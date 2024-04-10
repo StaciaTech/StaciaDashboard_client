@@ -4,9 +4,12 @@ import Write from "../../../assets/Write.svg";
 import fix from "../../../assets/fix.svg";
 import fixed from "../../../assets/fixed.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import undo from "../../../assets/undo.svg";
 import Edit from "../../../assets/Edit.svg";
+import { useDispatch } from "react-redux";
+import { updateFormData } from "../../../redux/action";
+import { ProductContext } from "../../../context/ProductContext";
 export const Card = ({
   id,
   moveCard,
@@ -18,7 +21,7 @@ export const Card = ({
   redioButtonHandel,
 }) => {
   const history = useNavigate();
-
+  const { setBtnStatus } = useContext(ProductContext)
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "card",
@@ -40,7 +43,7 @@ export const Card = ({
     }),
     [moveCard]
   );
-  const opacity = isDragging ? 0.2 : 2;
+  const opacity = isDragging ? 0.4 : 1;
 
   // const changeCard = (fromIndex, toIndex) => {
   //   const updatedCards = [...cards];
@@ -77,6 +80,38 @@ export const Card = ({
   //     setPageName(true);
   //   }
   // };
+  const dispatch = useDispatch()
+  const handle_edit = async (id) => {
+    const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    setBtnStatus(data.selectedProduct.archive)
+    dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
+    dispatch(updateFormData("des", data.selectedProduct.des));
+    dispatch(updateFormData("image", data.selectedProduct.image));
+    dispatch(updateFormData("altText", data.selectedProduct.altText));
+
+    dispatch(
+      updateFormData("pDes1", data.selectedProduct.pDes1)
+    );
+    dispatch(
+      updateFormData("pDes2", data.selectedProduct.pDes2)
+    );
+    dispatch(
+      updateFormData("pImage", data.selectedProduct.pImage)
+    );
+    dispatch(
+      updateFormData("pAltText", data.selectedProduct.pAltText)
+    );
+    dispatch(updateFormData("domainName", data.selectedProduct.domainName))
+    dispatch(updateFormData("heading", data.selectedProduct.title));
+    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
+    history(`/ProductPage/EditProduct/${id}`);
+  };
   const undohandeler = (product) => {
     setPageName(false);
     setSelectedProducts((prevSelected) => {
@@ -136,10 +171,12 @@ export const Card = ({
             </div>
           </div>
         ) : (
-          <div ref={(node) => drag(drop(node))} style={{ width: "100%", position: "relative", display: "flex", }}>
+          <div 
+          ref={(node) => drag(drop(node))} 
+          style={{ width: "100%", position: "relative", display: "flex",
+           }}>
             <div style={{ padding: "12px 22px", width: "238px" }}>
               <img
-
                 src={dragAndDrop}
                 alt=""
                 style={{ cursor: "move" }}
@@ -216,26 +253,24 @@ export const Card = ({
               >
                 <div
                   style={{
-                    float: "right",
                     display: "flex",
-                    position: "absolute",
-                    bottom: "10px",
-                    right: "10px",
-                    paddingTop: "5px",
-                    paddingRight: "17px",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    width: "90%",
+                    columnGap: "0.2rem",
                   }}
                 >
                   <img
                     src={Write}
                     alt="Write"
-                    onClick={() => history(`/ProductPage/Edit/${card._id}`)}
+                    onClick={() => handle_edit(card._id)}
                     style={{ cursor: "pointer" }}
                   />
 
                   <img
                     src={fix}
                     alt=""
-                    style={{ paddingLeft: "5px" }}
+                    style={{ paddingLeft: "5px", cursor: "pointer" }}
                     onClick={() => {
                       fixHandelClick(card);
                     }}
@@ -252,6 +287,39 @@ export const Card = ({
 
 export const ArchiveCard = ({ key, card, fixHandelClick }) => {
   const history = useNavigate();
+  const dispatch = useDispatch()
+  const { setBtnStatus } = useContext(ProductContext)
+  const handle_edit = async (id) => {
+    const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    setBtnStatus(data.selectedProduct.archive)
+       dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
+    dispatch(updateFormData("des", data.selectedProduct.des));
+    dispatch(updateFormData("image", data.selectedProduct.image));
+    dispatch(updateFormData("altText", data.selectedProduct.altText));
+
+    dispatch(
+      updateFormData("pDes1", data.selectedProduct.pDes1)
+    );
+    dispatch(
+      updateFormData("pDes2", data.selectedProduct.pDes2)
+    );
+    dispatch(
+      updateFormData("pImage", data.selectedProduct.pImage)
+    );
+    dispatch(
+      updateFormData("pAltText", data.selectedProduct.pAltText)
+    );
+    dispatch(updateFormData("domainName", data.selectedProduct.domainName))
+    dispatch(updateFormData("heading", data.selectedProduct.title));
+    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
+    history(`/ProductPage/EditProduct/${id}`);
+  };
   return (
     <div key={card.id}>
       <div
@@ -283,13 +351,13 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
           <img
             src={Edit}
             alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
-            onClick={() => history(`/ProductPage/Edit/${card._id}`)}
+            style={{ paddingLeft: "0.5rem", zIndex: 10 }}
+            onClick={() => handle_edit(card._id)}
           />
           <img
             src={fixed}
             alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
+            style={{ paddingLeft: "0.5rem", zIndex: 10 }}
             onClick={() => fixHandelClick(card)}
           />
         </div>

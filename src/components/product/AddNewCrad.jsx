@@ -1,159 +1,243 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import Backicon from "../../assets/Backicon.svg";
 import { useNavigate } from "react-router-dom";
 import "../../styles/AddNewProduct.css";
-import ProductImgIcon from "../../assets/ProductImgIcon.svg";
 import DefaultProductIcon from "../../assets/DefaultProductIcon.svg";
-import NotificationIcon from "../../assets/NotificationIcon.svg";
+import dropDownImage from "../../assets/dropDownImage.svg";
 import Trash from "../../assets/Trash.svg";
-import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ProductContext } from "../../context/ProductContext";
+import ReactModal from "react-modal";
+import close from '../../assets/close.svg'
+import successful from "../../assets/successful.svg";
+import { useDispatch } from "react-redux";
 import { updateFormData } from "../../redux/action";
-import Archive from "../Archive";
-import S3 from "react-aws-s3";
 
-const AddNewData = () => {
-  const formData = useSelector((state) => state.products);
+const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
+  const fileInputRef = useRef(null);
   const history = useNavigate();
-  const [productImg, setProductImg] = useState("");
-  const dispatch = useDispatch();
-  
-  const product = useSelector((state) => state.product.productList)
-  useEffect(() => {
-    setProductImg(formData.image);
-  }, [setProductImg, formData.image]);
+  const dispatch = useDispatch()
+
+  const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext);
+
+  //drag and drop image 
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    setImageOverlayShow(true)
+  }
+
+  const handleDrop = async (e) => {
+    setImageOverlayShow(false)
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
+    })
+    const resData = await res.json();
+    formik.setFieldValue("image", resData.signedUrl)
+    dispatch(updateFormData("image", resData.signedUrl));
+  }
+
+  //onchange image
   const onChange = async (e) => {
-    const { url } = await fetch("http://localhost:8000/upload").then((res) =>
-      res.json()
-    );
-
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: e.target.files[0],
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    // formData.append("image", "")
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
     });
-
-    const imageUrl = url.split("?")[0];
-    setProductImg(imageUrl);
-  };
-  const [hover, setHover] = useState(true);
-  const onHover = () => {
-    setHover(false);
-  };
-  const onLeave = () => {
-    setHover(true);
+    const resData = await res.json();
+    formik.setFieldValue("image", resData.signedUrl)
+    dispatch(updateFormData("image", resData.signedUrl));
   };
 
-  const formik = useFormik({
-    initialValues: {
-      waterMark: formData.waterMark ? formData.waterMark : "",
-      des: formData.des ? formData.des : "",
-      heading: formData.heading ? formData.heading : "",
-      altText: formData.altText ? formData.altText : "",
-      image: formData.image ? formData.image : "",
+  const handleChange = event => {
+    const { name, value } = event.target;
+    formik.setFieldValue(name, value);
+    dispatch(updateFormData(name, value));
+  };
+
+  // const formik = useFormik({
+  //   initialValues: {
+  //     waterMark: savedData.waterMark ? savedData.waterMark : "",
+  //     des: savedData.des ? savedData.des : "",
+  //     altText: savedData.altText ? savedData.altText : "",
+  //     image: savedData.image ? savedData.image : "",
+  //   },
+  //   validationSchema: Yup.object().shape({
+  //     waterMark: Yup.string().required(),
+  //     des: Yup.string().required(),
+  //     altText: Yup.string().required(),
+  //   }),
+  //   onSubmit: (values) => {
+  //     onNext(values)
+  //   },
+  // });
+
+
+
+  //Notification Model Style
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      borderRadius: "15px",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "28.625rem",
+      height: "9.85rem",
     },
-    validationSchema: Yup.object().shape({
-      waterMark: Yup.string().required(),
-      des: Yup.string().required(),
-      heading: Yup.string().required(),
-      altText: Yup.string().required(),
-      // image: Yup.
-    }),
-    onSubmit: (values) => {
-      dispatch(updateFormData("waterMark", values.waterMark));
-      dispatch(updateFormData("heading", values.heading));
-      dispatch(updateFormData("des", values.des));
-      dispatch(updateFormData("altText", values.altText));
-      dispatch(updateFormData("image", productImg));
-      history("/ProductPage/AddPrimaryShowcase");
+    overlay: {
+      background: "rgba(0,0,0,0.25)",
     },
-  });
-
-  const [btnStatus, setBtnStatus] = useState("Save as");
-  const [show, setShow] = useState(false);
-  const changeandupdate = async (value) => {
-    if (true) {
-      setShow(true);
-    }
-    if (value === "Save as Darft") {
-      setBtnStatus(value);
-      setShow(false);
-      const { waterMark, heading, des, altText } = formik.values;
-
-      const data = {
-        title: heading,
-        image: productImg,
-        des: des,
-        waterMark: waterMark,
-        altText: altText,
-        position: 0,
-        draft: true,
-        archive: true,
-      };
-      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // const resData = await res.json();
-      // history("/ProductPage/AllProduct");
-    }
-    if (value === "Save as Archive") {
-      setBtnStatus(value);
-      setShow(false);
-      const { waterMark, heading, des, altText } = formik.values;
-      const data = {
-        title: heading,
-        des: des,
-        waterMark: waterMark,
-        image: productImg,
-        altText: altText,
-        position: 0,
-        draft: false,
-        archive: true,
-      };
-      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // const resData = await res.json();
-      // history("/ProductPage/AllProduct");
-    }
-    if (value === "Save as") {
-      setBtnStatus(value);
-      setShow(false);
-      // const { waterMark, heading, des, altText } = formik.values;
-
-      // const data = {
-      //   title: heading,
-      //   image: productImg,
-      //   des: des,
-      //   waterMark: waterMark,
-      //   altText: altText,
-      //   position: product.length+1,
-      //   draft: false,
-      //   archive: false,
-      // };
-      // const res = await fetch("http://localhost:8000/product/draftAndArchive", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data),
-      // });
-    }
   };
+
+  //Draft Model Style
+  const draftStyle = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      borderRadius: "15px",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "38.813rem",
+      height: '28.625rem'
+    },
+    overlay: {
+      background: "rgba(0,0,0,0.25)",
+    }
+  }
+
+  //final back button
+  const handelBack = () => {
+    const value = savedData
+    function hasNonEmptyValue(obj) {
+      for (const key in obj) {
+        if (obj[key] !== '' && obj[key] !== null && obj[key] !== undefined && obj[key].length !== 0) {
+          return true; // Found a non-empty value
+        }
+      }
+      return false; // All values are empty
+    }
+    // Check if any value is non-empty
+    if (hasNonEmptyValue(value)) {
+      // non-empty values
+      setShowModel(true)
+    } else {
+      // all values being empty
+      history("/ProductPage/AllProduct")
+      removeRedux()
+    }
+  }
+
+  //Filled Value save As Draft
+  const saveAsDraftbtn = async () => {
+    const res = await fetch("http://localhost:8000/product/addDraft", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(savedData)
+    });
+    setShowCardSuccessfull(true)
+    setShowModel(false)
+  }
+  //Successfull Draft Button
+  const createDraft = () => {
+    history("/ProductPage/AllProduct")
+    setShowCardSuccessfull(false)
+    removeRedux()
+  }
+  //UnSaved Back
+  const backbtn = () => {
+    history("/ProductPage/AllProduct")
+    setShowModel(false)
+    removeRedux()
+  }
   return (
     <>
+      <div>
+        <ReactModal
+          isOpen={showModel}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }} className="cursor" onClick={() => setShowModel(!showModel)}>
+            <img src={close} alt="closebtn" />
+          </div>
+          <div
+          >
+            <p style={{ width: "100%", textAlign: "left", fontFamily: "EuclidMedium", fontSize: "18px" }}>
+              You have unsaved changes. Leaving this page
+              will discard them
+            </p>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+              columnGap: "1rem",
+            }}
+              className="popupbtns">
+              <button
+                className="popupbtn colour cursor"
+                onClick={() => backbtn()}>Okay</button>
+              <button className="popupbtn cursor"
+                onClick={() => saveAsDraftbtn()}>Save as Draft</button>
+            </div>
+          </div>
+        </ReactModal>
+      </div>
+      <div>
+        <ReactModal
+          isOpen={showCardSuccessfull}
+          style={draftStyle}
+          contentLabel="Example Modal"
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "71px",
+              flexDirection: "column",
+            }}
+          >
+            <img src={successful} alt="successfull" />
+            <h1>Saved as Draft</h1>
+            <p style={{ width: "25.075rem", textAlign: "center" }}>
+              Your edits have been successfully saved as a draft.
+              Take your time to review and refine your work.
+            </p>
+            <button
+              style={{
+                background: "#0047FF",
+                width: "35.063rem",
+                height: "3.125rem",
+                marginTop: "10%",
+                border: "none",
+                borderRadius: "5px",
+                color: "#ffff",
+                fontSize: "1rem",
+                fontFamily: "EuclidMedium",
+                cursor: "pointer",
+              }}
+              onClick={() => createDraft()}
+            >
+              Done
+            </button>
+          </div>
+        </ReactModal>
+      </div>
       <AddNewProductContainer>
         <Container>
           <div
@@ -169,7 +253,7 @@ const AddNewData = () => {
                 paddingTop: "17.5px",
                 cursor: "pointer",
               }}
-              onClick={() => history(`/ProductPage/AllProduct`)}
+              onClick={() => handelBack()}
             >
               <img src={Backicon} alt="" />
               <div
@@ -183,19 +267,12 @@ const AddNewData = () => {
                 Back / All Product Page
               </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Archive
-                changeandupdate={changeandupdate}
-                btnStatus={btnStatus}
-                show={show}
-              />
-            </div>
+
+            {/* <Archive
+              changeandupdate={changeandupdate}
+              btnStatus={activeState}
+            // show={sho
+            /> */}
           </div>
           <div
             style={{
@@ -240,6 +317,7 @@ const AddNewData = () => {
                     >
                       <input
                         placeholder="Enter the water Mark"
+                        name="waterMark"
                         style={{
                           fontSize: "16px",
                           color:
@@ -253,7 +331,7 @@ const AddNewData = () => {
                             color: "#787878",
                           },
                         }}
-                        onChange={formik.handleChange("waterMark")}
+                        onChange={handleChange}
                         value={formik.values.waterMark}
                       />
                     </div>
@@ -263,64 +341,10 @@ const AddNewData = () => {
                         right: "10px",
                         bottom: "16px",
                         color: "#787878",
+
                       }}
                     >
                       {formik.values.waterMark.length}/ 25
-                    </span>
-                  </div>
-                  <div style={{ paddingTop: "25px", position: "relative" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Lable>Heading</Lable>
-                      {formik.values.heading.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="input"
-                      style={{
-                        border:
-                          formik.values.heading.length <= 25
-                            ? "1px solid rgba(0, 0, 0, 0.1)"
-                            : "2px solid #E52F2F",
-                      }}
-                    >
-                      <input
-                        placeholder="Enter Heading"
-                        style={{
-                          fontSize: "16px",
-                          width: "430px",
-                          color:
-                            formik.values.heading.length <= 25
-                              ? "#000000"
-                              : "#E52f2f",
-                          height: "48px",
-                          border: "none",
-                          "::placeholder": {
-                            color: "#787878",
-                          },
-                        }}
-                        onChange={formik.handleChange("heading")}
-                        value={formik.values.heading}
-                      />
-                    </div>
-
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "10px",
-                        bottom: "16px",
-                        color: "#787878",
-                      }}
-                    >
-                      {formik.values.heading.length}/ 25
                     </span>
                   </div>
                   <div style={{ paddingTop: "25px", position: "relative" }}>
@@ -349,13 +373,15 @@ const AddNewData = () => {
                     >
                       <textarea
                         placeholder="Enter Description"
-                        onChange={formik.handleChange("des")}
+                        name="des"
+                        onChange={handleChange}
                         value={formik.values.des}
                         style={{
                           fontSize: "16px",
                           width: "430px",
                           height: "380px",
                           border: "none",
+                          resize: "none",
                           color:
                             formik.values.des.length <= 50
                               ? "#000000"
@@ -381,24 +407,46 @@ const AddNewData = () => {
                   </div>
                 </div>
                 <div style={{ width: "849px" }}>
-                  <Lable>Heading</Lable>
-                  <div className="right_container">
-                    {hover ? (
-                      <div></div>
-                    ) : (
-                      <div
-                        style={{
-                          width: "151px",
-                          height: "62px",
-                          display: "flex",
-                          position: "absolute",
-                          right: "84px",
-                        }}
-                      >
-                        <img src={NotificationIcon} alt="" />
-                      </div>
-                    )}
-
+                  <Lable>Image</Lable>
+                  <div
+                    style={{
+                      width: "849px",
+                      height: "531px",
+                      border: "1px solid rgba(0, 0, 0, 0.1) ",
+                      borderRadius: "8px",
+                      fontSize: "16px",
+                      fontFamily: "Euclid",
+                      marginTop: "15px",
+                      color: "#787878",
+                      display: "flex",
+                      filter: imageOverlayShow && 'blur(0.8px)',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      // backgroundColor:"red"
+                    }}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                  >
+                    {imageOverlayShow &&
+                      <>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            width: '98%',
+                            height: '98%',
+                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
+                            border: '2px dashed #fff',
+                            borderRadius: '5px',
+                            zIndex: 9999,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                          }}
+                          onDragLeave={() => setImageOverlayShow(false)}
+                        >
+                        </div>
+                      </>
+                    }
                     <div
                       style={{
                         width: "50px",
@@ -409,65 +457,74 @@ const AddNewData = () => {
                         marginRight: "36px",
                       }}
                     >
-                      {productImg ? (
+                      {formik.values.image &&
                         <img
                           src={Trash}
                           alt="deletebutton"
-                          onClick={() => setProductImg("")}
-                        />
-                      ) : (
-                        <>
-                          <input
-                            type="file"
-                            className="file-upload"
-                            onChange={onChange}
-                            onMouseEnter={onHover}
-                            onMouseLeave={onLeave}
-                          ></input>
+                          onClick={() => formik.setFieldValue("image", "")}
+                        />}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}
+                      onClick={() => { fileInputRef.current.click(); }}
+                    >
+                      {formik.values.image ? (
+                        <div
+                          style={{
+                            maxWidth: "650px",
+                            height: "420px",
+                          }}
+                        >
                           <img
-                            src={ProductImgIcon}
-                            alt=""
-                            className="file-input-icon"
+                            src={formik.values.image}
+                            alt="ProductImage"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
                           />
-                        </>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            width: "830px",
+                            // height: "94%",
+                            marginTop: "12px",
+                            marginLeft: "12px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <div style={{
+                            width: "608px",
+                            height: "420px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                          }}
+                          >
+                            <img
+                              src={DefaultProductIcon}
+                              alt="DefaultProductIcon"
+                            />
+                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <p
+                              style={{
+                                maxWidth: "299px",
+                                lineHeight: "200%",
+                                textAlign: "center"
+                              }}>
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                              <div>upload image “1920 x 1080” size</div>
+
+                            </p>
+                          </div>
+                        </div>
                       )}
                     </div>
-                    {productImg ? (
-                      <div
-                        style={{
-                          width: "608px",
-                          height: "420px",
-                          margin: "90px 140px",
-                        }}
-                      >
-                        <img
-                          src={productImg}
-                          alt="ProductImage"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        style={{
-                          width: "830px",
-                          height: "94%",
-                          marginTop: "12px",
-                          marginLeft: "12px",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img
-                          src={DefaultProductIcon}
-                          alt="DefaultProductIcon"
-                        />
-                      </div>
-                    )}
                   </div>
                   <div style={{ paddingTop: "22px", position: "relative" }}>
                     <div
@@ -495,6 +552,7 @@ const AddNewData = () => {
                     >
                       <input
                         placeholder="Enter Heading"
+                        name="altText"
                         style={{
                           fontSize: "16px",
                           width: "749px",
@@ -508,7 +566,7 @@ const AddNewData = () => {
                             color: "#787878",
                           },
                         }}
-                        onChange={formik.handleChange("altText")}
+                        onChange={handleChange}
                         value={formik.values.altText}
                       />
                     </div>
@@ -543,25 +601,33 @@ const AddNewData = () => {
           ></div>
 
           {/* save and Cancel button */}
-          <div style={{ marginTop: "33px", display: "flex", float: "right" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+              columnGap: "1rem",
+              marginTop: "33px",
+            }}
+          >
             <div
               className="save_button"
-              onClick={() => history(`/ProductPage/AllProduct`)}
+              onClick={() => handelBack()}
             >
               Cancel
             </div>
             {formik.values.waterMark !== "" &&
-            formik.values.heading !== "" &&
-            formik.values.des !== "" &&
-            formik.values.altText !== "" ? (
+              formik.values.image !== "" &&
+              formik.values.des !== "" &&
+              formik.values.altText !== "" ? (
               <div
                 className="save_button"
                 style={{
                   background: "#0044FF",
                   color: "#FFFFFF",
-                  marginLeft: "8px",
                 }}
-                onClick={formik.handleSubmit}
+                onClick={onNext}
               >
                 Next
               </div>
@@ -572,7 +638,6 @@ const AddNewData = () => {
                   background: "#0044FF",
                   color: "#FFFFFF",
                   opacity: 0.2,
-                  marginLeft: "8px",
                   cursor: "default",
                 }}
               >
@@ -580,23 +645,24 @@ const AddNewData = () => {
               </div>
             )}
           </div>
-        </Container>
-      </AddNewProductContainer>
+        </Container >
+      </AddNewProductContainer >
     </>
   );
 };
 
-export default AddNewData;
+export default AddNewProduct;
 
 const AddNewProductContainer = styled.div`
-  min-width: calc(100vw - 356px);
+   min-width: calc(100vw - 356px);
   background-color: #ffffff;
   margin: 0 22px 0 18px;
+  min-height: 100vh;
 `;
 const Container = styled.div`
   padding: 25px 59px 25px 60px;
   width: calc(1564px - 119px);
-  height: 100vh;
+  min-height: 100vh;
 `;
 const Lable = styled.div`
   color: #787878;

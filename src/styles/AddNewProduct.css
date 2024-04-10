@@ -21,7 +21,7 @@ input:focus {
 }
 .textArea {
   width: 508px;
-  height: 401px;
+  height: 520px;
   padding-left: 16px;
   padding-top: 11px;
   border-radius: 8px;
@@ -33,7 +33,7 @@ input:focus {
 }
 .primaryShowcase_textArea {
   width: 508px;
-  height: 175px;
+  height: 288px;
   padding-left: 16px;
   padding-top: 11px;
   border-radius: 8px;
@@ -77,18 +77,16 @@ textArea:focus {
 }
 
 .file-upload {
-  width: 50px;
-  height: 50px;
+  /* width: 50px;
+  height: 50px; */
   position: absolute;
-  z-index: 10;
+  background-color: #000000;
+  /* z-index: 10; */
 }
 .file-upload:focus {
   border: none;
 }
-.file-input-icon {
-  width: 50px;
-  height: 50px;
-}
+
 input[type="file"]::-webkit-file-upload-button {
   visibility: hidden;
   color: transparent;
@@ -106,4 +104,24 @@ input[type="file"]::-webkit-file-upload-button {
   font-family: EuclidMedium;
   color: #0047ff;
   cursor: pointer;
+}
+.modelBox {
+  /* width: 100%; */
+  height: 3.12rem;
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: EuclidRegular;
+  margin-top: 0.95rem;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

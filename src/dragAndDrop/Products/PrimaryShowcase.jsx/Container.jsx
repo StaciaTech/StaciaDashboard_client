@@ -4,38 +4,45 @@ import { Card } from "./Card.jsx";
 import Add from "../../../assets/Add.svg";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { primaryShowcase } from "../../../redux/productSlice.js";
 import {
   archiveCard,
   changePrimaryCard,
   newData,
 } from "../../../redux/productSlice.js";
 
-const Container = ({ handleProductSelect }) => {
+const Container = () => {
   const history = useNavigate();
-
   const dispatch = useDispatch();
-  const primaryShowcase = useSelector((state) => state.product.primaryShowcase);
-  const [cards, setCards] = useState([]);
-  console.log(primaryShowcase);
   useEffect(() => {
-    setCards(primaryShowcase);
-  }, [primaryShowcase]);
+    (async () => {
+      const res = await fetch(
+        "http://localhost:8000/product/primaryShowcaseProducts"
+      );
+      const resData = await res.json();
+      dispatch(primaryShowcase(resData.data));
+    })();
+  }, [dispatch]);
+  const primaryShowcaseProduct = useSelector((state) => state.product.primaryShowcase);
+  const [cards, setCards] = useState([]);
+  useEffect(() => {
+    const data = primaryShowcaseProduct.filter((item) => item.archive === false)
+    setCards(data);
+  }, [primaryShowcaseProduct]);
 
   const moveCard = async (id, position) => {
-    // const positionValue = {position:position}
-    // const dragedId = cards.filter(
-    //   (items) => items.primaryShowcasePosition === id
-    // )[0];
-    // const _id = dragedId._id;
-    // console.log(dragedId, _id, position);
-    // const res = await fetch(
-    //   `http://localhost:8000/product/update-PrimaryShowcaseProduct/${_id}/${position}`,
-    //   {
-    //     method: "PATCH",
-    //   }
-    // );
-    // const data = await res.json();
-    // dispatch(newData(data.productBasedPosition));
+    const dragedId = cards.filter(
+      (items) => items.primaryShowcasePosition === id
+    )[0];
+    const _id = dragedId._id;
+    const res = await fetch(
+      `http://localhost:8000/product/update-PrimaryProduct/${_id}/${position}`,
+      {
+        method: "PATCH",
+      }
+    );
+    const data = await res.json();
+    dispatch(primaryShowcase(data.positionbased));
   };
 
   const redioButtonHandel = async (product) => {
@@ -47,29 +54,31 @@ const Container = ({ handleProductSelect }) => {
     );
     const data = await res.json();
     dispatch(newData(data.product));
-    dispatch(changePrimaryCard(data.primaryShowcase));
+    dispatch(changePrimaryCard(data.primaryShowcasePositionWise));
   };
 
+  // Function to handle the click event
   const fixHandelClick = async (item) => {
-    //   const res = await fetch(
-    //     `http://localhost:8000/product/addArichve/${item._id}`,
-    //     {
-    //       method: "POST",
-    //     }
-    //   );
-    //   const data = await res.json();
-    //   dispatch(archiveCard(data.archiveProduct));
-    //   dispatch(newData(data.positionWise));
+    const res = await fetch(
+      `http://localhost:8000/product/addArichve/${item._id}`,
+      {
+        method: "POST",
+      }
+    );
+    const data = await res.json();
+    dispatch(archiveCard(data.archiveProduct));
+    dispatch(newData(data.positionWise));
+    dispatch(changePrimaryCard(data.primaryShowcaseProduct));
   };
   const [, drop] = useDrop(() => ({ accept: "card" }));
   return (
     <>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >
@@ -85,7 +94,7 @@ const Container = ({ handleProductSelect }) => {
             border: "2px solid #0047FF",
             cursor: "pointer",
           }}
-          onClick={() => history(`/ProductPage/addnew`)}
+          onClick={() => history(`/ProductPage/AddNewProduct`)}
         >
           <div
             style={{
@@ -109,14 +118,12 @@ const Container = ({ handleProductSelect }) => {
             id={`${card.id}`}
             primaryShowcasePosition={card.primaryShowcasePosition}
             moveCard={moveCard}
-            cards={cards}
-            setCards={setCards}
-            achieved={card.achieved}
-            onClick={handleProductSelect}
+            // cards={cards}
+            // setCards={setCards}
+            // achieved={card.achieved}
+            // onClick={handleProductSelect}
             card={card}
             redioButtonHandel={redioButtonHandel}
-            // selectedProducts={selectedProducts}
-            // setSelectedProducts={setSelectedProducts}
             fixHandelClick={fixHandelClick}
           />
         ))}

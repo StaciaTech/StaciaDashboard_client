@@ -458,12 +458,6 @@ const AddNewServiceData = ({ onNext, savedData }) => {
           >
             <div
               className="save_button"
-              style={
-                {
-                  // height: "2.8rem",
-                  // width: "141px",
-                }
-              }
               onClick={() => history(`/servicePage/Allservice`)}
             >
               Cancel

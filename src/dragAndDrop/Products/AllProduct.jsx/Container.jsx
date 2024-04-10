@@ -60,7 +60,7 @@ export const Container = ({
     );
     const data = await res.json();
     dispatch(newData(data.product));
-    dispatch(changePrimaryCard(data.primaryShowcase));
+    dispatch(changePrimaryCard(data.primaryShowcasePositionWise));
   };
 
   const [, drop] = useDrop(() => ({ accept: "card" }));
@@ -76,16 +76,17 @@ export const Container = ({
     const data = await res.json();
     dispatch(archiveCard(data.archiveProduct));
     dispatch(newData(data.positionWise));
+    dispatch(changePrimaryCard(data.primaryShowcaseProduct));
   };
 
   return (
     <>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >
@@ -101,7 +102,7 @@ export const Container = ({
             border: "2px solid #0047FF",
             cursor: "pointer",
           }}
-          onClick={() => history(`/ProductPage/AddNew`)}
+          onClick={() => history(`/ProductPage/AddNewProduct`)}
         >
           <div
             style={{
@@ -159,10 +160,10 @@ export const Container = ({
       </div>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >
