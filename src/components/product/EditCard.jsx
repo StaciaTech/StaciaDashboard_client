@@ -15,7 +15,7 @@ import { ProductContext } from "../../context/ProductContext";
 import { updateFormData } from "../../redux/action";
 import ReactModal from "react-modal";
 
-const EditData = ({  onNext, removeRedux, formik }) => {
+const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
   const fileInputRef = useRef(null);
   const history = useNavigate();
   const id = useParams()
@@ -29,7 +29,7 @@ const EditData = ({  onNext, removeRedux, formik }) => {
     e.preventDefault()
     setImageOverlayShow(true)
   }
-  
+
   const handleDrop = async (e) => {
     e.preventDefault();
     setImageOverlayShow(false)
@@ -82,37 +82,6 @@ const EditData = ({  onNext, removeRedux, formik }) => {
   //   },
   // });
 
-  const changeandupdate = async (values, status) => {
-    const data = {
-      waterMark: formik.values.waterMark,
-      des: formik.values.des,
-      image: formik.values.image,
-      altText: formik.values.altText,
-      id: id.id,
-    }
-    if (status === "activeBtn") {
-      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-      });
-      history("/ProductPage/AllProduct")
-    } else {
-      const res = await fetch("http://localhost:8000/product/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-      });
-      history("/ProductPage/AllProduct")
-    }
-  };
-
-
-
   //Notification Model Style
   const customStyles = {
     content: {
@@ -149,7 +118,6 @@ const EditData = ({  onNext, removeRedux, formik }) => {
     }
   }
 
-
   const handelBack = () => {
     if (formik.dirty) {
       setShowModel(true)
@@ -170,8 +138,8 @@ const EditData = ({  onNext, removeRedux, formik }) => {
       body: JSON.stringify(formik.values)
     });
     // if (res.status === 200) {
-      setShowCardSuccessfull(true)
-      setShowModel(false)
+    setShowCardSuccessfull(true)
+    setShowModel(false)
     // }
   }
   //Successfull Draft Button
@@ -299,7 +267,7 @@ const EditData = ({  onNext, removeRedux, formik }) => {
             >
               <Archive
                 btnStatus={btnStatus}
-                changeandupdate={changeandupdate}
+                changeandupdate={changeArchive}
               />
             </div>
           </div>

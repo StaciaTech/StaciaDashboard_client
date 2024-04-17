@@ -8,31 +8,44 @@ import {
   archiveCard,
   changePrimaryCard,
   newData,
+  primaryShowcaseService,
 } from "../../../redux/serviceSlice.js";
 
 const Container = ({ handleProductSelect }) => {
   const history = useNavigate();
   const dispatch = useDispatch();
-  const primaryShowcase = useSelector((state) => state.service.primaryShowcase);
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(
+        "http://localhost:8000/service/primaryShowcaseService"
+      );
+      const resData = await res.json();
+      dispatch(primaryShowcaseService(resData.data));
+    })();
+  }, [dispatch]);
+  const primaryShowcaseProduct = useSelector((state) => state.service.primaryShowcase);
   const [cards, setCards] = useState([]);
   useEffect(() => {
-    setCards(primaryShowcase);
-  }, [primaryShowcase]);
+    const data = primaryShowcaseProduct.filter((item) => item.archive === false)
+    setCards(data);
+  }, [primaryShowcaseProduct]);
+
 
   const moveCard = async (id, position) => {
     // const positionValue = {position:position}
+    console.log(id, position)
     const dragedId = cards.filter(
       (items) => items.primaryShowcasePosition === id
     )[0];
     const _id = dragedId._id;
     const res = await fetch(
-      `http://localhost:8000/product/update-PrimaryShowcaseProduct/${_id}/${position}`,
+      `http://localhost:8000/service/update-PrimaryService/${_id}/${position}`,
       {
         method: "PATCH",
       }
     );
     const data = await res.json();
-    dispatch(newData(data.productBasedPosition));
+    dispatch(primaryShowcaseService(data.positionbased));
   };
 
   const redioButtonHandel = async (services) => {
@@ -44,29 +57,31 @@ const Container = ({ handleProductSelect }) => {
     );
     const data = await res.json();
     dispatch(newData(data.service));
-    dispatch(changePrimaryCard(data.primaryShowcase));
+    dispatch(changePrimaryCard(data.primaryShowcasePositionWise));
   };
 
+  // Function to handle the click event
   const fixHandelClick = async (item) => {
     const res = await fetch(
-      `http://localhost:8000/product/addArichve/${item._id}`,
+      `http://localhost:8000/service/addArichve/${item._id}`,
       {
         method: "POST",
       }
     );
     const data = await res.json();
-    dispatch(archiveCard(data.archiveProduct));
+    dispatch(archiveCard(data.archiveservice));
     dispatch(newData(data.positionWise));
+    dispatch(changePrimaryCard(data.primaryShowcaseservice));
   };
   const [, drop] = useDrop(() => ({ accept: "card" }));
   return (
     <>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >
@@ -112,8 +127,6 @@ const Container = ({ handleProductSelect }) => {
             onClick={handleProductSelect}
             card={card}
             redioButtonHandel={redioButtonHandel}
-            // selectedProducts={selectedProducts}
-            // setSelectedProducts={setSelectedProducts}
             fixHandelClick={fixHandelClick}
           />
         ))}

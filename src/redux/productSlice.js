@@ -9,7 +9,6 @@ const initialState = {
 
 const initialStates = {
   waterMark:"",
-  heading:"",
   des:"",
   altText:"",
   image:"",

@@ -45,41 +45,7 @@ export const Card = ({
   );
   const opacity = isDragging ? 0.4 : 1;
 
-  // const changeCard = (fromIndex, toIndex) => {
-  //   const updatedCards = [...cards];
-  //   const [movedCard] = updatedCards.splice(fromIndex, 1);
-  //   updatedCards.splice(toIndex, 0, movedCard);
-  //   setCards(updatedCards);
-  // };
-  // const handleRadioChange = (id) => {
-  //   const cardIndex = cards.findIndex((card) => card.id === +id);
-  //   changeCard(cardIndex, 0);
-  // };
-
-  // const changeCardLast = (fromIndex, toIndex) => {
-  //   const updatedCards = [...cards];
-  //   const [achievedCard] = updatedCards.splice(fromIndex, 1);
-  //   achievedCard.achieved = !achievedCard.achieved;
-  //   updatedCards.push(achievedCard);
-  //   setCards(updatedCards);
-  // };
-  // const fixHandelClick = (id) => {
-  //   const cardIndex = cards.findIndex((card) => card.id === +id);
-  //   changeCardLast(cardIndex, cards.length - 1);
-  //   // setFreezeCardOff(1);
-  // };
-
   const [pageName, setPageName] = useState(card.page);
-  // const redioButtonHandel = (product) => {
-  //   const alreadySelected = selectedProducts.includes(product);
-
-  //   if (alreadySelected) {
-  //     setTimeout(() => {
-  //       setPageName(false);
-  //     }, 10000);
-  //     setPageName(true);
-  //   }
-  // };
   const dispatch = useDispatch()
   const handle_edit = async (id) => {
     const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {

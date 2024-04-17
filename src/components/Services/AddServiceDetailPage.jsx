@@ -5,94 +5,30 @@ import Archive from "../Archive";
 import Backicon from "../../assets/Backicon.svg";
 import { useNavigate } from "react-router-dom";
 import Add from "../../assets/Add.svg";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateServiceFormData } from "../../redux/action";
+import { useFormik } from "formik";
 
-function FormContainer({ onPrevious, onNext, savedData }) {
-  const [forms, setForms] = useState(() => {
-    return savedData.form
-      ? savedData.form
-      : [{ id: 1, heading: "", description: "" }];
-  });
+function FormContainer({ onPrevious, onNext, savedData, formik }) {
+  const dispatch = useDispatch();
+
   const [nextId, setNextId] = useState(2);
-  const history = useNavigate();
   const handleAddForm = () => {
-    setForms([...forms, { id: nextId, heading: "", description: "" }]);
+    formik.setFieldValue("form", [...formik.values.form, { id: nextId, heading: "", description: "" }]);
     setNextId(nextId + 1);
   };
 
   const handleInputChange = (id, event) => {
     const { name, value } = event.target;
-    const updatedForms = forms.map((form) =>
+    const updatedForms = formik.values.form.map((form) =>
       form.id === id ? { ...form, [name]: value } : form
     );
-    setForms(updatedForms);
+    formik.setFieldValue("form", updatedForms)
+    dispatch(updateServiceFormData("form", updatedForms))
   };
 
-  const handelSubmit = () => {
-    onNext(forms);
-  };
-
-  //Archive and draft function
-  const [btnStatus, setBtnStatus] = useState("Save as");
-  const [show, setShow] = useState(false);
-  const formData = useSelector((state) => state.services);
-  const changeandupdate = async (value) => {
-    if (true) {
-      setShow(true);
-    }
-    if (value === "Save as Darft") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        heading: formData.heading,
-        des: formData.des,
-        image: formData.serviceImg,
-        altText: formData.altText,
-        form: forms,
-        position: 0,
-        draft: true,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as Archive") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        heading: formData.heading,
-        des: formData.des,
-        image: formData.serviceImg,
-        altText: formData.altText,
-        form: forms,
-        position: 0,
-        draft: false,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as") {
-      setBtnStatus(value);
-      setShow(false);
-    }
-  };
   const renderForms = () => {
-    return forms.map((form, index) => (
+    return formik.values.form.map((form, index) => (
       <div key={form.id} className="form-container">
         <div
           style={{
@@ -171,7 +107,7 @@ function FormContainer({ onPrevious, onNext, savedData }) {
                 width: "630px",
                 height: "290px",
                 border: "none",
-
+                resize: "none",
                 fontFamily: "EuclidRegular",
                 "::placeholder": {
                   color: "#787878",
@@ -211,7 +147,6 @@ function FormContainer({ onPrevious, onNext, savedData }) {
                 cursor: "pointer",
               }}
               onClick={onPrevious}
-              
             >
               <img src={Backicon} alt="" />
               <div
@@ -232,11 +167,6 @@ function FormContainer({ onPrevious, onNext, savedData }) {
                 justifyContent: "space-between",
               }}
             >
-              <Archive
-                changeandupdate={changeandupdate}
-                btnStatus={btnStatus}
-                show={show}
-              />
             </div>
           </div>
           {/* horizontal line */}
@@ -250,7 +180,6 @@ function FormContainer({ onPrevious, onNext, savedData }) {
           ></div>
           <div className="grid-container">
             {renderForms()}
-
             <div className="plus-container">
               <button
                 onClick={handleAddForm}
@@ -278,7 +207,7 @@ function FormContainer({ onPrevious, onNext, savedData }) {
             </div>
 
           </div>
-            { /* save and Cancel button */}
+          {/* horizontal line */}
           <div
             style={{
               width: "100%",
@@ -287,6 +216,7 @@ function FormContainer({ onPrevious, onNext, savedData }) {
               marginTop: "34px",
             }}
           ></div>
+          {/* save and Cancel button */}
           <div
             style={{
               display: "flex",
@@ -297,19 +227,37 @@ function FormContainer({ onPrevious, onNext, savedData }) {
               marginTop: "33px",
             }}
           >
-            <div className="save_button" style={{}} onClick={onPrevious}>
-              Privious
-            </div>
             <div
-              onClick={() => handelSubmit()}
               className="save_button"
-              style={{
-                backgroundColor: "#0044FF",
-                color: "#ffff",
-              }}
+              onClick={onPrevious}
             >
-              Next
+              Previous
             </div>
+            {
+              formik.values.form !== "" ? (
+                <div
+                  className="save_button"
+                  style={{
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                  }}
+                  onClick={onNext}
+                >
+                  Next
+                </div>
+              ) : (
+                <div
+                  className="save_button"
+                  style={{
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                    opacity: 0.2,
+                    cursor: "default",
+                  }}
+                >
+                  Next
+                </div>
+              )}
           </div>
         </Container>
       </AddNewserviceContainer>

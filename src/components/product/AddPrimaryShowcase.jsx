@@ -20,6 +20,8 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
   const dispatch = useDispatch()
   const fileInputRef = useRef(null);
 
+
+  console.log(formik.values)
   const { hashTagModel, setHashModel, successfullModel, setSuccessfullModel, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext)
 
   const [dropdownShow, setDropdownShow] = useState(false);
@@ -64,20 +66,14 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
     dispatch(updateFormData(name, value));
   };
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     pDes1: savedData.pDes1 ? savedData.pDes1 : '',
-  //     pDes2: savedData.pDes2 ? savedData.pDes2 : "",
-  //     pImage: savedData.pImage ? savedData.pImage : "",
-  //     pAltText: savedData.pAltText ? savedData.pAltText : "",
-  //     heading: savedData.heading ? savedData.heading : "",
-  //     domainName: savedData.domainName ? savedData.domainName : '',
-  //     hashTash: savedData.hashTag ? savedData.hashTag : null,
-  //   },
-  //   onSubmit: (values) => {
-  //     // console.log(values.pDomainName, hashTageValues)
-  //   }
-  // });
+  const formiks = useFormik({
+    initialValues: {
+      hashTash: savedData.hashTag ? savedData.hashTag : null,
+    },
+    onSubmit: (values) => {
+      // console.log(values.pDomainName, hashTageValues)
+    }
+  });
 
 
   const customStyles = {
@@ -120,15 +116,12 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
 
   const continues = () => {
     setHashModel(true)
-    // dispatch(updateFormData("pDes2", formik.values.pDes2));
-    // dispatch(updateFormData("pDes1", formik.values.pDes1));
-    // dispatch(updateFormData("pImage", formik.values.pImage));
-    // dispatch(updateFormData("pAltText", formik.values.pAltText));
   }
 
   const handleInputChange = (value) => {
     if (value === "Add New") {
       formik.setFieldValue("domainName", "")
+      dispatch(updateFormData("domainName", ""))
       setDropdownShow(false)
     } else {
       formik.setFieldValue("domainName", value)
@@ -143,15 +136,6 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
   }
   const handleDropdownChange = (event) => {
     setDropdownShow(!dropdownShow)
-    // const selectedOption = event.target.value;
-    // console.log(selectedOption)
-    // if (selectedOption === 'add_new') {
-    //   formik.setFieldValue("domainName", "") // Clear input value
-    //   setDropdownValue('');
-    // } else {
-    //   setDropdownValue(selectedOption);
-    //   formik.setFieldValue("domainName", selectedOption)
-    // }
   };
 
   const [hashInputValue, sethashInputValue] = useState('');
@@ -330,7 +314,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                       rowGap: "1rem",
                     }}
                   >
-                    {formik.values.hashTash.map((tag, index) => (
+                    {formiks.values.hashTash.map((tag, index) => (
                       <div key={index}
                         style={{
                           backgroundColor: "#F7F9FB",
@@ -515,110 +499,6 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
             <form>
               <div style={{ display: "flex", justifyContent: "space-between", height: "100%" }}>
                 <div>
-                  {/* <div style={{ position: "relative" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Lable>Heading</Lable>
-                      {formik.values.pHeading.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="input"
-                      style={{
-                        border:
-                          formik.values.pHeading.length <= 25
-                            ? "1px solid rgba(0, 0, 0, 0.1)"
-                            : "2px solid #E52F2F",
-                      }}
-                    >
-                      <input
-                        placeholder="Enter the water Mark"
-                        style={{
-                          fontSize: "16px",
-                          width: "430px",
-                          height: "48px",
-                          color: formik.values.pHeading.length <= 25 ? "#000000" : "#E52f2f",
-                          border: "none",
-                          "::placeholder": {
-                            color: "#787878",
-                          },
-                        }}
-                        onChange={formik.handleChange("pHeading")}
-                        value={formik.values.pHeading}
-                      />
-                    </div>
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "10px",
-                        bottom: "16px",
-                        color: "#787878",
-                      }}
-                    >
-                      {formik.values.pHeading.length}/ 25
-                    </span>
-                  </div> */}
-                  {/* <div style={{ position: "relative" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Lable>Domain Name</Lable>
-                      {formik.values.pDomainName.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="input"
-                      style={{
-                        border:
-                          formik.values.pDomainName.length <= 25
-                            ? "1px solid rgba(0, 0, 0, 0.1)"
-                            : "2px solid #E52F2F",
-                      }}
-                    >
-                      <input
-                        placeholder="Enter Heading"
-                        style={{
-                          fontSize: "16px",
-                          width: "430px",
-                          height: "48px",
-                          color:
-                            formik.values.pDomainName.length <= 25 ? "#000000" : "#E52f2f",
-                          border: "none",
-                          "::placeholder": {
-                            color: "#787878",
-                          },
-                        }}
-                        onChange={formik.handleChange("pDomainName")}
-                        value={formik.values.pDomainName}
-                      />
-                    </div>
-
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "10px",
-                        bottom: "16px",
-                        color: "#787878",
-                      }}
-                    >
-                      {formik.values.pDomainName.length}/ 25
-                    </span>
-                  </div> */}
                   <div style={{ position: "relative" }}>
                     <div
                       style={{

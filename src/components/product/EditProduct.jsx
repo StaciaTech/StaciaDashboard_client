@@ -3,7 +3,7 @@ import EditPrimaryShowcaseCard from './EditPrimaryShowcaseCard'
 import EditData from './EditCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProductContext } from '../../context/ProductContext'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { updateFormData } from '../../redux/action'
 import { useFormik } from 'formik'
 // import { useNavigate } from 'react-router-dom'; 
@@ -11,6 +11,7 @@ import { useFormik } from 'formik'
 const EditProduct = () => {
     const dispatch = useDispatch()
     const id = useParams()
+    const history = useNavigate()
     const [step, setStep] = useState(1)
     // const navigate = useNavigate();
     const [formData, setFormData] = useState()
@@ -100,6 +101,17 @@ const EditProduct = () => {
         }
     }
 
+    const changeArchive = async () => {
+        const res = await fetch(`http://localhost:8000/product/draftAndArchive/${id.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formik.values)
+        });
+        history("/ProductPage/AllProduct")
+        removeRedux()
+    }
     return (
         <div>
             {step === 1 && (
@@ -107,6 +119,7 @@ const EditProduct = () => {
                     onNext={handleNextStep1}
                     removeRedux={removeRedux}
                     formik={formik}
+                    changeArchive={changeArchive}
                 />
             )}
             {step === 2 && (
@@ -116,6 +129,7 @@ const EditProduct = () => {
                     onSubmitValue={handleSubmit}
                     removeRedux={removeRedux}
                     formik={formik}
+                    changeArchive={changeArchive}
                 />
             )}
         </div>

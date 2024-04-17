@@ -3,18 +3,17 @@ import ReactDOM from "react-dom/client";
 import "./index.css"
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import ProductProvider from "./context/ProductContext";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import ProductProvider from "./context/ProductContext";
+import ServiceProvider from "./context/ServiceContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <React.StrictMode>
-      <ProductProvider>
       <Provider store={store}>
         <App /></Provider>
-      </ProductProvider>
     </React.StrictMode>
   </BrowserRouter>
 );

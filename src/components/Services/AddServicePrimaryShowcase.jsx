@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Backicon from "../../assets/Backicon.svg";
 import Archive from "../Archive";
@@ -6,28 +6,53 @@ import { useNavigate } from "react-router-dom";
 import DefaultserviceIcon from "../../assets/DefaultProductIcon.svg";
 import serviceImgIcon from "../../assets/ProductImgIcon.svg";
 import NotificationIcon from "../../assets/NotificationIcon.svg";
+import DefaultProductIcon from "../../assets/DefaultProductIcon.svg";
 import Trash from "../../assets/Trash.svg";
 import "../../styles/AddNewProduct.css";
 import ReactModal from "react-modal";
 import successful from "../../assets/successful.svg";
 import { ProductContext } from "../../context/ProductContext";
 import { useFormik } from "formik";
-import { useDispatch} from "react-redux";
-import { updateServiceFormData } from "../../redux/action";
+import { useDispatch } from "react-redux";
+import { updateFormData, updateServiceFormData } from "../../redux/action";
+import dived from "../../assets/dived.svg"
+import dropdown from "../../assets/DropDown.svg"
+import close_btn from "../../assets/close.svg"
+import { ServiceContext } from "../../context/ServiceContext";
 
 const AddServicePrimaryShowcase = ({
   onPrevious,
   onSubmitValue,
   savedData,
+  formik
 }) => {
   const history = useNavigate();
-  const [btnStatus, setBtnStatus] = useState("Save as");
-  const [show, setShow] = useState(false);
-  const [hover, setHover] = useState(true);
-  const { showModel, setShowModel } = useContext(ProductContext);
+  const fileInputRef = useRef(null);
+  const { hashTagModel, setHashModel, successfullModel, setSuccessfullModel, imageOverlayShow, setImageOverlayShow, showModel, setShowModel } = useContext(ServiceContext)
+
+  const [dropdownShow, setDropdownShow] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState(["Add New", 'Agriculture', 'Technology', "Electronics"]);
+
   const dispatch = useDispatch();
 
   const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      borderRadius: "15px",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "34.25rem",
+      height: "44.375rem",
+    },
+    overlay: {
+      background: "rgba(0,0,0,0.25)",
+    },
+  };
+
+  const successfulcustomStyles = {
     content: {
       top: "50%",
       left: "50%",
@@ -42,117 +67,360 @@ const AddServicePrimaryShowcase = ({
     overlay: {
       background: "rgba(0,0,0,0.25)",
     },
-  };
-  const onHover = () => {
-    setHover(false);
-  };
-  const onLeave = () => {
-    setHover(true);
-  };
+  }
+
+  //image DragandDrop 
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    setImageOverlayShow(true)
+  }
+  const handleDrop = async (e) => {
+    setImageOverlayShow(false)
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
+    })
+    const resData = await res.json();
+    formik.setFieldValue("pImage", resData.signedUrl)
+    dispatch(updateServiceFormData("pImage", resData.signedUrl));
+  }
+
+  //image onchange value
   const onChange = async (e) => {
-    const { url } = await fetch("http://localhost:8000/upload").then((res) =>
-      res.json()
-    );
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: e.target.files[0],
-    });
-    const imageUrl = url.split("?")[0];
-    formik.setFieldValue("pServiceImage", imageUrl);
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
+    })
+    const resData = await res.json();
+    formik.setFieldValue("pImage", resData.signedUrl)
+    dispatch(updateServiceFormData("pImage", resData.signedUrl));
   };
 
-  const formik = useFormik({
-    initialValues: {
-      serviceName: savedData.serviceName ? savedData.serviceName : "",
-      pServiceImage: savedData.pServiceImage ? savedData.pServiceImage : "",
-      pAlterNativeText: savedData.pAlterNativeText
-        ? savedData.pAlterNativeText
-        : "",
-    },
-    onSubmit: (values) => {
-      dispatch(updateServiceFormData("serviceName", values.serviceName));
-      dispatch(updateServiceFormData("pServiceImage", values.pServiceImage));
-      dispatch(
-        updateServiceFormData("pAlterNativeText", values.pAlterNativeText)
-      );
-      onSubmitValue();
-      setShowModel(true);
-    },
-  });
+  //text value onchange
+  const handleChange = event => {
+    const { name, value } = event.target;
+    formik.setFieldValue(name, value);
+    dispatch(updateServiceFormData(name, value))
+  };
   const btn_handeler = () => {
     setShowModel(false);
     history("/ServicePage/AllService");
   };
-  const changeandupdate = async (value) => {
-    if (true) {
-      setShow(true);
-    }
-    if (value === "Save as Darft") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        heading: savedData.heading,
-        des: savedData.des,
-        image: savedData.serviceImg,
-        altText: savedData.altText,
-        form: savedData.form,
-        pServiceName: formik.values.serviceName,
-        pImage: formik.values.pServiceImage,
-        pAltText: formik.values.pAlterNativeText,
-        position: 0,
-        draft: true,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as Archive") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        heading: savedData.heading,
-        des: savedData.des,
-        image: savedData.serviceImg,
-        altText: savedData.altText,
-        form: savedData.form,
-        pServiceName: formik.values.serviceName,
-        pImage: formik.values.pServiceImage,
-        pAltText: formik.values.pAlterNativeText,
-        position: 0,
-        draft: false,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as") {
-      setBtnStatus(value);
-      setShow(false);
+
+  const continues = () => {
+    setHashModel(true)
+  }
+  const handleInputChange = (value) => {
+    if (value === "Add New") {
+      formik.setFieldValue("domainName", "")
+      dispatch(updateServiceFormData("domainName", ""))
+      setDropdownShow(false)
+    } else {
+      formik.setFieldValue("domainName", value)
+      setDropdownShow(false)
+      dispatch(updateServiceFormData("domainName", value))
     }
   };
+
+
+  const handleDropdownChange = (event) => {
+    setDropdownShow(!dropdownShow)
+    // const selectedOption = event.target.value;
+    // if (selectedOption === 'add_new') {
+    //   formik.setFieldValue("domainName", "") // Clear input value
+    //   setDropdownValue('');
+    // } else {
+    //   setDropdownValue(selectedOption);
+    //   formik.setFieldValue("domainName", selectedOption)
+    // }
+  };
+
+  const [hashInputValue, sethashInputValue] = useState('');
+  const [filteredWords, setFilteredWords] = useState([]);
+
+  const handleHashInputChange = (event) => {
+    const value = event.target.value;
+    sethashInputValue(value);
+  };
+
+  useEffect(() => {
+    if (hashInputValue) {
+      fetchWords(hashInputValue);
+    } else {
+      setFilteredWords([]);
+    }
+  }, [hashInputValue])
+  const fetchWords = async (input) => {
+    try {
+      const response = await fetch(`https://api.datamuse.com/sug?s=${input}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch words');
+      }
+      const data = await response.json();
+      // Extract titles from fetched data
+      const words = data.map(item => item.word);
+      setFilteredWords(words.slice(0, 6));
+    } catch (error) {
+      console.error('Error fetching words:', error);
+    }
+  };
+
+  const enterInputValue = (value) => {
+    formik.setFieldValue("hashTag", [...formik.values.hashTag, value])
+    sethashInputValue("")
+    dispatch(updateServiceFormData("hashTag", [...formik.values.hashTag, value]))
+  }
+
+  const handelRemove = (tag) => {
+    const newArray = formik.values.hashTag.filter((value) => value !== tag)
+    formik.setFieldValue("hashTag", newArray)
+    dispatch(updateServiceFormData("hashTag", newArray))
+  }
+
+  const savePost = () => {
+    onSubmitValue()
+    setHashModel(false)
+  }
   return (
     <>
       <div>
         <ReactModal
-          isOpen={showModel}
+          isOpen={hashTagModel}
           style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <form style={{ width: "100%", height: "100%", }}>
+              <div style={{ width: "100%", marginBottom: "8px" }}>
+                <Lable> Heading</Lable>
+                <div
+                  className="modelBox"
+                  style={{
+                    border: "1px solid  rgba(0, 0, 0, 0.1)"
+                  }}
+                >
+                  <input
+                    placeholder="Enter Heading"
+                    name="heading"
+                    style={{
+                      fontSize: "16px",
+                      width: "430px",
+                      height: "48px",
+                      color:
+                        "#000000",
+                      border: "none",
+                      "::placeholder": {
+                        color: "#787878",
+                      },
+                    }}
+                    // onChange={formik.handleChange("heading")}
+                    onChange={handleChange}
+                    value={formik.values.heading}
+                  />
+                </div>
+              </div>
+              <div style={{ marginBottom: "8px" }}>
+                <Lable> Domain</Lable>
+
+                <div
+                  className="modelBox"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid rgba(0, 0, 0, 0.1)"
+                  }}
+                >
+                  <input
+                    placeholder="Enter the water Mark"
+                    name="domainName"
+                    style={{
+                      fontSize: "16px",
+                      width: "90%",
+                      height: "48px",
+                      color: "#000000",
+                      border: "none",
+                      "::placeholder": {
+                        color: "#787878",
+                      },
+                    }}
+                    value={formik.values.domainName}
+                    onChange={handleChange}
+                  />
+                  <img src={dived} alt="" />
+                  <img src={dropdown} alt="" style={{ margin: "18px" }} onClick={handleDropdownChange} />
+                </div>
+                <div
+                  className=""
+                  style={{
+                    position: "absolute",
+                    width: "93%",
+                    background: "#FFFFFF",
+                    zIndex: 1
+                  }}
+                >
+                  {dropdownShow &&
+                    <div
+                      style={{
+                        width: "100%",
+                        marginTop: "8px",
+                        boxShadow: "0px 4px 4px 2px rgba(0, 0, 0, 0.1)",
+                        borderRadius: "8px",
+                        position: "relative"
+                      }}>
+                      {dropdownOptions.map((item, id) => (
+                        <div key={id} style={{
+                          // width: "100%",
+                          borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                          padding: "10px",
+                          cursor: "pointer"
+                        }}
+                          onClick={() => handleInputChange(item)}>
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  }
+                </div>
+              </div>
+              <div>
+                <Lable>Hashtag</Lable>
+                <div
+                  className="modelBox"
+                  style={{
+                    height: "10.12rem",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignContent: "flex-start",
+                    border: "1px solid rgba(0, 0, 0, 0.1)"
+                  }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      columnGap: "1rem",
+                      rowGap: "1rem",
+                    }}
+                  >
+                    {formik.values.hashTag.map((tag, index) => (
+                      <div key={index}
+                        style={{
+                          backgroundColor: "#F7F9FB",
+                          // color: "#000000",
+                          fontSize: "16px",
+                          height: "40px",
+                          display: 'flex',
+                          alignItems: "center",
+                          borderRadius: "8px",
+                          fontFamily: "EuclidMedium",
+                          justifyContent: "space-between",
+
+                        }}>
+                        <p
+                          style={{ padding: "0px 10px" }}
+                        >{tag}</p>
+                        <img src={close_btn} alt="hello" style={{ padding: "0px 10px", cursor: "pointer", }} onClick={() => handelRemove(tag)} />
+                      </div>
+                    ))}
+                  </div>
+                  <input
+                    placeholder="Minimum 4 hashtag "
+                    style={{
+                      fontSize: "16px",
+                      width: "150px",
+                      height: "48px",
+                      color: "#000000",
+                      border: "none",
+                      "::placeholder": {
+                        color: "#787878",
+                      },
+                    }}
+                    type="text"
+                    value={hashInputValue}
+                    onChange={handleHashInputChange}
+                  />
+                </div>
+                <Lable
+                  style={{
+                    marginTop: "10px"
+                  }}>Suggested Tags</Lable>
+                <div
+                  className="modelBox"
+                  style={{
+                    height: "9.013rem",
+                    display: "flex",
+                    columnGap: "1rem",
+                    rowGap: "1rem",
+                    flexWrap: "wrap",
+                    marginTop: "8px",
+                  }}>
+                  {filteredWords.map((tag, index) => (
+                    <div key={index}
+                      style={{
+                        backgroundColor: "#F7F9FB",
+                        color: "#000000",
+                        fontSize: "16px",
+                        height: "40px",
+                        display: 'flex',
+                        alignItems: "center",
+                        borderRadius: "8px",
+                        fontFamily: "EuclidMedium",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => enterInputValue(tag)}>
+                      <span style={{ padding: "20px 20px" }}>{tag}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* save and Cancel button */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "100%",
+                columnGap: "1rem",
+                marginTop: "83px",
+              }}>
+                <div
+                  className="save_button"
+                  onClick={() => setHashModel(false)}
+                >
+                  Previous
+                </div>
+
+                <div
+                  className="save_button"
+                  style={{
+                    backgroundColor: "#0044FF",
+                    color: "#ffff",
+                  }}
+                  onClick={() => savePost()}
+                >
+                  Save & Post
+                </div>
+              </div>
+            </form>
+          </div>
+        </ReactModal>
+      </div>
+      <div>
+        <ReactModal
+          isOpen={successfullModel}
+          style={successfulcustomStyles}
           contentLabel="Example Modal"
         >
           <div
@@ -219,19 +487,6 @@ const AddServicePrimaryShowcase = ({
                 Back / All Services / Detailed Description / Primary Showcase
               </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Archive
-                changeandupdate={changeandupdate}
-                btnStatus={btnStatus}
-                show={show}
-              />
-            </div>
           </div>
           {/* horizontal line */}
           <div
@@ -242,55 +497,7 @@ const AddServicePrimaryShowcase = ({
               marginTop: "34px",
             }}
           ></div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: "20px",
-            }}
-          >
-            <Lable>Service Name </Lable>
-            {/* {formik.values.heading.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )} */}
-          </div>
-          <div
-            className="input"
-            style={{
-              width: "89.3rem",
-              border: "1px solid rgba(0, 0, 0, 0.1)",
-              //   formik.values.heading.length <= 25
-              //     ? "1px solid rgba(0, 0, 0, 0.1)"
-              //     : "2px solid #E52F2F",
-            }}
-          >
-            <input
-              type="text"
-              name="heading"
-              placeholder="Enter Heading"
-              style={{
-                fontSize: "16px",
-                width: "86.5rem",
 
-                color: "#000000",
-                //     formik.values.heading.length <= 25
-                //       ? "#000000"
-                //       : "#E52f2f",
-                height: "48px",
-                border: "none",
-                "::placeholder": {
-                  color: "#787878",
-                },
-              }}
-              onChange={formik.handleChange("serviceName")}
-              value={formik.values.serviceName}
-              // value={form.heading}
-              // onChange={(e) => handleInputChange(form.id, e)}
-            />
-          </div>
           <span
             style={{
               position: "absolute",
@@ -301,7 +508,7 @@ const AddServicePrimaryShowcase = ({
           >
             {/* {formik.values.heading.length}/ 25 */}
           </span>
-          <div style={{ width: "90.3rem", marginTop: "10px" }}>
+          {/* <div style={{ width: "90.3rem", marginTop: "10px" }}>
             <Lable>Image</Lable>
             <div className="right_container">
               {hover ? (
@@ -348,7 +555,7 @@ const AddServicePrimaryShowcase = ({
                     <img
                       src={serviceImgIcon}
                       alt=""
-                      // className="file-input-icon"
+                    // className="file-input-icon"
                     />
                   </>
                 )}
@@ -393,8 +600,128 @@ const AddServicePrimaryShowcase = ({
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
+          <div style={{ width: "100%", paddingTop: "20px" }}>
+            <Lable>Image</Lable>
+            <div
+              style={{
+                width: "100%",
+                height: "531px",
+                border: "1px solid rgba(0, 0, 0, 0.1) ",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontFamily: "Euclid",
+                marginTop: "15px",
+                color: "#787878",
+                display: "flex",
+                filter: imageOverlayShow && 'blur(0.8px)',
+                justifyContent: 'center',
+                position: 'relative',
+                // backgroundColor:"red"
+              }}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              {imageOverlayShow &&
+                <>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '98%',
+                      height: '98%',
+                      backgroundColor: 'rgba(0, 0, 0, 0.56)',
+                      border: '2px dashed #fff',
+                      borderRadius: '5px',
+                      zIndex: 9999,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                    onDragLeave={() => setImageOverlayShow(false)}
+                  >
+                  </div>
+                </>
+              }
+              <div
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  position: "absolute",
+                  right: "84px",
+                  marginTop: "77px",
+                  marginRight: "36px",
+                }}
+              >
+                {formik.values.pImage &&
+                  <img
+                    src={Trash}
+                    alt="deletebutton"
+                    onClick={() => formik.setFieldValue("pImage", "")}
+                  />}
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', }}
+                onClick={() => { fileInputRef.current.click(); }}
+              >
+                {formik.values.pImage ? (
+                  <div
+                    style={{
+                      Width: "100%",
+                      height: "95%",
+                    }}
+                  >
+                    <img
+                      src={formik.values.pImage}
+                      alt="ProductImage"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      width: "830px",
+                      // height: "94%",
+                      marginTop: "12px",
+                      marginLeft: "12px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <div style={{
+                      width: "608px",
+                      height: "420px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                    >
+                      <img
+                        src={DefaultProductIcon}
+                        alt="DefaultProductIcon"
+                      />
+                      <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                      <p
+                        style={{
+                          maxWidth: "299px",
+                          lineHeight: "200%",
+                          textAlign: "center"
+                        }}>
+                        <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                        <div>upload image “1920 x 1080” size</div>
 
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
           <div style={{ paddingTop: "22px", position: "relative" }}>
             <div
               style={{
@@ -422,10 +749,10 @@ const AddServicePrimaryShowcase = ({
             >
               <input
                 placeholder="Enter Heading"
+                name="pAlterNativeText"
                 style={{
                   fontSize: "16px",
-
-                  width: "86.5rem",
+                  width: "84.0rem",
                   color: "#000000",
                   // formik.values.altText.length <= 25
                   //   ? "#000000"
@@ -436,7 +763,7 @@ const AddServicePrimaryShowcase = ({
                     color: "#787878",
                   },
                 }}
-                onChange={formik.handleChange("pAlterNativeText")}
+                onChange={handleChange}
                 value={formik.values.pAlterNativeText}
               />
             </div>
@@ -473,34 +800,34 @@ const AddServicePrimaryShowcase = ({
             <div className="save_button" onClick={onPrevious}>
               Previous
             </div>
-            {/* {formik.values.heading !== "" &&
-            formik.values.des !== "" &&
-            formik.values.altText !== "" ? (  */}
-            <div
-              className="save_button"
-              style={{
-                background: "#0044FF",
-                color: "#FFFFFF",
-                marginLeft: "8px",
-              }}
-              onClick={formik.handleSubmit}
-            >
-              Save & Post
-            </div>
-            {/* {/* ) : ( */}
-            {/* <div
-              className="save_button"
-              style={{
-                background: "#0044FF",
-                color: "#FFFFFF",
-                opacity: 0.2,
-                marginLeft: "8px",
-                cursor: "default",
-              }}
-            >
-              Next
-            </div> */}
-            {/* )} */}
+            {
+              formik.values.pAlterNativeText !== "" &&
+                formik.values.pImage !== "" ? (
+                <div
+                  className="save_button"
+                  style={{
+                    backgroundColor: "#0044FF",
+                    color: "#ffff",
+                  }}
+                  onClick={() => continues()}
+                >
+                  Continue
+                </div>
+              ) : (
+                <div
+                  className="save_button"
+                  style={{
+                    // width: "141px",
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                    opacity: 0.2,
+                    cursor: "default",
+                    // height: "3.5rem",
+                  }}
+                >
+                  Continue
+                </div>
+              )}
           </div>
         </Container>
       </AddNewserviceContainer>
