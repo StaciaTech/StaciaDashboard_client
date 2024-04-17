@@ -16,7 +16,7 @@ import { updateFormData } from "../../redux/action";
 import close from "../../assets/close.svg"
 import Archive from "../Archive";
 
-const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik }) => {
+const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik, changeArchive }) => {
   const history = useNavigate();
   const dispatch = useDispatch()
   const id = useParams();
@@ -551,7 +551,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik }) => {
             >
               <Archive
                 btnStatus={btnStatus}
-                changeandupdate={changeandupdate}
+                changeandupdate={changeArchive}
               />
             </div>
           </div>

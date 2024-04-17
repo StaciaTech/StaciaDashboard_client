@@ -11,20 +11,16 @@ import {
 } from "../../../redux/serviceSlice.js";
 import { ArchiveCard, Card } from "./Card.jsx";
 
-export const Container = ({
-  selectedservice,
-  handleserviceelect,
-  setSelectedservice,
-}) => {
+export const Container = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:8000/service/allService`);
+      const res = await fetch(`http://localhost:8000/service/all-service`);
       const resData = await res.json();
-      dispatch(newData(resData.servicesPositionWaise));
-      dispatch(archiveCard(resData.archiveServices));
-      dispatch(allService(resData.allServices));
+      dispatch(newData(resData.serviceBasedPosition));
+      dispatch(archiveCard(resData.archiveService));
+      dispatch(allService(resData.allService));
     })();
   }, [dispatch]);
   const history = useNavigate();
@@ -59,10 +55,8 @@ export const Container = ({
     );
     const data = await res.json();
     dispatch(newData(data.service));
-    dispatch(changePrimaryCard(data.primaryShowcase));
+    dispatch(changePrimaryCard(data.primaryShowcasePositionWise));
   };
-
-  const [, drop] = useDrop(() => ({ accept: "card" }));
 
   // Function to handle the click event
   const fixHandelClick = async (item) => {
@@ -73,18 +67,19 @@ export const Container = ({
       }
     );
     const data = await res.json();
-    console.log(data);
-    dispatch(archiveCard(data.archiveService));
+    dispatch(archiveCard(data.archiveservice));
     dispatch(newData(data.positionWise));
+    dispatch(changePrimaryCard(data.primaryShowcaseservice));
   };
+  const [, drop] = useDrop(() => ({ accept: "card" }));
   return (
     <>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >
@@ -128,12 +123,9 @@ export const Container = ({
             cards={cards}
             setCards={setCards}
             achieved={card.achieved}
-            onClick={handleserviceelect}
             card={card}
-            redioButtonHandel={redioButtonHandel}
-            selectedservice={selectedservice}
-            setSelectedservice={setSelectedservice}
             fixHandelClick={fixHandelClick}
+            redioButtonHandel={redioButtonHandel}
           />
         ))}
       </div>
@@ -158,10 +150,10 @@ export const Container = ({
       </div>
       <div
         ref={drop}
+        className="grid"
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "auto auto auto ",
           gap: "30px",
         }}
       >

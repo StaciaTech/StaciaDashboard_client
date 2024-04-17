@@ -10,7 +10,7 @@ const ProductProvider = ({ children }) => {
   const [successfullModel, setSuccessfullModel] = useState(false)
 
   const [dirty, setDirty] = useState(false)
-  
+
   //image overlay 
   const [imageOverlayShow, setImageOverlayShow] = useState(false)
 
@@ -29,9 +29,9 @@ const ProductProvider = ({ children }) => {
         setHashModel,
         successfullModel,
         setSuccessfullModel,
-        dirty, 
+        dirty,
         setDirty,
-        imageOverlayShow, 
+        imageOverlayShow,
         setImageOverlayShow
       }}
     >

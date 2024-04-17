@@ -4,11 +4,12 @@ import Write from "../../../assets/Write.svg";
 import fix from "../../../assets/fix.svg";
 import fixed from "../../../assets/fixed.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import undo from "../../../assets/undo.svg";
 import Edit from "../../../assets/Edit.svg";
 import { useDispatch } from "react-redux";
 import { updateServiceFormData } from "../../../redux/action";
+import { ServiceContext } from "../../../context/ServiceContext";
 export const Card = ({
   id,
   moveCard,
@@ -44,42 +45,9 @@ export const Card = ({
   );
   const opacity = isDragging ? 0.2 : 2;
 
-  // const changeCard = (fromIndex, toIndex) => {
-  //   const updatedCards = [...cards];
-  //   const [movedCard] = updatedCards.splice(fromIndex, 1);
-  //   updatedCards.splice(toIndex, 0, movedCard);
-  //   setCards(updatedCards);
-  // };
-  // const handleRadioChange = (id) => {
-  //   const cardIndex = cards.findIndex((card) => card.id === +id);
-  //   changeCard(cardIndex, 0);
-  // };
-
-  // const changeCardLast = (fromIndex, toIndex) => {
-  //   const updatedCards = [...cards];
-  //   const [achievedCard] = updatedCards.splice(fromIndex, 1);
-  //   achievedCard.achieved = !achievedCard.achieved;
-  //   updatedCards.push(achievedCard);
-  //   setCards(updatedCards);
-  // };
-  // const fixHandelClick = (id) => {
-  //   const cardIndex = cards.findIndex((card) => card.id === +id);
-  //   changeCardLast(cardIndex, cards.length - 1);
-  //   // setFreezeCardOff(1);
-  // };
-
   const [pageName, setPageName] = useState(card.page);
-  // const redioButtonHandel = (product) => {
-  //   const alreadySelected = selectedProducts.includes(product);
 
-  //   if (alreadySelected) {
-  //     setTimeout(() => {
-  //       setPageName(false);
-  //     }, 10000);
-  //     setPageName(true);
-  //   }
-  // };
-
+  const { setBtnStatus } = useContext(ServiceContext)
   const handle_edit = async (id) => {
     const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
       method: "GET",
@@ -88,20 +56,17 @@ export const Card = ({
       },
     });
     const data = await res.json();
-    dispatch(updateServiceFormData("heading", data.selectedService.heading));
-    dispatch(updateServiceFormData("des", data.selectedService.description));
+    setBtnStatus(data.selectedService.archive)
+    console.log(data.selectedService.archive)
+    dispatch(updateServiceFormData("des", data.selectedService.des));
     dispatch(updateServiceFormData("image", data.selectedService.image));
     dispatch(updateServiceFormData("altText", data.selectedService.altText));
     dispatch(updateServiceFormData("form", data.selectedService.form));
-    dispatch(
-      updateServiceFormData("serviceName", data.selectedService.pServiceName)
-    );
-    dispatch(
-      updateServiceFormData("pServiceImage", data.selectedService.pImage)
-    );
-    dispatch(
-      updateServiceFormData("pAlterNativeText", data.selectedService.pAltText)
-    );
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
+    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("heading", data.selectedService.title));
+    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
     history(`/ServicePage/EditService/${id}`);
   };
   const undohandeler = (product) => {
@@ -129,33 +94,6 @@ export const Card = ({
         }}
         className={achieved ? "freeze-card" : ""}
       >
-        {/* {achieved && (
-        <div
-          style={{
-            zIndex: "10",
-            position: "absolute",
-            right: "17px",
-            top: "166px",
-            bottom: "200px",
-          }}
-          // onClick={() => {
-          //   setFreezeCardOff(false);
-          // }}
-        >
-          <img
-            src={Edit}
-            alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
-            onClick={()=>history(`/${pageName}/Edit/${id}`)}
-          />
-          <img
-            src={fixed}
-            alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
-            onClick={() => fixHandelClick(id)}
-          />
-        </div>
-      )} */}
         {pageName ? (
           <div
             style={{
@@ -214,7 +152,7 @@ export const Card = ({
                   marginTop: "30px",
                 }}
               >
-                {card.heading}
+                {card.title}
               </div>
               <div
                 style={{
@@ -228,7 +166,7 @@ export const Card = ({
                   marginTop: "6px",
                 }}
               >
-                {card.description}
+                {card.des}
               </div>
               <div
                 style={{
@@ -243,7 +181,7 @@ export const Card = ({
                     checked={card.primaryShowcase === true}
                     onChange={() => redioButtonHandel(card)}
                   />
-                  <span className="checkmark"></span>
+                  <span className="checkmark" style={{cursor:"pointer"}}></span>
                   Primary Showcase
                 </label>
               </div>
@@ -290,7 +228,7 @@ export const Card = ({
                   <img
                     src={fix}
                     alt=""
-                    style={{ paddingLeft: "5px" }}
+                    style={{ paddingLeft: "5px", cursor: "pointer" }}
                     onClick={() => {
                       fixHandelClick(card);
                     }}
@@ -308,6 +246,7 @@ export const Card = ({
 export const ArchiveCard = ({ key, card, fixHandelClick }) => {
   const dispatch = useDispatch()
   const history = useNavigate()
+  const { setBtnStatus } = useContext(ServiceContext)
   const handle_edit = async (id) => {
     const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
       method: "GET",
@@ -316,20 +255,17 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
       },
     });
     const data = await res.json();
-    dispatch(updateServiceFormData("heading", data.selectedService.heading));
-    dispatch(updateServiceFormData("des", data.selectedService.description));
+    setBtnStatus(data.selectedService.archive)
+    console.log(data.selectedService.archive)
+    dispatch(updateServiceFormData("des", data.selectedService.des));
     dispatch(updateServiceFormData("image", data.selectedService.image));
     dispatch(updateServiceFormData("altText", data.selectedService.altText));
     dispatch(updateServiceFormData("form", data.selectedService.form));
-    dispatch(
-      updateServiceFormData("serviceName", data.selectedService.pServiceName)
-    );
-    dispatch(
-      updateServiceFormData("pServiceImage", data.selectedService.pImage)
-    );
-    dispatch(
-      updateServiceFormData("pAlterNativeText", data.selectedService.pAltText)
-    );
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
+    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("heading", data.selectedService.title));
+    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
     history(`/ServicePage/EditService/${id}`);
   };
   return (
@@ -363,13 +299,13 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
           <img
             src={Edit}
             alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
+            style={{ paddingLeft: "5px", zIndex: 10, cursor: "pointer" }}
             onClick={() => handle_edit(card._id)}
           />
           <img
             src={fixed}
             alt=""
-            style={{ paddingLeft: "5px", zIndex: 10 }}
+            style={{ paddingLeft: "5px", zIndex: 10, cursor: "pointer" }}
             onClick={() => fixHandelClick(card)}
           />
         </div>
@@ -412,7 +348,7 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
                 marginTop: "30px",
               }}
             >
-              {card.heading}
+              {card.title}
             </div>
             <div
               style={{
@@ -426,7 +362,7 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
                 marginTop: "6px",
               }}
             >
-              {card.description}
+              {card.des}
             </div>
             <div
               style={{

@@ -8,14 +8,15 @@ const initialState = {
   detailsValue: [],
 };
 const initialStates = {
-  heading: "",
   des: "",
-  altText: "",
   image: "",
-  form: "",
-  serviceName: "",
-  pServiceImage: "",
+  altText: "",
+  form: [{ id: 1, heading: "", description: "" }],
+  pImage: "",
   pAlterNativeText: "",
+  heading: "",
+  domainName: "",
+  hashTag: [],
 };
 
 const serviceSlice = createSlice({
@@ -50,11 +51,6 @@ export const serviceFormReducer = (state = initialStates, action) => {
         ...state,
         [action.field]: action.value,
       };
-    // case "REMOVE_SEVED_DATA":
-    //   return {
-    //     ...state,
-    //     [action.field]: action.value,
-    //   };
     default:
       return state;
   }

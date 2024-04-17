@@ -11,7 +11,6 @@ const AddNewProductPage = () => {
     const dispatch = useDispatch()
     const [step, setStep] = useState(1)
     const [formDatas, setformDatas] = useState()
-    const navigate = useNavigate();
     const { setSuccessfullModel, setShowModel, setDirty } = useContext(ProductContext)
     const savedData = useSelector((state) => state.products)
     useEffect(() => {
@@ -32,34 +31,29 @@ const AddNewProductPage = () => {
             domainName: savedData.domainName ? savedData.domainName : '',
             hashTag: savedData.hashTag ? savedData.hashTag : [],
         },
-        // validationSchema: Yup.object().shape({
-        //     waterMark: Yup.string().required(),
-        //     des: Yup.string().required(),
-        //     altText: Yup.string().required(),
-        // }),
         onSubmit: (values) => {
             // onNext(values)
         },
     });
 
     useEffect(() => {
-        
+        console.log(formik.dirty)
         if (formik.dirty) {
             setDirty(true)
         }
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
-            if (formik.dirty) {
-                console.log(formik.dirty)
-                // Display a confirmation dialog
-                event.returnValue = ''; // For Chrome
-            }
-        };
-        window.addEventListener('beforeunload', handleBeforeUnload);
+        // const handleBeforeUnload = (event) => {
+        //     event.preventDefault();
+        //     if (formik.dirty) {
+        //         console.log(formik.dirty)
+        //         // Display a confirmation dialog
+        //         event.returnValue = 'helloooo'; // For Chrome
+        //     }
+        // };
+        // window.addEventListener('beforeunload', handleBeforeUnload);
 
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
+        // return () => {
+        //     window.removeEventListener('beforeunload', handleBeforeUnload);
+        // };
     }, [formik.dirty]);
 
     const handleNextStep1 = () => {

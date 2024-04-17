@@ -1,116 +1,218 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import "../../styles/AddNewProduct.css";
 import Backicon from "../../assets/Backicon.svg";
 import Trash from "../../assets/Trash.svg";
+import DefaultProductIcon from "../../assets/DefaultProductIcon.svg";
+import successful from "../../assets/successful.svg";
+import close from '../../assets/close.svg'
 import serviceImgIcon from "../../assets/ProductImgIcon.svg";
 import DefaultserviceIcon from "../../assets/DefaultProductIcon.svg";
 import NotificationIcon from "../../assets/NotificationIcon.svg";
 import Archive from "../Archive";
+import { useDispatch } from "react-redux";
+import ReactModal from "react-modal";
+import { ServiceContext } from "../../context/ServiceContext";
+import { updateServiceFormData } from "../../redux/action";
 
-const EditNewCard = ({ formDatas, onNext, id }) => {
+const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
+  const fileInputRef = useRef(null);
   const history = useNavigate();
-  const [hover, setHover] = useState(true);
+  const dispatch = useDispatch()
 
-  const onHover = () => {
-    setHover(false);
-  };
-  const onLeave = () => {
-    setHover(true);
-  };
+  const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow, btnStatus } = useContext(ServiceContext);
+  //drag and drop image 
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    setImageOverlayShow(true)
+  }
 
-  const formik = useFormik({
-    initialValues: {
-      heading: formDatas.heading ? formDatas.heading : "",
-      des: formDatas.des ? formDatas.des : "",
-      altText: formDatas.altText ? formDatas.altText : "",
-      image: formDatas.image ? formDatas.image : "",
-    },
-    onSubmit: (values) => {
-      onNext(values);
-    },
-  });
-
-  const onChangeImage = async (e) => {
-    const { url } = await fetch("http://localhost:8000/upload").then((res) =>
-      res.json()
-    );
-
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: e.target.files[0],
+  const handleDrop = async (e) => {
+    setImageOverlayShow(false)
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
+    })
+    const resData = await res.json();
+    formik.setFieldValue("image", resData.signedUrl)
+    dispatch(updateServiceFormData("image", resData.signedUrl));
+  }
+  //onchange image
+  const onChange = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    // formData.append("image", "")
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData
     });
-
-    const imageUrl = url.split("?")[0];
-    formik.setFieldValue("image", imageUrl);
+    const resData = await res.json();
+    formik.setFieldValue("image", resData.signedUrl)
+    dispatch(updateServiceFormData("image", resData.signedUrl));
   };
 
-  const [btnStatus, setBtnStatus] = useState("Save as");
-  const [show, setShow] = useState(false);
-  const changeandupdate = async (value) => {
-    if (true) {
-      setShow(true);
-    }
-    if (value === "Save as Darft") {
-      setBtnStatus(value);
-      setShow(false);
-      const { heading, des, altText, image } = formik.values;
-      const data = {
-        id: id,
-        heading: heading,
-        des: des,
-        image: image,
-        altText: altText,
-        position: 0,
-        draft: true,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as Archive") {
-      setBtnStatus(value);
-      setShow(false);
-      const { heading, des, altText, image } = formik.values;
-      const data = {
-        id: id,
-        heading: heading,
-        des: des,
-        image: image,
-        altText: altText,
-        position: 0,
-        draft: false,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as") {
-      setBtnStatus(value);
-      setShow(false);
-    }
+  const handleChange = event => {
+    const { name, value } = event.target;
+    formik.setFieldValue(name, value);
+    dispatch(updateServiceFormData(name, value));
   };
+
+  //Notification Model Style
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      borderRadius: "15px",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "28.625rem",
+      height: "9.85rem",
+    },
+    overlay: {
+      background: "rgba(0,0,0,0.25)",
+    },
+  };
+
+  //Draft Model Style
+  const draftStyle = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      borderRadius: "15px",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "38.813rem",
+      height: '28.625rem'
+    },
+    overlay: {
+      background: "rgba(0,0,0,0.25)",
+    }
+  }
+
+  const handelBack = () => {
+    if (formik.dirty) {
+      setShowModel(true)
+    } else {
+      //all  values being empty
+      history("/ServicePage/AllService")
+      removeRedux()
+    }
+  }
+
+  //Filled Value save As Draft
+  const saveAsDraftbtn = async () => {
+    const res = await fetch("http://localhost:8000/service/addDraft", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formik.values)
+    });
+    // if (res.status === 200) {
+    setShowCardSuccessfull(true)
+    setShowModel(false)
+    // }
+  }
+  //Successfull Draft Button
+  const createDraft = () => {
+    history("/ServicePage/AllService")
+    setShowCardSuccessfull(false)
+    removeRedux()
+  }
+  //UnSaved Back
+  const backbtn = () => {
+    history("/ServicePage/AllService")
+    setShowModel(false)
+    removeRedux()
+  }
   return (
     <>
+      <div>
+        <ReactModal
+          isOpen={showModel}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }} className="cursor" onClick={() => setShowModel(!showModel)}>
+            <img src={close} alt="closebtn" />
+          </div>
+          <div
+          >
+            <p style={{ width: "100%", textAlign: "left", fontFamily: "EuclidMedium", fontSize: "18px" }}>
+              You have unsaved changes. Leaving this page
+              will discard them
+            </p>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+              columnGap: "1rem",
+            }}
+              className="popupbtns">
+              <button
+                className="popupbtn colour cursor"
+                onClick={() => backbtn()}>Okay</button>
+              <button
+                className="popupbtn cursor"
+                onClick={() => saveAsDraftbtn()}
+              >
+                Save as Draft
+              </button>
+            </div>
+          </div>
+        </ReactModal>
+      </div>
+      <div>
+        <ReactModal
+          isOpen={showCardSuccessfull}
+          style={draftStyle}
+          contentLabel="Example Modal"
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "71px",
+              flexDirection: "column",
+            }}
+          >
+            <img src={successful} alt="successfull" />
+            <h1>Saved as Draft</h1>
+            <p style={{ width: "25.075rem", textAlign: "center" }}>
+              Your edits have been successfully saved as a draft.
+              Take your time to review and refine your work.
+            </p>
+            <button
+              style={{
+                background: "#0047FF",
+                width: "35.063rem",
+                height: "3.125rem",
+                marginTop: "10%",
+                border: "none",
+                borderRadius: "5px",
+                color: "#ffff",
+                fontSize: "1rem",
+                fontFamily: "EuclidMedium",
+                cursor: "pointer",
+              }}
+              onClick={() => createDraft()}
+            >
+              Done
+            </button>
+          </div>
+        </ReactModal>
+      </div>
       <AddNewserviceContainer>
         <Container>
           <div
@@ -126,7 +228,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                 paddingTop: "17.5px",
                 cursor: "pointer",
               }}
-              onClick={() => history("/ServicePage/AllService")}
+              onClick={() => handelBack()}
             >
               <img src={Backicon} alt="" />
               <div
@@ -148,9 +250,8 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
               }}
             >
               <Archive
-                changeandupdate={changeandupdate}
                 btnStatus={btnStatus}
-                show={show}
+                changeandupdate={changeandupdate}
               />
             </div>
           </div>
@@ -179,61 +280,6 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Lable>Heading</Lable>
-                      {formik.values.heading.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className="input"
-                      style={{
-                        border:
-                          formik.values.heading.length <= 25
-                            ? "1px solid rgba(0, 0, 0, 0.1)"
-                            : "2px solid #E52F2F",
-                      }}
-                    >
-                      <input
-                        placeholder="Enter Heading"
-                        style={{
-                          fontSize: "16px",
-                          width: "430px",
-                          color:
-                            formik.values.heading.length <= 25
-                              ? "#000000"
-                              : "#E52f2f",
-                          height: "48px",
-                          border: "none",
-                          "::placeholder": {
-                            color: "#787878",
-                          },
-                        }}
-                        onChange={formik.handleChange("heading")}
-                        value={formik.values.heading}
-                      />
-                    </div>
-
-                    <span
-                      style={{
-                        position: "absolute",
-                        right: "10px",
-                        bottom: "16px",
-                        color: "#787878",
-                      }}
-                    >
-                      {formik.values.heading.length}/ 25
-                    </span>
-                  </div>
-                  <div style={{ paddingTop: "25px", position: "relative" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
                       <Lable>Description</Lable>
                       {formik.values.des.length > 250 && (
                         <span style={{ color: "#E52F2F" }}>
@@ -244,7 +290,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                     <div
                       className="textArea"
                       style={{
-                        height: "32.5rem",
+                        height: "630px",
                         border:
                           formik.values.des.length <= 250
                             ? "1px solid rgba(0, 0, 0, 0.1)"
@@ -253,12 +299,14 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                     >
                       <textarea
                         placeholder="Enter Description"
-                        onChange={formik.handleChange("des")}
+                        name="des"
+                        onChange={handleChange}
                         value={formik.values.des}
                         style={{
                           fontSize: "16px",
                           width: "430px",
-                          height: "490px",
+                          height: "600px",
+                          resize: "none",
                           border: "none",
                           color:
                             formik.values.des.length <= 250
@@ -282,27 +330,50 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                     >
                       {formik.values.des.length}/ 250
                     </span>
+
                   </div>
                 </div>
                 <div style={{ width: "849px" }}>
-                  <Lable>Heading</Lable>
-                  <div className="right_container">
-                    {hover ? (
-                      <div></div>
-                    ) : (
-                      <div
-                        style={{
-                          width: "151px",
-                          height: "62px",
-                          display: "flex",
-                          position: "absolute",
-                          right: "84px",
-                        }}
-                      >
-                        <img src={NotificationIcon} alt="" />
-                      </div>
-                    )}
-
+                  <Lable>Image</Lable>
+                  <div
+                    style={{
+                      width: "849px",
+                      height: "531px",
+                      border: "1px solid rgba(0, 0, 0, 0.1) ",
+                      borderRadius: "8px",
+                      fontSize: "16px",
+                      fontFamily: "Euclid",
+                      marginTop: "15px",
+                      color: "#787878",
+                      display: "flex",
+                      filter: imageOverlayShow && 'blur(0.8px)',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      // backgroundColor:"red"
+                    }}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                  >
+                    {imageOverlayShow &&
+                      <>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            width: '98%',
+                            height: '98%',
+                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
+                            border: '2px dashed #fff',
+                            borderRadius: '5px',
+                            zIndex: 9999,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                          }}
+                          onDragLeave={() => setImageOverlayShow(false)}
+                        >
+                        </div>
+                      </>
+                    }
                     <div
                       style={{
                         width: "50px",
@@ -313,65 +384,74 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                         marginRight: "36px",
                       }}
                     >
-                      {formik.values.image ? (
+                      {formik.values.image &&
                         <img
                           src={Trash}
                           alt="deletebutton"
                           onClick={() => formik.setFieldValue("image", "")}
-                        />
-                      ) : (
-                        <>
-                          <input
-                            type="file"
-                            className="file-upload"
-                            onChange={(e) => onChangeImage(e)}
-                            onMouseEnter={onHover}
-                            onMouseLeave={onLeave}
-                          ></input>
+                        />}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}
+                      onClick={() => { fileInputRef.current.click(); }}
+                    >
+                      {formik.values.image ? (
+                        <div
+                          style={{
+                            maxWidth: "650px",
+                            height: "420px",
+                          }}
+                        >
                           <img
-                            src={serviceImgIcon}
-                            alt=""
-                            className="file-input-icon"
+                            src={formik.values.image}
+                            alt="ProductImage"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
                           />
-                        </>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            width: "830px",
+                            // height: "94%",
+                            marginTop: "12px",
+                            marginLeft: "12px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <div style={{
+                            width: "608px",
+                            height: "420px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                          }}
+                          >
+                            <img
+                              src={DefaultProductIcon}
+                              alt="DefaultProductIcon"
+                            />
+                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <p
+                              style={{
+                                maxWidth: "299px",
+                                lineHeight: "200%",
+                                textAlign: "center"
+                              }}>
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                              <div>upload image “1920 x 1080” size</div>
+
+                            </p>
+                          </div>
+                        </div>
                       )}
                     </div>
-                    {formik.values.image ? (
-                      <div
-                        style={{
-                          width: "608px",
-                          height: "420px",
-                          margin: "90px 140px",
-                        }}
-                      >
-                        <img
-                          src={formik.values.image}
-                          alt="serviceImage"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        style={{
-                          width: "830px",
-                          height: "94%",
-                          marginTop: "12px",
-                          marginLeft: "12px",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img
-                          src={DefaultserviceIcon}
-                          alt="DefaultserviceIcon"
-                        />
-                      </div>
-                    )}
                   </div>
                   <div style={{ paddingTop: "22px", position: "relative" }}>
                     <div
@@ -381,7 +461,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Lable>Alternative Text</Lable>
+                      <Lable>Alt Text</Lable>
                       {formik.values.altText.length > 25 && (
                         <span style={{ color: "#E52F2F" }}>
                           Max 25 Characters
@@ -399,6 +479,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                     >
                       <input
                         placeholder="Enter Heading"
+                        name="altText"
                         style={{
                           fontSize: "16px",
                           width: "749px",
@@ -412,7 +493,7 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
                             color: "#787878",
                           },
                         }}
-                        onChange={formik.handleChange("altText")}
+                        onChange={handleChange}
                         value={formik.values.altText}
                       />
                     </div>
@@ -459,51 +540,42 @@ const EditNewCard = ({ formDatas, onNext, id }) => {
           >
             <div
               className="save_button"
-              style={
-                {
-                  // height: "2.8rem",
-                  // width: "141px",
-                }
-              }
-              onClick={() => history(`/servicePage/Allservice`)}
+              onClick={() => handelBack()}
             >
               Cancel
             </div>
-            {formik.values.heading !== "" &&
+            {
               formik.values.image !== "" &&
-              formik.values.des !== "" &&
-              formik.values.altText !== "" ? (
-              <div
-                className="save_button"
-                style={{
-                  // width: "141px",
-                  backgroundColor: "#0044FF",
-                  color: "#ffff",
-                  // padding: "0.5rem 1rem",
-                  // height: "2.5rem",
-                }}
-                onClick={formik.handleSubmit}
-              >
-                Next
-              </div>
-            ) : (
-              <div
-                className="save_button"
-                style={{
-                  // width: "141px",
-                  background: "#0044FF",
-                  color: "#FFFFFF",
-                  opacity: 0.2,
-                  cursor: "default",
-                  // height: "3.5rem",
-                }}
-              >
-                Next
-              </div>
-            )}
+                formik.values.des !== "" &&
+                formik.values.altText !== "" ? (
+                <div
+                  className="save_button"
+                  style={{
+                    backgroundColor: "#0044FF",
+                    color: "#ffff",
+                  }}
+                  onClick={onNext}
+                >
+                  Next
+                </div>
+              ) : (
+                <div
+                  className="save_button"
+                  style={{
+                    // width: "141px",
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                    opacity: 0.2,
+                    cursor: "default",
+                    // height: "3.5rem",
+                  }}
+                >
+                  Next
+                </div>
+              )}
           </div>
-        </Container>
-      </AddNewserviceContainer>
+        </Container >
+      </AddNewserviceContainer >
     </>
   );
 };

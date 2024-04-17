@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import SidebarMenu from "./SideBarMenu";
 import Add from "../../assets/Add.svg";
@@ -20,6 +20,7 @@ import careerIcon from "../../assets/careerIcon.svg"
 import careerIconA from "../../assets/careerIconA.svg"
 import whatsnewA from "../../assets/whatsnewA.svg"
 import whatsnew from "../../assets/whatsnew.svg"
+import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
     path: "/",
@@ -30,7 +31,7 @@ const routes = [
   {
     path: "/Home",
     name: "Home",
-    icon: home ,
+    icon: home,
     iconA: homeA,
   },
   {
@@ -120,9 +121,11 @@ const SideBar = () => {
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
+  const { setShowModel, dirty } = useContext(ProductContext)
   const location = useLocation();
-  const handleClick = (index) => {
-    setActiveIndex(index);
+  const history = useNavigate()
+  const handleClick = (index, event) => {
+    history()
   };
   return (
     <div className="main-container">
@@ -146,26 +149,31 @@ const SideBar = () => {
               );
             } */}
             return (
-              <div key={index} style={{ display: "flex", justifyContent: "space-between" }} className="link"
+              <div style={{}} className="link_container"
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <a
-                  href={route.path}
-                  className="link_text"
-                  style={{ display: "flex", alignItems: "center", textDecoration: "none", color: (location.pathname === route.page || location.pathname === route.path) ? '#0047ff' : '#787878' }}
+                <Link to={route.path} key={index} style={{ display: "flex", justifyContent: "space-between" }} className="link"
+                  onClick={(event) => handleClick(index, route.path)}
                 >
-                  {route.icon && <span style={{ paddingRight: "15px", }}>
-                    {(location.pathname === route.page || location.pathname === route.path) ? <img src={route.iconA} /> : <img src={route.icon} />}
-                  </span>}
-                  {route.name}
-                </a>
+                  <a
+                    // href={route.path}
+                    className="link_text"
+                    style={{ color: (location.pathname === route.page || location.pathname === route.path) ? '#0047ff' : '#787878' }}
+                  // onClick={(event) => handleClick(index, )}
+                  >
+                    {route.icon && <span style={{ paddingRight: "15px", }}>
+                      {(location.pathname === route.page || location.pathname === route.path) ? <img src={route.iconA} /> : <img src={route.icon} />}
+                    </span>}
+                    <p style={{ margin: "0px" }}>{route.name}</p>
+                  </a>
+                </Link>
                 {(hoveredIndex === index || location.pathname === route.path || location.pathname === route.page) && (
-                  <a href={route.page} style={{ display: 'flex', justifyContent: "center" }}
-                    onClick={() => handleClick(index)}
+                  <Link to={route.page} style={{ display: 'flex', justifyContent: "center", }}
+                    onClick={(event) => handleClick(index, route.page)}
                   >
                     <img src={Add} />
-                  </a>
+                  </Link>
                 )}
               </div>
 

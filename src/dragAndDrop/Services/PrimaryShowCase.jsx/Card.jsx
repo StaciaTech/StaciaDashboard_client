@@ -2,14 +2,15 @@ import { useDrag, useDrop } from "react-dnd";
 import dragAndDrop from "../../../assets/DragandDropicon.svg";
 import Write from "../../../assets/Write.svg";
 import fix from "../../../assets/fix.svg";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import productImage from "../../../assets/ProductImg.svg";
+import { updateServiceFormData } from "../../../redux/action";
+import { ServiceContext } from "../../../context/ServiceContext";
+import { useContext } from "react";
 
 export const Card = ({
   id,
   moveCard,
-  cards,
-  setCards,
   achieved,
   primaryShowcasePosition,
   pageName,
@@ -18,6 +19,7 @@ export const Card = ({
   card,
 }) => {
   const history = useNavigate();
+  const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "card",
@@ -41,6 +43,28 @@ export const Card = ({
   );
   const opacity = isDragging ? 0.2 : 2;
 
+  const { setBtnStatus } = useContext(ServiceContext)
+  const handle_edit = async (id) => {
+    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    setBtnStatus(data.selectedService.archive)
+    console.log(data.selectedService.archive)
+    dispatch(updateServiceFormData("des", data.selectedService.des));
+    dispatch(updateServiceFormData("image", data.selectedService.image));
+    dispatch(updateServiceFormData("altText", data.selectedService.altText));
+    dispatch(updateServiceFormData("form", data.selectedService.form));
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
+    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("heading", data.selectedService.title));
+    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
+    history(`/ServicePage/EditService/${id}`);
+  };
   return (
     <>
       <div
@@ -57,33 +81,6 @@ export const Card = ({
         }}
         className={achieved ? "freeze-card" : ""}
       >
-        {/* {achieved && (
-      <div
-        style={{
-          zIndex: "10",
-          position: "absolute",
-          right: "17px",
-          top: "166px",
-          bottom: "200px",
-        }}
-        // onClick={() => {
-        //   setFreezeCardOff(false);
-        // }}
-      >
-        <img
-          src={Edit}
-          alt=""
-          style={{ paddingLeft: "5px", zIndex: 10 }}
-          onClick={()=>history(`/${pageName}/Edit/${id}`)}
-        />
-        <img
-          src={fixed}
-          alt=""
-          style={{ paddingLeft: "5px", zIndex: 10 }}
-          onClick={() => fixHandelClick(id)}
-        />
-      </div>
-    )} */}
         {pageName ? (
           <div
             style={{
@@ -117,10 +114,11 @@ export const Card = ({
             </div>
           </div>
         ) : (
-          <div style={{ width: "100%", position: "relative", display: "flex" }}>
+          <div
+           ref={(node) => drag(drop(node))}
+          style={{ width: "100%", position: "relative", display: "flex" }}>
             <div style={{ padding: "12px 22px", width: "238px" }}>
               <img
-                ref={(node) => drag(drop(node))}
                 src={dragAndDrop}
                 alt=""
                 style={{ cursor: "move" }}
@@ -139,7 +137,7 @@ export const Card = ({
                   marginTop: "30px",
                 }}
               >
-                {card.heading}
+                {card.title}
               </div>
               <div
                 style={{
@@ -153,7 +151,7 @@ export const Card = ({
                   marginTop: "6px",
                 }}
               >
-                {card.description}
+                {card.des}
               </div>
               <div
                 style={{
@@ -162,14 +160,6 @@ export const Card = ({
                   marginTop: "64px",
                 }}
               >
-                {/* {achieved === true ? (
-                <input
-                  type="checkbox"
-                  name="fav_language"
-                  style={{ margin: "0", height: "18px", width: "18px" }}
-                  disabled
-                />
-              ) : ( */}
                 <label className="circular-checkbox">
                   <input
                     type="checkbox"
@@ -208,14 +198,14 @@ export const Card = ({
                   <img
                     src={Write}
                     alt="Write"
-                    onClick={() => history(`/ProductPage/Edit/${id}`)}
+                    onClick={() => handle_edit(card._id)}
                     style={{ cursor: "pointer" }}
                   />
 
                   <img
                     src={fix}
                     alt=""
-                    style={{ paddingLeft: "5px" }}
+                    style={{ paddingLeft: "5px", cursor:"pointer" }}
                     onClick={() => {
                       fixHandelClick(card);
                     }}

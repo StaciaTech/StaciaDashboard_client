@@ -1,29 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
-import EditNewCard from "./EditNewCard";
-import EditDetails from "./EditDetails";
-import EditPrimaryShowcase from "./EditPrimaryShowcase";
+import React, { useState, useEffect, useContext } from "react";
+import FormContainer from "./AddServiceDetailPage";
+import AddServicePrimaryShowcase from "./AddServicePrimaryShowcase";
+import AddNewServiceData from "./AddNewCrad";
 import { useDispatch, useSelector } from "react-redux";
 import { updateServiceFormData } from "../../redux/action";
-import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
-import { ProductContext } from "../../context/ProductContext";
 import { ServiceContext } from "../../context/ServiceContext";
 
-const EditService = () => {
-  const [step, setStep] = useState(1);
-  const id = useParams();
-  const history = useNavigate()
-  const [formDatas, setformDatas] = useState({});
+// Parent component
+const ServiceAddForm = () => {
   const dispatch = useDispatch();
-
-  const { setSuccessfullModel } = useContext(ServiceContext)
+  const [formDatas, setformDatas] = useState()
+  const [step, setStep] = useState(1);
   const savedData = useSelector((state) => state.services);
+  const { setSuccessfullModel,} = useContext(ServiceContext)
+
   useEffect(() => {
     setformDatas(savedData);
   }, [savedData]);
 
   const formik = useFormik({
     initialValues: {
+      heading: savedData.heading ? savedData.heading : "",
       des: savedData.des ? savedData.des : "",
       altText: savedData.altText ? savedData.altText : "",
       image: savedData.image ? savedData.image : "",
@@ -35,15 +33,18 @@ const EditService = () => {
       hashTag: savedData.hashTag ? savedData.hashTag : [],
     },
   });
-  const handleNextStep1 = () => {
+  const handleNextStep1 = (values) => {
     setStep(2);
   };
-  const handleNextStep2 = () => {
+
+  const handleNextStep2 = (serviceDetails) => {
     setStep(3);
   };
+
   const handlePrevious = () => {
     setStep(step - 1);
   };
+
 
   const remove = () => {
     dispatch(updateServiceFormData("des", ""));
@@ -56,67 +57,50 @@ const EditService = () => {
     dispatch(updateServiceFormData("domainName", ""));
     dispatch(updateServiceFormData("hashTag", ""))
   }
-
   const handleSubmit = async () => {
-    // Submit the form data
-    console.log(formik.values)
-    const res = await fetch(
-      `http://localhost:8000/service/selectedService/${id.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formDatas),
-      }
-    );
-    if (res.status === 200) {
-      setSuccessfullModel(true);
-      remove()
-    }
-  };
-  const changeandupdate = async () => {
-    const res = await fetch(`http://localhost:8000/service/ArchiveandUnArchive/${id.id}`, {
+    console.log(formDatas)
+    const res = await fetch("http://localhost:8000/service/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formik.values)
+      body: JSON.stringify(formDatas),
     });
-    history("/ServicePage/AllService")
-    remove()
-  }
+    const resData = await res.json();
+    if (resData.message === "Data upload successfully") {
+     remove()
+    setSuccessfullModel(true)
+    }
+  };
+
   return (
     <div>
       {step === 1 && (
-        <EditNewCard
+        <AddNewServiceData
           onNext={handleNextStep1}
-          formDatas={savedData}
+          savedData={savedData}
           formik={formik}
           removeRedux={remove}
-          changeandupdate={changeandupdate}
         />
       )}
       {step === 2 && (
-        <EditDetails
+        <FormContainer
           onNext={handleNextStep2}
-          formDatas={savedData}
+          savedData={savedData}
           onPrevious={handlePrevious}
           formik={formik}
-          changeandupdate={changeandupdate}
         />
       )}
       {step === 3 && (
-        <EditPrimaryShowcase
-          formDatas={savedData}
+        <AddServicePrimaryShowcase
+          savedData={savedData}
           onPrevious={handlePrevious}
           onSubmitValue={handleSubmit}
           formik={formik}
-          changeandupdate={changeandupdate}
         />
       )}
     </div>
   );
 };
 
-export default EditService;
+export default ServiceAddForm;
