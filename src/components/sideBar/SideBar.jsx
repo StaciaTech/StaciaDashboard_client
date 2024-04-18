@@ -25,7 +25,8 @@ const routes = [
   {
     path: "/",
     name: "Dashboard",
-    icon: <OverViewIcon />,
+    icon: overViewIcon,
+    iconA: overViewIconA,
   },
   {
     path: "/Home",
