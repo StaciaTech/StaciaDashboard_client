@@ -13,35 +13,71 @@
   height: 100%;
   padding-top: 2.5rem;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
 }
 .routes {
   display: flex;
+  width: 80%;
+  /* justify-content: center; */
   flex-direction: column;
-  gap: 1.6rem;
-  padding-left: 2.5rem;
+  gap: 1.5rem;
 }
 
+.link_container {
+  display: flex;
+  padding-right: 5px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
+  /* gap: px; */
+  /* padding: 15px 10px; */
+  /* border: 4px solid transparent; */
+  
+  /* transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045); */
+}
 .link {
   display: flex;
-  gap: 24px;
-  padding: 5px 10px;
+  padding: 10px;
+  justify-content: space-between;
+  flex-direction: row;
   text-decoration: none;
-  border: 4px solid transparent;
-  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  /* gap: px; */
+  padding: 15px 90px 15px 10px;
+  /* padding-right: 50; */
+  /* margin-right: 50px; */
+  /* border: 4px solid transparent; */
+  
+  /* transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045); */
 }
-.link.active .link_text {
+
+.icon{
+  padding-right: 15px;
+}
+.link_container:hover{
+  background-color: rgba(0, 71, 255, 0.1);
+  border-radius: 8px;
+}
+.linkN.active  .link_text {
   color: #0047ff;
 }
-.link.active .icon svg {
+.linkN.active .icon svg {
   fill: #0047ff;
 }
 .link_text {
   white-space: nowrap;
+  width: 100%;
   font-size: 18px;
   color: #787878;
   font-family: "EuclidMedium";
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 }
-
+.pluse.active .link_text{
+  color: #0047ff  ;
+}
 .menu {
   display: flex;
   color: white;
@@ -99,42 +135,55 @@
   padding: 10px;
   margin: 10px;
 }
-.saveasbtn {
-  /* border: 1px solid; */
-  width: 190px;
-  height: 59px;
+.unActivebtn {
+  width: 9.25rem;
+  height: 3.125rem;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
   color: #0047ff;
-
   background-color: #ffffff;
   font-family: EuclidMedium;
   font-size: 16px;
-}
-.bor {
   border: 1px solid #0047ff;
-}
-.archive-Draft {
-  color: #0047ff;
-  background-color: #ffffff;
-  border: none;
   cursor: pointer;
 }
-.BtnHead {
-  position: absolute;
-  top: 180;
+
+.activeBtn {
+  width: 9.25rem;
+  height: 3.125rem;
   display: flex;
-  flex-direction: column;
-  gap: 10;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-}
-.border {
-  width: 190px;
-  height: 2px;
-  background-color: black;
-  opacity: 0.1;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  color: #ffffff;
+  background-color: #0047ff;
+  font-family: EuclidMedium;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ffffff;
 }
 
-/* model */
+.popupbtns {
+  height: 3.125rem;
+  width: 17rem;
+}
+
+.popupbtn{
+  width: 8.75rem;
+  height: 100%;
+  background-color: #0047ff;
+  border: none;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: EuclidMedium;
+}
+.colour{
+  color: #7A7A7A;
+  background-color: #F5F5F5 ;
+}
+.cursor {
+  cursor: pointer;
+}

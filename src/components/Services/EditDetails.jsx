@@ -1,96 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Backicon from "../../assets/Backicon.svg";
 import Archive from "../Archive";
 import Add from "../../assets/Add.svg";
+import { ServiceContext } from "../../context/ServiceContext";
+import { updateServiceFormData } from "../../redux/action";
+import { useDispatch } from "react-redux"
 
-const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
+const EditDetails = ({ onPrevious, onNext, id, formik,changeandupdate }) => {
 
-  const history = useNavigate();
-  const [forms, setForms] = useState(() => {
-    return formDatas.form
-      ? formDatas.form
-      : [{ id: 1, heading: "", description: "" }];
-  });
+  const history = useNavigate()
+  const dispatch = useDispatch()
+  const { btnStatus } = useContext(ServiceContext)
   const [nextId, setNextId] = useState(2);
   const handleAddForm = () => {
-    setForms([...forms, { id: nextId, heading: "", description: "" }]);
+    formik.setFieldValue("form", [...formik.values.form, { id: nextId, heading: "", description: "" }]);
     setNextId(nextId + 1);
   };
+
   const handleInputChange = (id, event) => {
     const { name, value } = event.target;
-    const updatedForms = forms.map((form) =>
+    const updatedForms = formik.values.form.map((form) =>
       form.id === id ? { ...form, [name]: value } : form
     );
-    setForms(updatedForms);
+    formik.setFieldValue("form", updatedForms)
+    dispatch(updateServiceFormData("form", updatedForms))
   };
-  const handelSubmit = () => {
-    onNext(forms);
-  };
-  console.log()
-  //archive and draft function
-  const [btnStatus, setBtnStatus] = useState("Save as");
-  const [show, setShow] = useState(false);
-  const changeandupdate = async (value) => {
-    if (true) {
-      setShow(true);
-    }
-    if (value === "Save as Darft") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        id: id,
-        heading: formDatas.heading,
-        des: formDatas.des,
-        image: formDatas.serviceImg,
-        altText: formDatas.altText,
-        form: forms,
-        position: 0,
-        draft: true,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as Archive") {
-      setBtnStatus(value);
-      setShow(false);
-      const data = {
-        id: id,
-        heading: formDatas.heading,
-        des: formDatas.des,
-        image: formDatas.serviceImg,
-        altText: formDatas.altText,
-        form: forms,
-        position: 0,
-        draft: false,
-        archive: true,
-        primaryShowcase: false,
-      };
-      await fetch("http://localhost:8000/service/draftAndArchive", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      // history("/ServicePage/AllService");
-    }
-    if (value === "Save as") {
-      setBtnStatus(value);
-      setShow(false);
-    }
-  };
+
   const renderForms = () => {
-    return forms.map((form, index) => (
+    return formik.values.form.map((form, index) => (
       <div key={form.id} className="form-container">
         <div
           style={{
@@ -100,20 +39,12 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
           }}
         >
           <Lable>Heading {form.id}</Lable>
-          {/* {formik.values.heading.length > 25 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 25 Characters
-                        </span>
-                      )} */}
         </div>
         <div
           className="input"
           style={{
             width: "680px",
             border: "1px solid rgba(0, 0, 0, 0.1)",
-            //   formik.values.heading.length <= 25
-            //     ? "1px solid rgba(0, 0, 0, 0.1)"
-            //     : "2px solid #E52F2F",
           }}
         >
           <input
@@ -124,18 +55,12 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               fontSize: "16px",
               width: "630px",
 
-              //   color:
-              //     formik.values.heading.length <= 25
-              //       ? "#000000"
-              //       : "#E52f2f",
               height: "48px",
               border: "none",
               "::placeholder": {
                 color: "#787878",
               },
             }}
-            // onChange={formik.handleChange("heading")}
-            // value={formik.values.heading}
             value={form.heading}
             onChange={(e) => handleInputChange(form.id, e)}
           />
@@ -148,9 +73,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
             bottom: "16px",
             color: "#787878",
           }}
-        >
-          {/* {formik.values.heading.length}/ 25 */}
-        </span>
+        ></span>
 
         <div
           style={{
@@ -166,11 +89,6 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
             }}
           >
             <Lable>Description {form.id}</Lable>
-            {/* {formik.values.des.length > 250 && (
-                        <span style={{ color: "#E52F2F" }}>
-                          Max 250 Characters
-                        </span>
-                      )} */}
           </div>
           <div
             className="textArea"
@@ -178,16 +96,11 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               width: "680px",
               height: "19.5rem",
               border: "1px solid rgba(0, 0, 0, 0.1)",
-              //   formik.values.des.length <= 250
-              //     ? "1px solid rgba(0, 0, 0, 0.1)"
-              //     : "2px solid #E52F2F",
             }}
           >
             <textarea
               placeholder="Enter Description"
               name="description"
-              // onChange={formik.handleChange("des")}
-              // value={formik.values.des}
               value={form.description}
               onChange={(e) => handleInputChange(form.id, e)}
               style={{
@@ -195,10 +108,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
                 width: "630px",
                 height: "290px",
                 border: "none",
-                //   color:
-                //     formik.values.des.length <= 250
-                //       ? "#000000"
-                //       : "#E52f2f",
+                resize: "none",
                 fontFamily: "EuclidRegular",
                 "::placeholder": {
                   color: "#787878",
@@ -214,16 +124,14 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               bottom: "16px",
               color: "#787878",
             }}
-          >
-            {/* {formik.values.des.length}/ 250 */}
-          </span>
+          ></span>
         </div>
       </div>
     ));
   };
   return (
     <>
-      <AddNewProductContainer>
+      <AddNewserviceContainer>
         <Container>
           <div
             style={{
@@ -238,7 +146,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
                 paddingTop: "17.5px",
                 cursor: "pointer",
               }}
-            // onClick={() => history(-1)}
+              onClick={onPrevious}
             >
               <img src={Backicon} alt="" />
               <div
@@ -260,9 +168,8 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               }}
             >
               <Archive
-                changeandupdate={changeandupdate}
                 btnStatus={btnStatus}
-                show={show}
+                changeandupdate={changeandupdate}
               />
             </div>
           </div>
@@ -277,7 +184,6 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
           ></div>
           <div className="grid-container">
             {renderForms()}
-
             <div className="plus-container">
               <button
                 onClick={handleAddForm}
@@ -304,8 +210,8 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               </button>
             </div>
 
-            {/* save and Cancel button */}
           </div>
+          {/* horizontal line */}
           <div
             style={{
               width: "100%",
@@ -314,6 +220,7 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               marginTop: "34px",
             }}
           ></div>
+          {/* save and Cancel button */}
           <div
             style={{
               display: "flex",
@@ -324,29 +231,47 @@ const EditDetails = ({ formDatas, onPrevious, onNext, id }) => {
               marginTop: "33px",
             }}
           >
-            <div className="save_button" onClick={onPrevious}>
-              Privious
-            </div>
             <div
-              onClick={() => handelSubmit()}
               className="save_button"
-              style={{
-                backgroundColor: "#0044FF",
-                color: "#ffff",
-              }}
+              onClick={onPrevious}
             >
-              Next
+              Previous
             </div>
+            {
+              formik.values.form !== "" ? (
+                <div
+                  className="save_button"
+                  style={{
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                  }}
+                  onClick={onNext}
+                >
+                  Next
+                </div>
+              ) : (
+                <div
+                  className="save_button"
+                  style={{
+                    background: "#0044FF",
+                    color: "#FFFFFF",
+                    opacity: 0.2,
+                    cursor: "default",
+                  }}
+                >
+                  Next
+                </div>
+              )}
           </div>
         </Container>
-      </AddNewProductContainer>
+      </AddNewserviceContainer>
     </>
   );
 };
 
 export default EditDetails;
 
-const AddNewProductContainer = styled.div`
+const AddNewserviceContainer = styled.div`
   min-width: calc(100vw - 356px);
   background-color: #ffffff;
   margin: 0 22px 0 18px;
