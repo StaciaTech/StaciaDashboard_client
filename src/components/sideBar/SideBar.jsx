@@ -19,7 +19,7 @@ import SidebarMenu from "./SideBarMenu";
 const routes = [
   {
     path: "/",
-    name: "Overview",
+    name: "Dashboard",
     icon: <OverViewIcon />,
   },
   {

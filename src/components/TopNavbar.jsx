@@ -43,6 +43,7 @@ const TopNaveBard = styled.div`
   background-color: #0d0225;
   display: flex;
   align-items: center;
+  
 `;
 const StaciaLogo = styled.div`
   width: 201px;
