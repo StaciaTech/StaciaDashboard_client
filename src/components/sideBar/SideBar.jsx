@@ -24,7 +24,7 @@ import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
     path: "/",
-    name: "Overview",
+    name: "Dashboard",
     icon: overViewIcon,
     iconA: overViewIconA,
   },
