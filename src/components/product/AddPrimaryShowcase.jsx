@@ -21,7 +21,6 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
   const fileInputRef = useRef(null);
 
 
-  console.log(formik.values)
   const { hashTagModel, setHashModel, successfullModel, setSuccessfullModel, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext)
 
   const [dropdownShow, setDropdownShow] = useState(false);
@@ -68,14 +67,14 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
 
   const formiks = useFormik({
     initialValues: {
-      hashTash: savedData.hashTag ? savedData.hashTag : null,
+      hashTag: savedData.hashTag ? savedData.hashTag : null,
     },
     onSubmit: (values) => {
       // console.log(values.pDomainName, hashTageValues)
     }
   });
 
-
+console.log(formik.values.hashTag, formik.values)
   const customStyles = {
     content: {
       top: "50%",
@@ -169,14 +168,14 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
   };
 
   const enterInputValue = (value) => {
-    formik.setFieldValue("hashTash", [...formik.values.hashTash, value])
+    formik.setFieldValue("hashTag", [...formik.values.hashTag, value])
     sethashInputValue("")
-    dispatch(updateFormData("hashTag", [...formik.values.hashTash, value]))
+    dispatch(updateFormData("hashTag", [...formik.values.hashTag, value]))
   }
 
   const handelRemove = (tag) => {
-    const newArray = formik.values.hashTash.filter((value) => value !== tag)
-    formik.setFieldValue("hashTash", newArray)
+    const newArray = formik.values.hashTag.filter((value) => value !== tag)
+    formik.setFieldValue("hashTag", newArray)
     dispatch(updateFormData("hashTag", newArray))
   }
 
@@ -314,7 +313,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                       rowGap: "1rem",
                     }}
                   >
-                    {formiks.values.hashTash.map((tag, index) => (
+                    { formik.values.hashTag.length > 0 && formik.values.hashTag.map((tag, index) => (
                       <div key={index}
                         style={{
                           backgroundColor: "#F7F9FB",

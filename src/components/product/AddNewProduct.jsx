@@ -101,6 +101,7 @@ const AddNewProductPage = () => {
             removeRedux()
         }
     }
+    console.log(formik.values.hashTag.map((items)=>console.log(items)))
     return (
         <div>
             {step === 1 && (

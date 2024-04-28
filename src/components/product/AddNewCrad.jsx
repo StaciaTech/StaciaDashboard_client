@@ -119,26 +119,20 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
 
   //final back button
   const handelBack = () => {
-    const value = savedData
-    function hasNonEmptyValue(obj) {
-      for (const key in obj) {
-        if (obj[key] !== '' && obj[key] !== null && obj[key] !== undefined && obj[key].length !== 0) {
-          return true; // Found a non-empty value
-        }
-      }
-      return false; // All values are empty
-    }
-    // Check if any value is non-empty
-    if (hasNonEmptyValue(value)) {
-      // non-empty values
+    // all values being empty
+    if (formik.dirty) {
       setShowModel(true)
     } else {
-      // all values being empty
       history("/ProductPage/AllProduct")
       removeRedux()
     }
   }
 
+  const handelCancel = () => {
+    history("/ProductPage/AllProduct")
+    removeRedux()
+
+  }
   //Filled Value save As Draft
   const saveAsDraftbtn = async () => {
     const res = await fetch("http://localhost:8000/product/addDraft", {
@@ -613,7 +607,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
           >
             <div
               className="save_button"
-              onClick={() => handelBack()}
+              onClick={() => handelCancel()}
             >
               Cancel
             </div>

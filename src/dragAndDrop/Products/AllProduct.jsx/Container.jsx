@@ -155,7 +155,7 @@ export const Container = ({
             alignContent: "center",
           }}
         >
-          Archive / Drafts {clickedArray.length}
+          Archive / Drafts ({clickedArray.length})
         </p>
       </div>
       <div
