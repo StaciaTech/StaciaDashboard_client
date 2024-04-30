@@ -32,7 +32,7 @@ function App() {
       <div style={{ display: "flex", height: "100%" }}>
         <ProductProvider><SideBar /></ProductProvider>
         <Routes>
-          <Route path="/" element={<OverViewPage />} />
+          <Route path="/admin-dashboard" element={<OverViewPage />} />
           <Route path="/Home" element={<HomePage />} />
           <Route path="/Projects" element={<ProjectPage />} />
           <Route path="/Resources/Case_Study" element={<CaseStudy />} />

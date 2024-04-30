@@ -31,6 +31,7 @@ import Modal from "react-modal";
 import { IoMdClose } from "react-icons/io";
 import { FiCalendar } from "react-icons/fi";
 import { RiDownload2Line } from "react-icons/ri";
+import { FiFilter } from "react-icons/fi";
 const emails = [
   {
     id: 1,
@@ -146,6 +147,7 @@ const uptimeModalCustomStyles = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     width: "54rem",
+    height: "30rem",
     borderRadius: "0.9rem",
   },
   overlay: {
@@ -158,12 +160,27 @@ const downtimeData = [
   { sno: 2, date: "27/02/2023", time: "3:15 AM", duration: "2:30 Mins" },
   { sno: 3, date: "28/02/2023", time: "10:45 AM", duration: "1:20 Hrs" },
   { sno: 4, date: "01/03/2023", time: "8:30 PM", duration: "35 Mins" },
- ];
+  { sno: 5, date: "26/02/2023", time: "5:02 PM", duration: "4:05 Mins" },
+  { sno: 6, date: "27/02/2023", time: "3:15 AM", duration: "2:30 Mins" },
+  { sno: 7, date: "28/02/2023", time: "10:45 AM", duration: "1:20 Hrs" },
+  { sno: 8, date: "01/03/2023", time: "8:30 PM", duration: "35 Mins" },
+];
+
+const averageLoadingData = [
+  { sno: 1, pagename: "Landing Page", pageloadtime: "0.9 sec" },
+  { sno: 2, pagename: "All Product Page", pageloadtime: "1 sec" },
+  { sno: 3, pagename: "Chili Landing Page", pageloadtime: "2 sec" },
+  { sno: 4, pagename: "Contact Us", pageloadtime: "0.9 sec" },
+  { sno: 5, pagename: "All Service Page", pageloadtime: "0.5 sec" },
+  { sno: 6, pagename: "All Project Page", pageloadtime: "0.4 sec" },
+];
 
 const OverViewPage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [trafficSourceModal, setTrafficSourceModal] = useState(false);
   const [uptimeModal, setUptimeModal] = useState(false);
+  const [averageltModal, setAverageltModal] = useState(false);
+  const [popupBannerModal, setPopupBannerModal] = useState(false);
 
   const [startIndex, setStartIndex] = useState(0);
   const [dashboardData, setDashboardData] = useState(null);
@@ -174,6 +191,8 @@ const OverViewPage = () => {
     setModalIsOpen(false);
     setTrafficSourceModal(false);
     setUptimeModal(false);
+    setAverageltModal(false);
+    setPopupBannerModal(false);
   }
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -194,14 +213,48 @@ const OverViewPage = () => {
 
   const handleShiftUp = () => {
     setStartIndex((prevIndex) => Math.max(0, prevIndex - 1));
-  
   };
 
   const handleShiftDown = () => {
-
     setStartIndex((prevIndex) =>
       Math.min(dashboardData.goals.length, prevIndex + 1)
     );
+  };
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const options = [
+    'Total Views',
+    'New Users',
+    'Bounce Rate',
+    'Avg Time Spent',
+    'Mail Received',
+    'Instagram',
+    'X',
+    'Facebook',
+    'LinkedIn',
+    'Page1 view',
+    'Page 100 view',
+    'Uptime',
+    'Real Time Users',
+    'Direct Traffic',
+    'Email Marketing',
+    'Social Media Traffic',
+    'Online Forum',
+    'Search Engine',
+    'Free Quote - Machine Design',
+    'Free Quote - Project Documentation',
+    'Free Quote - Cad Modeling',
+    'Free Quote - Ansys',
+    'Free Quote - 3D Modeling',
+    'Avg Loading Time',
+    'Pop Up Banner Interaction',
+    'Information Technology - Mail',
+    'Agri Industries - Mail',
+    'Food Porcessing - Mail'
+  ];
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
   };
 
   return (
@@ -324,22 +377,32 @@ const OverViewPage = () => {
                 <>
                   <div className="addgoalformholder">
                     <form className="addgoalform">
-                      <input
-                        className="goalfield"
-                        type="text"
+                      
+                      <select className="goalfield goaldropdown" id="options" value={selectedOption} onChange={handleSelectChange}>
+        <option value="">Select Your Source</option>
+        {options.map((option, index) => (
+          <option key={index} value={option}>{option}</option>
+        ))}
+      </select>
+     <div style={{display:"flex", gap:"1rem"}}>
+      <input
+                        className="goalfield goalfield-col1"
+                        type=""
                         name="goaldesc"
                         id=""
                         placeholder="Enter Your Goal"
                         required
                       />
+                      
                       <input
-                        className="goalfield"
+                        className="goalfield goalfield-col2"
                         type="text"
                         name="Goal Target"
                         id=""
                         placeholder="Enter Your Target"
                         required
                       />
+                      </div>
                       <input className="formbtn" type="submit" value="Save" />
                     </form>
                   </div>
@@ -508,8 +571,24 @@ const OverViewPage = () => {
                     </div>
 
                     <div className="traffic-modal-right">
-                      <div className="goals-icon download-btn">
-                        <RiDownload2Line style={{ verticalAlign: "middle" }} />
+                      <div className="filter-btn">
+                        <FiFilter
+                          style={{
+                            verticalAlign: "middle",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </div>
+                      <div className="filter-btn">
+                        <RiDownload2Line
+                          size={23}
+                          style={{
+                            verticalAlign: "middle",
+
+                            cursor: "pointer",
+                            backgroundColor: "#F5F5F5",
+                          }}
+                        />
                       </div>
 
                       <IoMdClose
@@ -522,7 +601,9 @@ const OverViewPage = () => {
                       />
                     </div>
                   </div>
-                  <div className="uptimeheader">No. of Downtime {downtimeData.length}</div>
+                  <div className="uptimeheader">
+                    No. of Downtime {downtimeData.length}
+                  </div>
                   <div className="uptimetableheader">
                     <div className="uptime-thead col1">Sno</div>
                     <div className="uptime-thead col2">Downtime Date</div>
@@ -708,17 +789,6 @@ const OverViewPage = () => {
                 </div>
                 <div className="mailactionmenus-right">1-10 of 30</div>
               </div>
-
-              {/* <div className="maillists">
-            <div className="maillistitem">
-              <div className="maillistitem-left" >
-              <div className="maillistcheckbox"><input type="checkbox" name="" id="" /></div>
-              <div className="maillistname">Preethi</div>
-              </div>
-              <div className="maillistsubject">Lorem ipsum dolor sit amet consectetur adipisicing elit. </div>
-            </div>
-          </div> */}
-
               <div className="maillists">
                 {emails.map((email) => (
                   <Mail
@@ -790,6 +860,10 @@ const OverViewPage = () => {
 
               <div className="row3-left-col2">
                 <div className="row3-left-col2-up row5-left-col2-up ">
+                  <TbArrowsMaximize
+                    className="goals-icon average-maximize"
+                    onClick={() => setAverageltModal(!averageltModal)}
+                  />
                   <div>Average Loading Time</div>
                   <div
                     style={{
@@ -800,8 +874,115 @@ const OverViewPage = () => {
                   >
                     {dashboardData.AverageLoadingTime} sec
                   </div>
+                  {averageltModal && (
+                    <Modal
+                      isOpen={averageltModal}
+                      onRequestClose={closeModal}
+                      style={uptimeModalCustomStyles}
+                      contentLabel="Example Modal"
+                    >
+                      <div className="submit-modal-container">
+                        <div className="traffic-header traffic-source-header">
+                          <div className="traffic-modal-left uptime-left">
+                            <span
+                              style={{
+                                margin: "0 1rem 0 0.3rem",
+                                verticalAlign: "middle",
+                              }}
+                            >
+                              Average Loading Time
+                            </span>
+                            <span
+                              style={{
+                                color: "black",
+                                fontSize: "2.25rem",
+                                fontWeight: "600",
+                                margin: "0 1rem 0 0",
+                              }}
+                            >
+                              {" "}
+                              {dashboardData.AverageLoadingTime}{" "}
+                              <span
+                                style={{
+                                  color: "black",
+                                  fontSize: "1rem",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                sec
+                              </span>
+                            </span>
+                            <span
+                              style={{
+                                margin: "0 1rem 0 0.3rem",
+                                verticalAlign: "middle",
+                              }}
+                            >
+                              (This Month)
+                            </span>
+                          </div>
+
+                          <div className="traffic-modal-right">
+                            <div className="filter-btn">
+                              <FiFilter
+                                style={{
+                                  verticalAlign: "middle",
+                                  cursor: "pointer",
+                                }}
+                              />
+                            </div>
+                            <div className="filter-btn">
+                              <RiDownload2Line
+                                size={23}
+                                style={{
+                                  verticalAlign: "middle",
+
+                                  cursor: "pointer",
+                                  backgroundColor: "#F5F5F5",
+                                }}
+                              />
+                            </div>
+
+                            <IoMdClose
+                              style={{
+                                verticalAlign: "middle",
+                                color: "#787878",
+                                cursor: "pointer",
+                              }}
+                              onClick={closeModal}
+                            />
+                          </div>
+                        </div>
+                        <div className="uptimetableheader">
+                          <div className="uptime-thead avg-col1">Sno</div>
+                          <div className="uptime-thead avg-col2">Page Name</div>
+                          <div className="uptime-thead avg-col3">
+                            Page Load Time
+                          </div>
+                        </div>
+
+                        <div className="uptime-tbody">
+                          {averageLoadingData.map((entry, index) => (
+                            <div key={index} className="uptime-tdata">
+                              <div className="tdata avg-col1">{entry.sno}</div>
+                              <div className="tdata avg-col2">
+                                {entry.pagename}
+                              </div>
+                              <div className="tdata avg-col3">
+                                {entry.pageloadtime}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </Modal>
+                  )}
                 </div>
                 <div className="row3-left-col2-up row5-left-col2-up ">
+                  <TbArrowsMaximize
+                    className="goals-icon average-maximize"
+                    onClick={() => setPopupBannerModal(!popupBannerModal)}
+                  />
                   <div>Pop Up Banner Interaction</div>
                   <div
                     style={{
@@ -813,6 +994,93 @@ const OverViewPage = () => {
                     {dashboardData.PopUpBannerInteraction}
                   </div>
                 </div>
+                {popupBannerModal && (
+                  <Modal
+                    isOpen={popupBannerModal}
+                    onRequestClose={closeModal}
+                    style={uptimeModalCustomStyles}
+                    contentLabel="Example Modal"
+                  >
+                    <div className="submit-modal-container">
+                      <div className="traffic-header traffic-source-header">
+                        <div className="traffic-modal-left uptime-left">
+                          <PiTimerFill style={{ verticalAlign: "middle" }} />
+                          <span
+                            style={{
+                              margin: "0 1rem 0 0.3rem",
+                              verticalAlign: "middle",
+                            }}
+                          >
+                            Uptime
+                          </span>
+                          <span
+                            style={{
+                              color: "black",
+                              fontSize: "2.25rem",
+                              fontWeight: "600",
+                              margin: "0 1rem 0 0",
+                            }}
+                          >
+                            {" "}
+                            {dashboardData.Uptime}{" "}
+                          </span>
+                        </div>
+
+                        <div className="traffic-modal-right">
+                          <div className="filter-btn">
+                            <FiFilter
+                              size={20}
+                              style={{
+                                verticalAlign: "middle",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </div>
+                          <div className="filter-btn">
+                            <RiDownload2Line
+                              size={20}
+                              style={{
+                                verticalAlign: "middle",
+
+                                cursor: "pointer",
+                                backgroundColor: "#F5F5F5",
+                              }}
+                            />
+                          </div>
+
+                          <IoMdClose
+                            style={{
+                              verticalAlign: "middle",
+                              color: "#787878",
+                              cursor: "pointer",
+                            }}
+                            onClick={closeModal}
+                          />
+                        </div>
+                      </div>
+                      <div className="uptimeheader">
+                        No. of Downtime {downtimeData.length}
+                      </div>
+                      <div className="uptimetableheader">
+                        <div className="uptime-thead col1">Sno</div>
+                        <div className="uptime-thead col2">Downtime Date</div>
+                        <div className="uptime-thead col3">Time</div>
+                        <div className="uptime-thead col4">Duration</div>
+                      </div>
+
+                      <div className="uptime-tbody">
+                        {downtimeData.map((entry, index) => (
+                          <div key={index} className="uptime-tdata">
+                            <div className="tdata col1">{entry.sno}</div>
+                            <div className="tdata col2">{entry.date}</div>
+                            <div className="tdata col3">{entry.time}</div>
+                            <div className="tdata col4">{entry.duration}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </Modal>
+                )}
               </div>
             </div>
             <div className="row3-right row5-right">
