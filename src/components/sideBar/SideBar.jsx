@@ -23,63 +23,63 @@ import whatsnew from "../../assets/whatsnew.svg"
 import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
-    path: "/",
+    path: "/admin",
     name: "Dashboard",
     icon: overViewIcon,
     iconA: overViewIconA,
   },
   {
-    path: "/Home",
+    path: "/admin/Home",
     name: "Home",
     icon: home,
     iconA: homeA,
   },
   {
-    path: "/ServicePage/AllService",
+    path: "/admin/ServicePage/AllService",
     name: "Services",
     icon: serviceicon,
     iconA: serviceiconA,
     page: "/ServicePage/AddNewService"
   },
   {
-    path: "/ProductPage/AllProduct",
+    path: "/admin/ProductPage/AllProduct",
     name: "Products",
     icon: productIcon,
     iconA: productIconA,
     page: "/ProductPage/AddNewProduct"
   },
   {
-    path: "/Projects",
+    path: "/admin/Projects",
     name: "Projects",
     icon: projectIcon,
     iconA: projectIconA,
   },
   {
-    path: "/Resources",
+    path: "/admin/Resources",
     name: "Resources",
     icon: resourcesIcon,
     iconA: resourcesIconA,
     subRoutes: [
       {
-        path: "/Resources/Case_Study",
+        path: "/admin/Resources/Case_Study",
         name: "Case Study ",
         // icon: <CaseStudy />,
       },
       {
-        path: "/Resources/Articles",
+        path: "/admin/Resources/Articles",
         name: "Articles",
         // icon: <Articles />,
       },
     ],
   },
   {
-    path: "/Careers",
+    path: "/admin/Careers",
     name: "Careers",
     icon: careerIcon,
     iconA: careerIconA,
   },
   {
-    path: "/Whats New",
+    path: "/admin/Whats New",
     name: "What’s New",
     icon: whatsnew,
     iconA: whatsnewA,
@@ -88,12 +88,12 @@ const routes = [
 
 const HelpRoutes = [
   {
-    path: "/Support",
+    path: "/admin/Support",
     name: "Support",
     // icon: <Support />,
   },
   {
-    path: "/Settings",
+    path: "/admin/Settings",
     name: "Settings",
     // icon: <Settings />,
   },

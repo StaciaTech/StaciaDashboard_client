@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import SideBar from "./components/sideBar/SideBar";
 import TopNavbard from "./components/TopNavbar";
@@ -23,36 +23,56 @@ import EditProduct from "./components/product/EditProduct.jsx";
 import ProductProvider from "./context/ProductContext.jsx";
 import ServiceProvider from "./context/ServiceContext.jsx";
 import AudioRecorder from "./AudioRecorder.jsx";
+import AdminLayout from "../src/layout/AdminLayout"
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
   return (
     <>
-      <TopNavbard />  
-      <div style={{ display: "flex", height: "100%" }}>
-        <ProductProvider><SideBar /></ProductProvider>
+      {
+        location.pathname !== '/' && (
+          <>
+          {/* <TopNavbard />   */}
+      {/* <div style={{ display: "flex", height: "100%" }}> */}
+        {/* <ProductProvider><SideBar /></ProductProvider> */}
         <Routes>
-          <Route path="/admin-dashboard" element={<OverViewPage />} />
-          <Route path="/Home" element={<HomePage />} />
-          <Route path="/Projects" element={<ProjectPage />} />
-          <Route path="/Resources/Case_Study" element={<CaseStudy />} />
-          <Route path="/Resources/Articles" element={<Articles />} />
-          <Route path="/Careers" element={<CareersPage />} />
-          <Route path="/Whats New" element={<WhatsNewPage />} />
+        <Route path="/admin" element={
+         <AdminLayout> 
+          <OverViewPage />
+          </AdminLayout>
+          } />
+          <Route path="/admin/dashboard" element={
+         <AdminLayout> 
+          <OverViewPage />
+          </AdminLayout>
+          } />
+          <Route path="admin/Home" element={<AdminLayout><HomePage /></AdminLayout>} />
+          <Route path="admin/Projects" element={<AdminLayout><ProjectPage /></AdminLayout> } />
+          <Route path="admin/Resources/Case_Study" element={<AdminLayout><CaseStudy /></AdminLayout>} />
+          <Route path="admin/Resources/Articles" element={<AdminLayout><Articles /></AdminLayout>} />
+          <Route path="admin/Careers" element={<AdminLayout><CareersPage /></AdminLayout>} />
+          <Route path="admin/Whats New" element={<AdminLayout><WhatsNewPage /></AdminLayout>} />
 
-          <Route path="/ProductPage/AllProduct" element={<ProductProvider><AllProduct /></ProductProvider>} />
-          <Route path="/ProductPage/PrimaryProducts" element={
-            <ProductProvider><PrimaryProductPage /></ProductProvider>} />
-          <Route path="/ProductPage/AddNewProduct" element={<ProductProvider><AddNewProductPage /></ProductProvider>} />
-          <Route path="/ProductPage/EditProduct/:id" element={<ProductProvider><EditProduct /></ProductProvider>} />
+          <Route path="admin/ProductPage/AllProduct" element={<AdminLayout><ProductProvider><AllProduct /></ProductProvider></AdminLayout>} />
+          <Route path="admin/ProductPage/PrimaryProducts" element={
+            <AdminLayout>
+            <ProductProvider><PrimaryProductPage /></ProductProvider></AdminLayout>} />
+          <Route path="admin/ProductPage/AddNewProduct" element={ <AdminLayout><ProductProvider><AddNewProductPage /></ProductProvider></AdminLayout>} />
+          <Route path="admin/ProductPage/EditProduct/:id" element={<AdminLayout><ProductProvider><EditProduct /></ProductProvider></AdminLayout>} />
 
-          <Route path="/ServicePage/AllService" element={<ServiceProvider><AllService /></ServiceProvider>} />
-          <Route path="/ServicePage/PrimaryServices" element={<ServiceProvider><PrimaryService /></ServiceProvider>} />
-          <Route path="/ServicePage/AddNewService" element={<ServiceProvider><ServiceAddForm /></ServiceProvider>} />
-          <Route path="/ServicePage/EditService/:id" element={<ServiceProvider><EditService /></ServiceProvider>} />
+          <Route path="admin/ServicePage/AllService" element={<AdminLayout><ServiceProvider><AllService /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/ServicePage/PrimaryServices" element={<AdminLayout><ServiceProvider><PrimaryService /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/ServicePage/AddNewService" element={<AdminLayout><ServiceProvider><ServiceAddForm /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/ServicePage/EditService/:id" element={<AdminLayout><ServiceProvider><EditService /></ServiceProvider></AdminLayout>} />
+
         </Routes>
-      </div>
+      {/* </div> */}
 
+
+          </>
+        )
+      }
     </>
   );
 }
