@@ -18,7 +18,7 @@ const TopNavbard = () => {
           />
         </StaciaLogo>
         <WellCome>
-          Welcome, Manju Parkavi <img src={helloLogo} alt="" />
+          Welcome, admin! <img src={helloLogo} alt="" />
         </WellCome>
         <div style={{ position: "absolute", right: "23px" }}>
           <Box sx={{ flexGrow: 0 }}>
