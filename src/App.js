@@ -24,6 +24,11 @@ import ProductProvider from "./context/ProductContext.jsx";
 import ServiceProvider from "./context/ServiceContext.jsx";
 import AudioRecorder from "./AudioRecorder.jsx";
 import AdminLayout from "../src/layout/AdminLayout"
+import AdminLogin from "./pages/LoginPage/AdminLogin.jsx";
+import Password from "./pages/LoginPage/Passoword.jsx";
+import ForgotPassword from "./pages/LoginPage/ForgotPassword.jsx";
+import OtpVerify from "./pages/LoginPage/OtpVerify.jsx";
+import CreatePassword from "./pages/LoginPage/CreatePassword.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,11 +42,36 @@ function App() {
       {/* <div style={{ display: "flex", height: "100%" }}> */}
         {/* <ProductProvider><SideBar /></ProductProvider> */}
         <Routes>
-        <Route path="/admin" element={
-         <AdminLayout> 
+        <Route path="/admin" element={<AdminLayout> 
           <OverViewPage />
-          </AdminLayout>
+          </AdminLayout>} />
+          
+        <Route path="/admin-login" element={
+         
+          <AdminLogin />
+          
           } />
+          <Route path="/admin/password" element={
+         
+         <Password />
+         
+         } />
+         <Route path="/admin/forgotpassword" element={
+         
+         <ForgotPassword />
+         
+         } />
+         <Route path="/admin/otpverify" element={
+         
+         <OtpVerify />
+         
+         } />
+           <Route path="/admin/createpassword" element={
+         
+         <CreatePassword />
+         
+         } />
+
           <Route path="/admin/dashboard" element={
          <AdminLayout> 
           <OverViewPage />
@@ -54,17 +84,17 @@ function App() {
           <Route path="admin/Careers" element={<AdminLayout><CareersPage /></AdminLayout>} />
           <Route path="admin/Whats New" element={<AdminLayout><WhatsNewPage /></AdminLayout>} />
 
-          <Route path="admin/ProductPage/AllProduct" element={<AdminLayout><ProductProvider><AllProduct /></ProductProvider></AdminLayout>} />
-          <Route path="admin/ProductPage/PrimaryProducts" element={
+          <Route path="admin/Product/AllProduct" element={<AdminLayout><ProductProvider><AllProduct /></ProductProvider></AdminLayout>} />
+          <Route path="admin/Product/PrimaryProducts" element={
             <AdminLayout>
             <ProductProvider><PrimaryProductPage /></ProductProvider></AdminLayout>} />
-          <Route path="admin/ProductPage/AddNewProduct" element={ <AdminLayout><ProductProvider><AddNewProductPage /></ProductProvider></AdminLayout>} />
-          <Route path="admin/ProductPage/EditProduct/:id" element={<AdminLayout><ProductProvider><EditProduct /></ProductProvider></AdminLayout>} />
+          <Route path="admin/Product/AddNewProduct" element={ <AdminLayout><ProductProvider><AddNewProductPage /></ProductProvider></AdminLayout>} />
+          <Route path="admin/Product/EditProduct/:id" element={<AdminLayout><ProductProvider><EditProduct /></ProductProvider></AdminLayout>} />
 
-          <Route path="admin/ServicePage/AllService" element={<AdminLayout><ServiceProvider><AllService /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/ServicePage/PrimaryServices" element={<AdminLayout><ServiceProvider><PrimaryService /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/ServicePage/AddNewService" element={<AdminLayout><ServiceProvider><ServiceAddForm /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/ServicePage/EditService/:id" element={<AdminLayout><ServiceProvider><EditService /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/Service/AllService" element={<AdminLayout><ServiceProvider><AllService /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/Service/PrimaryServices" element={<AdminLayout><ServiceProvider><PrimaryService /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/Service/AddNewService" element={<AdminLayout><ServiceProvider><ServiceAddForm /></ServiceProvider></AdminLayout>} />
+          <Route path="admin/Service/EditService/:id" element={<AdminLayout><ServiceProvider><EditService /></ServiceProvider></AdminLayout>} />
 
         </Routes>
       {/* </div> */}
@@ -77,4 +107,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

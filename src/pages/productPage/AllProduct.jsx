@@ -52,7 +52,7 @@ export const AllProduct = () => {
                     color: "#ffffff",
                     cursor: "pointer",
                   }}
-                  onClick={() => history("/ProductPage/AllProduct")}
+                  onClick={() => history("/admin/Product/AllProduct")}
                 >
                   All Product Page
                 </div>
@@ -69,9 +69,9 @@ export const AllProduct = () => {
                     display: "flex",
                     cursor: "pointer",
                   }}
-                  onClick={() => history("/ProductPage/PrimaryProducts")}
+                  onClick={() => history("/admin/Product/PrimaryProducts")}
                 >
-                  Primary Showcase
+                  Primary Showcases
                 </div>
               </div>
             </div>

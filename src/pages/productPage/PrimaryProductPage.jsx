@@ -46,7 +46,7 @@ export const PrimaryProductPage = () => {
                   color: "#0047FF",
                   cursor: "pointer",
                 }}
-                onClick={() => history("/ProductPage/AllProduct")}
+                onClick={() => history("/admin/Product/AllProduct")}
               >
                 All Product Page
               </div>

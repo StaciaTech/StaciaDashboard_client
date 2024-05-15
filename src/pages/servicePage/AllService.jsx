@@ -52,7 +52,7 @@ const AllService = () => {
                     color: "#ffffff",
                     cursor: "pointer",
                   }}
-                  onClick={() => history("/ServicePage/AllService")}
+                  onClick={() => history("/admin/Service/AllService")}
                 >
                   All Service Page
                 </div>
@@ -69,7 +69,7 @@ const AllService = () => {
                     display: "flex",
                     cursor: "pointer",
                   }}
-                  onClick={() => history("/ServicePage/PrimaryServices")}
+                  onClick={() => history("/admin/Service/PrimaryServices")}
                 >
                   Primary Showcase
                 </div>

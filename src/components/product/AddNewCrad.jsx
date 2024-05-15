@@ -29,6 +29,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
   }
 
   const handleDrop = async (e) => {
+    
     setImageOverlayShow(false)
     e.preventDefault();
     const formData = new FormData();
@@ -39,21 +40,26 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
     })
     const resData = await res.json();
     formik.setFieldValue("image", resData.signedUrl)
+    console.log(resData.signedUrl)
     dispatch(updateFormData("image", resData.signedUrl));
   }
 
   //onchange image
   const onChange = async (e) => {
+    console.log("dropped")
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
+    formData.append('file', e.target.files[0]);
     // formData.append("image", "")
-    const res = await fetch("http://localhost:8000/upload", {
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     });
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    dispatch(updateFormData("image", resData.signedUrl));
+    console.log(resData)
+    formik.setFieldValue("image", resData.image)
+    formik.setFieldValue("imageType", resData.imageType)
+    // console.log(resData.signedUrl)
+    dispatch(updateFormData("image", resData.image));
   };
 
   const handleChange = event => {

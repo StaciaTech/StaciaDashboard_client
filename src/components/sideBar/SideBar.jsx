@@ -23,7 +23,7 @@ import whatsnew from "../../assets/whatsnew.svg"
 import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
-    path: "/admin",
+    path: "/admin/dashboard",
     name: "Dashboard",
     icon: overViewIcon,
     iconA: overViewIconA,
@@ -35,18 +35,18 @@ const routes = [
     iconA: homeA,
   },
   {
-    path: "/admin/ServicePage/AllService",
+    path: "/admin/Service/AllService",
     name: "Services",
     icon: serviceicon,
     iconA: serviceiconA,
-    page: "/ServicePage/AddNewService"
+    page: "/Service/AddNewService"
   },
   {
-    path: "/admin/ProductPage/AllProduct",
+    path: "/admin/Product/AllProduct",
     name: "Products",
     icon: productIcon,
     iconA: productIconA,
-    page: "/ProductPage/AddNewProduct"
+    page: "/Product/AddNewProduct"
   },
   {
     path: "/admin/Projects",

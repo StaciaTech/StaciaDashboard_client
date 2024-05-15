@@ -102,7 +102,7 @@ export const Container = ({
             border: "2px solid #0047FF",
             cursor: "pointer",
           }}
-          onClick={() => history(`/ProductPage/AddNewProduct`)}
+          onClick={() => history(`/admin/Product/AddNewProduct`)}
         >
           <div
             style={{

@@ -49,7 +49,7 @@ const PrimaryService = () => {
                   color: "#0047FF",
                   cursor: "pointer",
                 }}
-                onClick={() => history("/ServicePage/AllService")}
+                onClick={() => history("/admin/Service/AllService")}
               >
                 All Service Page
               </div>
