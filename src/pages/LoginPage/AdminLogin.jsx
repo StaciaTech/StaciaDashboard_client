@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import "../../styles/AdminLogin.css"
 import brandlogo from "../../assets/Group 547.png"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import axios from 'axios';
@@ -10,8 +10,9 @@ function AdminLogin(){
   const [emailVerified, SetEmailVerified] = useState(false)
   const [email, SetEmail] = useState("")
   const [passwordValue, SetPasswordValue]=useState("nil")
+  const navigate= useNavigate();
  
-
+ 
   function Login() {
     const [tempEmail, SetTempEmail] = useState("")
     const handleInputChange = (event) => {
@@ -19,6 +20,24 @@ function AdminLogin(){
       SetTempEmail(newemail);
       
     };
+    const verifyEmail =()=>{
+      {
+        const userData = {
+          email: tempEmail
+        };
+        axios.post("http://localhost:8000/admin/verify-email", userData).then((response) => {
+          console.log(response,response.status, response.data);
+          if(response.data.success){
+            alert(response.data.message)
+            SetEmail(tempEmail)
+            SetEmailVerified(true)
+          }
+          else{
+            alert(response.data.message)
+          }
+        });
+      }
+    }
     return (
       <div className="logincontainer">
           <div className="loginleft">
@@ -35,11 +54,11 @@ function AdminLogin(){
           <div className="header-primary">Welcome Back !</div>
           <div className="header-secondary">Kindly proceed with the login process in order to gain entry to your personal account.</div>
          
-          <input className="inputfield" value={tempEmail} onChange={handleInputChange}  placeholder='Email or Phone Number' required/>
-          <div className="btn" onClick={()=>{
-            SetEmailVerified(true)
-            SetEmail(tempEmail)
-            }} >
+          <input className="inputfield" value={tempEmail} onChange={handleInputChange}  placeholder='Email or Phone Number' onKeyDown={(e) => {
+        if (e.key === "Enter")
+            verifyEmail();
+        }} required/>
+          <div className="btn" onClick={verifyEmail} >
               Next
           </div>
           </div>
@@ -71,6 +90,7 @@ function AdminLogin(){
             alert(response.data.message)
             localStorage.setItem("token",response.data.token)
             localStorage.setItem("role","admin")
+            navigate('/admin/dashboard')
           }
           else{
             alert(response.data.message)
@@ -100,7 +120,10 @@ function AdminLogin(){
           <div className="header-primary">Enter Password</div>
           <div className="header-secondary">Please input your password to proceed further with authentication. </div>
          <div className="password-container">
-         <input className="inputfield" value={tempPassword} onChange={handleInputPasswordChange} type={passwordtype} placeholder='Enter Password'/>
+         <input className="inputfield" value={tempPassword} onChange={handleInputPasswordChange} type={passwordtype} placeholder='Enter Password'  onKeyDown={(e) => {
+        if (e.key === "Enter")
+          handleSubmit();
+        }} />
          {passwordtype === "text" ? (
                   <MdOutlineVisibilityOff
                     size={21}

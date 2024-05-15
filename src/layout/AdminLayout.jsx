@@ -10,8 +10,8 @@ import { Navigate, useNavigate } from 'react-router-dom';
 const AdminLayout = (props) => {
     const navigate = useNavigate();
     
-    const localtoken = localStorage.getItem(token)
-    const role = localStorage.getItem(role)
+    const localtoken = localStorage.getItem("token")
+    const role = localStorage.getItem("role")
    
     if(localtoken && role==="admin"){
         return (
@@ -26,7 +26,7 @@ const AdminLayout = (props) => {
         
     }
     else{
-        navigate('/admin-login')
+       return <Navigate to='/admin-login'/>
     }
     
 }

@@ -42,6 +42,10 @@ function App() {
       {/* <div style={{ display: "flex", height: "100%" }}> */}
         {/* <ProductProvider><SideBar /></ProductProvider> */}
         <Routes>
+        <Route path="/admin" element={<AdminLayout> 
+          <OverViewPage />
+          </AdminLayout>} />
+          
         <Route path="/admin-login" element={
          
           <AdminLogin />

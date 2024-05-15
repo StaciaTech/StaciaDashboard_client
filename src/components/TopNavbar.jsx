@@ -46,7 +46,7 @@ const TopNaveBard = styled.div`
   
 `;
 const StaciaLogo = styled.div`
-  width: 201px;
+  // width: 201px;
   height: 24.291px;
   padding-left: 57px;
   /* background: red; */
