@@ -109,7 +109,7 @@ const AddServicePrimaryShowcase = ({
   };
   const btn_handeler = () => {
     setShowModel(false);
-    history("/ServicePage/AllService");
+    history("/admin/Service/AllService");
   };
 
   const continues = () => {

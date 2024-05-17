@@ -34,6 +34,8 @@ const EditProduct = () => {
             heading: savedData.heading ? savedData.heading : "",
             domainName: savedData.domainName ? savedData.domainName : '',
             hashTag: savedData.hashTag ? savedData.hashTag : [],
+            internalUrl: savedData.internalUrl? savedData.internalUrl   :""
+
         },
         onSubmit: (values) => {
             // onNext(values)
@@ -73,6 +75,8 @@ const EditProduct = () => {
         dispatch(updateFormData("pAltText", ""));
         dispatch(updateFormData("domainName", ""));
         dispatch(updateFormData("hashTag", ""))
+        dispatch(updateFormData("internalUrl", ""))
+
     }
     const handleSubmit = async () => {
         const data = {
@@ -109,7 +113,7 @@ const EditProduct = () => {
             },
             body: JSON.stringify(formik.values)
         });
-        history("/ProductPage/AllProduct")
+        history("/admin/Product/AllProduct")
         removeRedux()
     }
     return (

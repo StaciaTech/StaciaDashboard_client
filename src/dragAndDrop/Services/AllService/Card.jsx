@@ -67,7 +67,7 @@ export const Card = ({
     dispatch(updateServiceFormData("heading", data.selectedService.title));
     dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
-    history(`/ServicePage/EditService/${id}`);
+    history(`/admin/Service/EditService/${id}`);
   };
   const undohandeler = (product) => {
     setPageName(false);
@@ -266,7 +266,7 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
     dispatch(updateServiceFormData("heading", data.selectedService.title));
     dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
-    history(`/ServicePage/EditService/${id}`);
+    history(`/admin/Service/EditService/${id}`);
   };
   return (
     <div key={card.id}>

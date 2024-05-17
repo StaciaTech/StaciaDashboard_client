@@ -10,6 +10,7 @@ import Edit from "../../../assets/Edit.svg";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../../redux/action";
 import { ProductContext } from "../../../context/ProductContext";
+import axios from "axios";
 export const Card = ({
   id,
   moveCard,
@@ -46,6 +47,7 @@ export const Card = ({
   const opacity = isDragging ? 0.4 : 1;
 
   const [pageName, setPageName] = useState(card.page);
+  const [signedUrl, SetSignedUrl] =useState("")
   const dispatch = useDispatch()
   const handle_edit = async (id) => {
     const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
@@ -76,7 +78,8 @@ export const Card = ({
     dispatch(updateFormData("domainName", data.selectedProduct.domainName))
     dispatch(updateFormData("heading", data.selectedProduct.title));
     dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
-    history(`/ProductPage/EditProduct/${id}`);
+    dispatch(updateFormData("internalUrl",signedUrl))
+    history(`/admin/Product/EditProduct/${id}`);
   };
   const undohandeler = (product) => {
     setPageName(false);
@@ -87,6 +90,19 @@ export const Card = ({
         : [...prevSelected, product];
     });
   };
+  axios.post("http://localhost:8000/product/getimageurl",{
+      image:card.image,
+    imageType:"image/png",
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+     
+      SetSignedUrl(response.data.url)
+     
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   return (
     <>
       <div
@@ -206,8 +222,10 @@ export const Card = ({
                   height: "75%",
                 }}
               >
+                {console.log("inside card details",card)}
                 <img
-                  src={card.image}
+                  // src={card.image}
+                  src={signedUrl}
                   alt="productImage"
                   style={{ width: "10.439rem" }}
                 />
@@ -284,7 +302,7 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
     dispatch(updateFormData("domainName", data.selectedProduct.domainName))
     dispatch(updateFormData("heading", data.selectedProduct.title));
     dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
-    history(`/ProductPage/EditProduct/${id}`);
+    history(`/admin/Product/EditProduct/${id}`);
   };
   return (
     <div key={card.id}>

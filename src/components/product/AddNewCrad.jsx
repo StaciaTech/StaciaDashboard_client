@@ -14,11 +14,14 @@ import close from '../../assets/close.svg'
 import successful from "../../assets/successful.svg";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../redux/action";
+import axios from "axios";
 
 const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
   const fileInputRef = useRef(null);
   const history = useNavigate();
   const dispatch = useDispatch()
+  const [signedUrl, SetSignedUrl] =useState("")
+  
 
   const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext);
 
@@ -33,15 +36,29 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
     setImageOverlayShow(false)
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
-    })
+    });
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    console.log(resData.signedUrl)
-    dispatch(updateFormData("image", resData.signedUrl));
+    console.log(resData)
+    formik.setFieldValue("image", resData.image)
+    formik.setFieldValue("imageType", resData.imageType)
+   
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    // console.log(resData.signedUrl)
+    dispatch(updateFormData("image", resData.image));
   }
 
   //onchange image
@@ -58,6 +75,18 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
     console.log(resData)
     formik.setFieldValue("image", resData.image)
     formik.setFieldValue("imageType", resData.imageType)
+   
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
     // console.log(resData.signedUrl)
     dispatch(updateFormData("image", resData.image));
   };
@@ -140,7 +169,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
       setShowModel(true)
     } else {
       // all values being empty
-      history("/ProductPage/AllProduct")
+      history("/admin/Product/AllProduct")
       removeRedux()
     }
   }
@@ -159,13 +188,13 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
   }
   //Successfull Draft Button
   const createDraft = () => {
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
     setShowCardSuccessfull(false)
     removeRedux()
   }
   //UnSaved Back
   const backbtn = () => {
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
     setShowModel(false)
     removeRedux()
   }
@@ -481,7 +510,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                           }}
                         >
                           <img
-                            src={formik.values.image}
+                            src={signedUrl}
                             alt="ProductImage"
                             style={{
                               width: "100%",

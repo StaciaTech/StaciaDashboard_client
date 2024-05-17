@@ -63,7 +63,7 @@ export const Card = ({
     dispatch(updateServiceFormData("heading", data.selectedService.title));
     dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
-    history(`/ServicePage/EditService/${id}`);
+    history(`/admin/Service/EditService/${id}`);
   };
   return (
     <>

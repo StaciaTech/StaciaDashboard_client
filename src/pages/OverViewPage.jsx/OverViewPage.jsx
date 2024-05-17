@@ -357,7 +357,7 @@ const OverViewPage = () => {
                   {" "}
                   {addGoals ? (
                     <div
-                      className="cancel-btn"
+                      className="cancel-goal-btn"
                       onClick={() => setAddGoals(!addGoals)}
                     >
                       {" "}

@@ -28,7 +28,7 @@ function AdminLogin(){
         axios.post("http://localhost:8000/admin/verify-email", userData).then((response) => {
           console.log(response,response.status, response.data);
           if(response.data.success){
-            alert(response.data.message)
+            // alert(response.data.message)
             SetEmail(tempEmail)
             SetEmailVerified(true)
           }
@@ -87,7 +87,7 @@ function AdminLogin(){
         axios.post("http://localhost:8000/admin/login", userData).then((response) => {
           console.log(response,response.status, response.data);
           if(response.data.success){
-            alert(response.data.message)
+            // alert(response.data.message)
             localStorage.setItem("token",response.data.token)
             localStorage.setItem("role","admin")
             navigate('/admin/dashboard')

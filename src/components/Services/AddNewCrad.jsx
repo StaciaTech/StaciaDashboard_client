@@ -16,9 +16,12 @@ import { updateServiceFormData } from "../../redux/action";
 import { ServiceContext } from "../../context/ServiceContext";
 import ReactModal from "react-modal";
 import close from '../../assets/close.svg'
+import axios from "axios";
 
 const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
   const history = useNavigate();
+  const [signedUrl, SetSignedUrl] =useState("")
+
   const fileInputRef = useRef(null);
   const dispatch = useDispatch()
 
@@ -34,27 +37,57 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
     setImageOverlayShow(false)
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      body: formData
-    })
-    const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    dispatch(updateServiceFormData("image", resData.signedUrl));
-  }
-  //onchange image
-  const onChange = async (e) => {
-    const formData = new FormData();
-    formData.append('image', e.target.files[0]);
-    // formData.append("image", "")
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     });
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    dispatch(updateServiceFormData("image", resData.signedUrl));
+    console.log(resData)
+    formik.setFieldValue("image", resData.image)
+    formik.setFieldValue("imageType", resData.imageType)
+   
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    // console.log(resData.signedUrl)
+    dispatch(updateServiceFormData("image", resData.image));
+  }
+  //onchange image
+  const onChange = async (e) => {
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    // formData.append("image", "")
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
+      method: "POST",
+      body: formData
+    });
+    const resData = await res.json();
+    console.log(resData)
+    formik.setFieldValue("image", resData.image)
+    formik.setFieldValue("imageType", resData.imageType)
+   
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    // console.log(resData.signedUrl)
+    dispatch(updateServiceFormData("image", resData.image));
   };
 
   const handleChange = event => {
@@ -110,7 +143,7 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
       setShowModel(true)
     } else {
       // all values being empty
-      history("/ServicePage/AllService")
+      history("/admin/Service/AllService")
       removeRedux()
     }
   }
@@ -129,14 +162,14 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
   }
   //UnSaved Back
   const backbtn = () => {
-    history("/ServicePage/AllService")
+    history("/admin/Service/AllService")
     setShowModel(false)
     removeRedux()
   }
 
   //Successfull Draft Button
   const createDraft = () => {
-    history("/ServicePage/AllService")
+    history("/admin/Service/AllService")
     setShowCardSuccessfull(false)
     removeRedux()
   }
@@ -534,7 +567,7 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
           >
             <div
               className="save_button"
-              onClick={() => history(`/servicePage/Allservice`)}
+              onClick={() => history(`/admin/service/Allservice`)}
             >
               Cancel
             </div>

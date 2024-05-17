@@ -114,7 +114,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik, changeArchive }
   }
   const Done = () => {
     setSuccessfullModel(false);
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
   }
 
   const continues = () => {
@@ -224,7 +224,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik, changeArchive }
         },
         body: JSON.stringify(data)
       });
-      history("/ProductPage/AllProduct")
+      history("/admin/Product/AllProduct")
     } else {
       const res = await fetch("http://localhost:8000/product/draftAndArchive", {
         method: "POST",
@@ -233,7 +233,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik, changeArchive }
         },
         body: JSON.stringify(data)
       });
-      history("/ProductPage/AllProduct")
+      history("/admin/Product/AllProduct")
     }
   };
 

@@ -123,7 +123,7 @@ const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
       setShowModel(true)
     } else {
       //all  values being empty
-      history("/ProductPage/AllProduct")
+      history("/admin/Product/AllProduct")
       removeRedux()
     }
   }
@@ -144,13 +144,13 @@ const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
   }
   //Successfull Draft Button
   const createDraft = () => {
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
     setShowCardSuccessfull(false)
     removeRedux()
   }
   //UnSaved Back
   const backbtn = () => {
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
     setShowModel(false)
     removeRedux()
   }
@@ -470,7 +470,7 @@ const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
                           }}
                         >
                           <img
-                            src={formik.values.image}
+                            src={formik.values.internalUrl}
                             alt="ProductImage"
                             style={{
                               width: "100%",

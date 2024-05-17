@@ -111,7 +111,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
   }
   const Done = () => {
     setSuccessfullModel(false);
-    history("/ProductPage/AllProduct")
+    history("/admin/Product/AllProduct")
   }
 
   const continues = () => {
