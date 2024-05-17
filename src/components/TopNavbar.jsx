@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import staciaLogo from "../assets/StaciaLogo.svg";
 import helloLogo from "../assets/helloLogo.svg";
 import { Avatar, Box, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import profilePic from "../assets/ProfilePic.svg";
+import "../styles/Navbar.css"
+import { useNavigate } from "react-router-dom";
 
 const TopNavbard = () => {
+  const navigate=useNavigate()
+  const [logoutModal,setLogoutModal]=useState(false)
+  const handleLogout=()=>{
+    localStorage.removeItem("token")
+    localStorage.removeItem("role")
+    navigate('/admin-login')
+    
+  }
   return (
     <>
       <TopNaveBard>
@@ -22,14 +32,35 @@ const TopNavbard = () => {
         </WellCome>
         <div style={{ position: "absolute", right: "23px" }}>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+           
               <IconButton sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={profilePic} />
+                <Avatar alt="Remy Sharp" src={profilePic} onClick={()=>{setLogoutModal(!logoutModal)}}/>
               </IconButton>
-            </Tooltip>
+           
+            
           </Box>
         </div>
+       
       </TopNaveBard>
+      {logoutModal && <div className="modalcontainer">
+        
+        <div className="modalleft">
+        <img src={profilePic} alt="" />
+        </div>
+        <div className="modalright">
+          <div className="user-details">
+          <div className="username">User Name</div>
+        <div className="user-email">admin@staciacorp.com</div>
+          </div>
+       <div className="btn-holder">
+       <button className="logout-btn" onClick={handleLogout}>Logout</button>
+
+       </div>
+        </div>
+        </div>
+
+        }
+      
     </>
   );
 };
@@ -43,6 +74,7 @@ const TopNaveBard = styled.div`
   background-color: #0d0225;
   display: flex;
   align-items: center;
+
   
 `;
 const StaciaLogo = styled.div`

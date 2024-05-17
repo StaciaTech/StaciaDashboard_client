@@ -83,7 +83,7 @@ const EditService = () => {
       },
       body: JSON.stringify(formik.values)
     });
-    history("/ServicePage/AllService")
+    history("/admin/Service/AllService")
     remove()
   }
   return (

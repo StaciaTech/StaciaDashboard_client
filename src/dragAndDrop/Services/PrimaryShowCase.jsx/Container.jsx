@@ -97,7 +97,7 @@ const Container = ({ handleProductSelect }) => {
             border: "2px solid #0047FF",
             cursor: "pointer",
           }}
-          onClick={() => history(`/ServicePage/AddNewService`)}
+          onClick={() => history(`/admin/Service/AddNewService`)}
         >
           <div
             style={{

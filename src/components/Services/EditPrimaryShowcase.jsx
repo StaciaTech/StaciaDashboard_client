@@ -97,7 +97,7 @@ const EditPrimaryShowcase = ({ onPrevious, formDatas, onSubmitValue, id, formik,
   };
   const btn_handeler = () => {
     setSuccessfullModel(false);
-    history("/ServicePage/AllService");
+    history("/admin/Service/AllService");
   };
   const continues = () => {
     setHashModel(true)

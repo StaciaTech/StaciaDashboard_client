@@ -17,8 +17,10 @@ const initialStates = {
   pImage:"",
   pAltText:"",
   heading:"",
+  imageType:"",
   domainName:"",
   hashTag:[],
+  internalUrl:"",
 }
 
 export const productSlice = createSlice({

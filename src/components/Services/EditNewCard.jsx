@@ -103,7 +103,7 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
       setShowModel(true)
     } else {
       //all  values being empty
-      history("/ServicePage/AllService")
+      history("/admin/Service/AllService")
       removeRedux()
     }
   }

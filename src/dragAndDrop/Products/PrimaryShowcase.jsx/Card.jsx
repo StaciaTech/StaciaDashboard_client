@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../../redux/action";
 import { ProductContext } from "../../../context/ProductContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
 
 export const Card = ({
   id,
@@ -18,6 +19,7 @@ export const Card = ({
   card,
 }) => {
   const history = useNavigate();
+  const [signedUrl, SetSignedUrl] =useState("")
   const { setBtnStatus } = useContext(ProductContext)
   const [{ isDragging }, drag] = useDrag(
     () => ({
@@ -63,8 +65,21 @@ export const Card = ({
     dispatch(updateFormData("domainName", data.selectedProduct.domainName))
     dispatch(updateFormData("heading", data.selectedProduct.title));
     dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
-    history(`/ProductPage/EditProduct/${id}`);
+    history(`/admin/Product/EditProduct/${id}`);
   };
+
+  axios.post("http://localhost:8000/product/getimageurl",{
+      image:card.image,
+    imageType:"image/png",
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+      dispatch(updateFormData("internalUrl", response.data.url))
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   return (
     <>
@@ -217,7 +232,7 @@ export const Card = ({
                   height: "75%",
                 }}
               >
-                <img src={card.image} alt="ProductImage" />
+                <img src={signedUrl} alt="ProductImage"  style={{ width: "10.439rem" }}/>
               </div>
               <div
                 style={{

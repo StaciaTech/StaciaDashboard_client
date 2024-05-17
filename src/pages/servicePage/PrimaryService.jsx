@@ -67,7 +67,7 @@ const PrimaryService = () => {
                   cursor: "pointer",
                   background: "#0047FF",
                 }}
-                onClick={() => history("/ServicePage/PrimaryServices")}
+                onClick={() => history("/admin/Service/PrimaryServices")}
               >
                 Primary Showcase
               </div>
