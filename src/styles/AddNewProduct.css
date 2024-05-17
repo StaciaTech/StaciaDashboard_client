@@ -1,0 +1,127 @@
+.input {
+  width: 31.75rem;
+  height: 3.12rem;
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: EuclidRegular;
+  margin-top: 0.95rem;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+input::placeholder {
+  color: #787878;
+  font-family: EuclidRegular;
+  opacity: 0.4;
+}
+input:focus {
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  outline: none;
+}
+.textArea {
+  width: 508px;
+  height: 520px;
+  padding-left: 16px;
+  padding-top: 11px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: EuclidRegular;
+  color: #000000;
+  margin-top: 15px;
+  resize: none;
+}
+.primaryShowcase_textArea {
+  width: 508px;
+  height: 288px;
+  padding-left: 16px;
+  padding-top: 11px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: EuclidRegular;
+  color: #000000;
+  margin-top: 15px;
+  resize: none;
+}
+textarea::placeholder {
+  color: #787878;
+  font-family: EuclidRegular;
+  opacity: 0.4;
+}
+textArea:focus {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+.right_container {
+  width: 849px;
+  height: 531px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: Euclid;
+  margin-top: 15px;
+  color: #787878;
+  display: flex;
+}
+.right_input {
+  width: 825px;
+  height: 50px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: EuclidRegular;
+  margin-top: 15px;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+
+.file-upload {
+  /* width: 50px;
+  height: 50px; */
+  position: absolute;
+  background-color: #000000;
+  /* z-index: 10; */
+}
+.file-upload:focus {
+  border: none;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+  color: transparent;
+}
+
+.save_button {
+  border: 1px solid #0047ff;
+  width: 141px;
+  border-radius: 5px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-family: EuclidMedium;
+  color: #0047ff;
+  cursor: pointer;
+}
+.modelBox {
+  /* width: 100%; */
+  height: 3.12rem;
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: EuclidRegular;
+  margin-top: 0.95rem;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
