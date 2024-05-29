@@ -4,22 +4,22 @@ import { AnimatePresence } from "framer-motion";
 import SidebarMenu from "./SideBarMenu";
 import Add from "../../assets/Add.svg";
 import { useNavigate, useLocation } from "react-router-dom";
-import projectIcon from "../../assets/projectIcon.svg"
-import projectIconA from "../../assets/projectIconA.svg"
-import overViewIcon from "../../assets/overViewIcon.svg"
-import overViewIconA from "../../assets/overViewIconA.svg"
-import home from "../../assets/homeicon.svg"
-import homeA from "../../assets/homeiconA.svg"
-import serviceicon from "../../assets/serviceicon.svg"
-import serviceiconA from "../../assets/serviceiconA.svg"
-import productIcon from "../../assets/productIcon.svg"
-import productIconA from "../../assets/productIconA.svg"
-import resourcesIcon from "../../assets/resourcesIcon.svg"
-import resourcesIconA from "../../assets/resourcesIconA.svg"
-import careerIcon from "../../assets/careerIcon.svg"
-import careerIconA from "../../assets/careerIconA.svg"
-import whatsnewA from "../../assets/whatsnewA.svg"
-import whatsnew from "../../assets/whatsnew.svg"
+import projectIcon from "../../assets/projectIcon.svg";
+import projectIconA from "../../assets/projectIconA.svg";
+import overViewIcon from "../../assets/overViewIcon.svg";
+import overViewIconA from "../../assets/overViewIconA.svg";
+import home from "../../assets/homeicon.svg";
+import homeA from "../../assets/homeiconA.svg";
+import serviceicon from "../../assets/serviceicon.svg";
+import serviceiconA from "../../assets/serviceiconA.svg";
+import productIcon from "../../assets/productIcon.svg";
+import productIconA from "../../assets/productIconA.svg";
+import resourcesIcon from "../../assets/resourcesIcon.svg";
+import resourcesIconA from "../../assets/resourcesIconA.svg";
+import careerIcon from "../../assets/careerIcon.svg";
+import careerIconA from "../../assets/careerIconA.svg";
+import whatsnewA from "../../assets/whatsnewA.svg";
+import whatsnew from "../../assets/whatsnew.svg";
 import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
@@ -27,32 +27,37 @@ const routes = [
     name: "Dashboard",
     icon: overViewIcon,
     iconA: overViewIconA,
+    subRoutes: [],
   },
   {
     path: "/admin/Home",
     name: "Home",
     icon: home,
     iconA: homeA,
+    subRoutes: [],
   },
   {
     path: "/admin/Service/AllService",
     name: "Services",
     icon: serviceicon,
     iconA: serviceiconA,
-    page: "/Service/AddNewService"
+    page: "/Service/AddNewService",
+    subRoutes: [],
   },
   {
     path: "/admin/Product/AllProduct",
     name: "Products",
     icon: productIcon,
     iconA: productIconA,
-    page: "/Product/AddNewProduct"
+    page: "/Product/AddNewProduct",
+    subRoutes: [],
   },
   {
     path: "/admin/Projects",
     name: "Projects",
     icon: projectIcon,
     iconA: projectIconA,
+    subRoutes: [],
   },
   {
     path: "/admin/Resources",
@@ -77,12 +82,14 @@ const routes = [
     name: "Careers",
     icon: careerIcon,
     iconA: careerIconA,
+    subRoutes: [],
   },
   {
     path: "/admin/Whats New",
     name: "What’s New",
     icon: whatsnew,
     iconA: whatsnewA,
+    subRoutes: [],
   },
 ];
 
@@ -121,11 +128,11 @@ const SideBar = () => {
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const { setShowModel, dirty } = useContext(ProductContext)
+  const { setShowModel, dirty } = useContext(ProductContext);
   const location = useLocation();
-  const history = useNavigate()
+  const history = useNavigate();
   const handleClick = (index, event) => {
-    history()
+    history();
   };
   return (
     <div className="main-container">
@@ -137,7 +144,8 @@ const SideBar = () => {
       >
         <section className="routes">
           {routes.map((route, index) => {
-            {/* if (route.subRoutes) {
+            {
+              /* if (route.subRoutes) {
               return (
                 <SidebarMenu
                   setIsOpen={setIsOpen}
@@ -147,36 +155,85 @@ const SideBar = () => {
                   key={index}
                 />
               );
-            } */}
+            } */
+            }
             return (
-              <div style={{}} className="link_container"
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <Link to={route.path} key={index} style={{ display: "flex", justifyContent: "space-between" }} className="link"
-                  onClick={(event) => handleClick(index, route.path)}
+              <div>
+                <div
+                  style={{}}
+                  className="link_container"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <a
-                    // href={route.path}
-                    className="link_text"
-                    style={{ color: (location.pathname === route.page || location.pathname === route.path) ? '#0047ff' : '#787878' }}
-                  // onClick={(event) => handleClick(index, )}
+                  <Link
+                    to={route.path}
+                    key={index}
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                    className="link"
+                    onClick={(event) => handleClick(index, route.path)}
                   >
-                    {route.icon && <span style={{ paddingRight: "15px", }}>
-                      {(location.pathname === route.page || location.pathname === route.path) ? <img src={route.iconA} /> : <img src={route.icon} />}
-                    </span>}
-                    <p style={{ margin: "0px" }}>{route.name}</p>
-                  </a>
-                </Link>
-                {(hoveredIndex === index || location.pathname === route.path || location.pathname === route.page) && (
-                  <Link to={route.page} style={{ display: 'flex', justifyContent: "center", }}
-                    onClick={(event) => handleClick(index, route.page)}
-                  >
-                    <img src={Add} />
+                    <a
+                      // href={route.path}
+                      className="link_text"
+                      style={{
+                        color:
+                          location.pathname === route.page ||
+                          location.pathname === route.path
+                            ? "#0047ff"
+                            : "#787878",
+                      }}
+                      // onClick={(event) => handleClick(index, )}
+                    >
+                      {route.icon && (
+                        <span style={{ paddingRight: "15px" }}>
+                          {location.pathname === route.page ||
+                          location.pathname === route.path ? (
+                            <img src={route.iconA} />
+                          ) : (
+                            <img src={route.icon} />
+                          )}
+                        </span>
+                      )}
+                      <p style={{ margin: "0px" }}>{route.name}</p>
+                    </a>
                   </Link>
-                )}
+                  {(hoveredIndex === index ||
+                    location.pathname === route.path ||
+                    location.pathname === route.page) && (
+                    <Link
+                      to={route.page}
+                      style={{ display: "flex", justifyContent: "center" }}
+                      onClick={(event) => handleClick(index, route.page)}
+                    >
+                      <img src={Add} />
+                    </Link>
+                  )}
+                </div>
+                {route.subRoutes.map(({ name, path }, index) => (
+                  <p
+                    key={index}
+                    onClick={() => {
+                      history(path);
+                    }}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ padding: "5px", cursor: "pointer" }}>{name}</p>
+                  </p>
+                ))}
+                {/* {route.subRoutes && (
+                  <div style={{ width: "100%", textAlign: "center" }}>
+                    {route.subRoutes.map(({ name }, index) => {
+                      <p key={index} style={{ padding: "0.5rem" }}>
+                        sfadkhngfdbkgnb
+                      </p>;
+                    })}
+                  </div>
+                )} */}
               </div>
-
             );
           })}
           {/* <div

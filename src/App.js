@@ -19,11 +19,12 @@ import PrimaryService from "./pages/servicePage/PrimaryService.jsx";
 import ServiceAddForm from "./components/Services/AddNewService.jsx";
 import EditService from "./components/Services/EditService.jsx";
 import AddNewProductPage from "./components/product/AddNewProduct.jsx";
+import AddNewArticles from "./components/Articles/AddNewArticles.jsx";
 import EditProduct from "./components/product/EditProduct.jsx";
 import ProductProvider from "./context/ProductContext.jsx";
 import ServiceProvider from "./context/ServiceContext.jsx";
 import AudioRecorder from "./AudioRecorder.jsx";
-import AdminLayout from "../src/layout/AdminLayout"
+import AdminLayout from "../src/layout/AdminLayout";
 import AdminLogin from "./pages/LoginPage/AdminLogin.jsx";
 import Password from "./pages/LoginPage/Passoword.jsx";
 import ForgotPassword from "./pages/LoginPage/ForgotPassword.jsx";
@@ -35,76 +36,175 @@ function App() {
   const location = useLocation();
   return (
     <>
-      {
-        location.pathname !== '/' && (
-          <>
+      {location.pathname !== "/" && (
+        <>
           {/* <TopNavbard />   */}
-      {/* <div style={{ display: "flex", height: "100%" }}> */}
-        {/* <ProductProvider><SideBar /></ProductProvider> */}
-        <Routes>
-        <Route path="/admin" element={<AdminLayout> 
-          <OverViewPage />
-          </AdminLayout>} />
-          
-        <Route path="/admin-login" element={
-         
-          <AdminLogin />
-          
-          } />
-          <Route path="/admin/password" element={
-         
-         <Password />
-         
-         } />
-         <Route path="/admin/forgotpassword" element={
-         
-         <ForgotPassword />
-         
-         } />
-         <Route path="/admin/otpverify" element={
-         
-         <OtpVerify />
-         
-         } />
-           <Route path="/admin/createpassword" element={
-         
-         <CreatePassword />
-         
-         } />
+          {/* <div style={{ display: "flex", height: "100%" }}> */}
+          {/* <ProductProvider><SideBar /></ProductProvider> */}
+          <Routes>
+            <Route
+              path="/admin"
+              element={
+                <AdminLayout>
+                  <OverViewPage />
+                </AdminLayout>
+              }
+            />
 
-          <Route path="/admin/dashboard" element={
-         <AdminLayout> 
-          <OverViewPage />
-          </AdminLayout>
-          } />
-          <Route path="admin/Home" element={<AdminLayout><HomePage /></AdminLayout>} />
-          <Route path="admin/Projects" element={<AdminLayout><ProjectPage /></AdminLayout> } />
-          <Route path="admin/Resources/Case_Study" element={<AdminLayout><CaseStudy /></AdminLayout>} />
-          <Route path="admin/Resources/Articles" element={<AdminLayout><Articles /></AdminLayout>} />
-          <Route path="admin/Careers" element={<AdminLayout><CareersPage /></AdminLayout>} />
-          <Route path="admin/Whats New" element={<AdminLayout><WhatsNewPage /></AdminLayout>} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin/password" element={<Password />} />
+            <Route path="/admin/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/admin/otpverify" element={<OtpVerify />} />
+            <Route path="/admin/createpassword" element={<CreatePassword />} />
 
-          <Route path="admin/Product/AllProduct" element={<AdminLayout><ProductProvider><AllProduct /></ProductProvider></AdminLayout>} />
-          <Route path="admin/Product/PrimaryProducts" element={
-            <AdminLayout>
-            <ProductProvider><PrimaryProductPage /></ProductProvider></AdminLayout>} />
-          <Route path="admin/Product/AddNewProduct" element={ <AdminLayout><ProductProvider><AddNewProductPage /></ProductProvider></AdminLayout>} />
-          <Route path="admin/Product/EditProduct/:id" element={<AdminLayout><ProductProvider><EditProduct /></ProductProvider></AdminLayout>} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <AdminLayout>
+                  <OverViewPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Home"
+              element={
+                <AdminLayout>
+                  <HomePage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Projects"
+              element={
+                <AdminLayout>
+                  <ProjectPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Resources/Case_Study"
+              element={
+                <AdminLayout>
+                  <CaseStudy />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Resources/Articles"
+              element={
+                <AdminLayout>
+                  <Articles />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Careers"
+              element={
+                <AdminLayout>
+                  <CareersPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Whats New"
+              element={
+                <AdminLayout>
+                  <WhatsNewPage />
+                </AdminLayout>
+              }
+            />
 
-          <Route path="admin/Service/AllService" element={<AdminLayout><ServiceProvider><AllService /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/Service/PrimaryServices" element={<AdminLayout><ServiceProvider><PrimaryService /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/Service/AddNewService" element={<AdminLayout><ServiceProvider><ServiceAddForm /></ServiceProvider></AdminLayout>} />
-          <Route path="admin/Service/EditService/:id" element={<AdminLayout><ServiceProvider><EditService /></ServiceProvider></AdminLayout>} />
+            <Route
+              path="admin/Product/AllProduct"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <AllProduct />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Product/PrimaryProducts"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <PrimaryProductPage />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Product/AddNewProduct"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <AddNewProductPage />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Resource/Articles/AddNewArticle"
+              element={<AdminLayout>{<AddNewArticles />}</AdminLayout>}
+            />
+            <Route
+              path="admin/Product/EditProduct/:id"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <EditProduct />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
 
-        </Routes>
-      {/* </div> */}
-
-
-          </>
-        )
-      }
+            <Route
+              path="admin/Service/AllService"
+              element={
+                <AdminLayout>
+                  <ServiceProvider>
+                    <AllService />
+                  </ServiceProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Service/PrimaryServices"
+              element={
+                <AdminLayout>
+                  <ServiceProvider>
+                    <PrimaryService />
+                  </ServiceProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Service/AddNewService"
+              element={
+                <AdminLayout>
+                  <ServiceProvider>
+                    <ServiceAddForm />
+                  </ServiceProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Service/EditService/:id"
+              element={
+                <AdminLayout>
+                  <ServiceProvider>
+                    <EditService />
+                  </ServiceProvider>
+                </AdminLayout>
+              }
+            />
+          </Routes>
+          {/* </div> */}
+        </>
+      )}
     </>
   );
 }
 
-export default App
+export default App;
