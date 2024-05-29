@@ -19,7 +19,6 @@ export const Card = ({
   card,
 }) => {
   const history = useNavigate();
-  const [signedUrl, SetSignedUrl] =useState("")
   const { setBtnStatus } = useContext(ProductContext)
   const [{ isDragging }, drag] = useDrag(
     () => ({
@@ -68,18 +67,7 @@ export const Card = ({
     history(`/admin/Product/EditProduct/${id}`);
   };
 
-  axios.post("http://localhost:8000/product/getimageurl",{
-      image:card.image,
-    imageType:"image/png",
-    }).then(function (response) {
-
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-      dispatch(updateFormData("internalUrl", response.data.url))
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  
 
   return (
     <>
@@ -232,7 +220,7 @@ export const Card = ({
                   height: "75%",
                 }}
               >
-                <img src={signedUrl} alt="ProductImage"  style={{ width: "10.439rem" }}/>
+                <img src={card.image} alt="ProductImage"  style={{ width: "10.439rem" }}/>
               </div>
               <div
                 style={{

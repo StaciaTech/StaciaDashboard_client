@@ -1,0 +1,48 @@
+.home-container{
+    padding: 1rem;
+    background-color: white;
+    display: flex;  
+    flex-direction: column;
+    min-width: calc(100vw - 356px);
+    margin: 0 auto;
+    min-height: 100vh;
+}
+.home-header{
+    display: flex;
+    gap: 10px;
+}
+.single-header{
+    display: flex;
+    background-color: #F5F5F5;
+    padding: 15px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.header-name{
+    /* color:#787878; */
+    font-size: 1rem;
+    margin: 0 0.5rem
+}
+.active{
+    background-color: #0047FF1A;
+    color: #0047FF;
+}
+.line-break{
+    height: 1px;
+    background-color: #E5E5E5;
+    margin: 1rem 0 0 0;
+}
+.switchbutton{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.switchtext{
+    color: #787878;
+    
+}
+.client-active{
+    border-bottom: 4px solid #0047FF;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}

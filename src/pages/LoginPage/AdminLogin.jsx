@@ -139,9 +139,16 @@ function AdminLogin(){
                 )}
          </div>
           
+          <div className="forgot-password-text"> 
+          <div className="rememberme">
+            <input type="checkbox" style={{marginRight:"5px"}} name="" id="" />
+            Remember Me <span style={{fontSize:"14px"}}> (Valid for 30 Days) </span></div>
           <Link to="/admin/forgotpassword">
-          <div className="forgot-password-text">Forgot Password?</div>
+          <div >Forgot Password?</div>
           </Link>
+
+          </div>
+          
           <div className="btn" onClick={handleSubmit}>
               Log in
           </div>

@@ -14,10 +14,13 @@ import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../redux/action";
 import close from "../../assets/close.svg"
+import axios from "axios";
 
 const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) => {
   const history = useNavigate();
   const dispatch = useDispatch()
+  const [signedUrl, SetSignedUrl] =useState("")
+
   const fileInputRef = useRef(null);
 
 
@@ -36,27 +39,51 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
     setImageOverlayShow(false)
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl)
-    dispatch(updateFormData("pImage", resData.signedUrl));
+    formik.setFieldValue("pImage", resData.image)
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    dispatch(updateFormData("pImage", resData.image));
   }
 
   //image onchange value
   const onChange = async (e) => {
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    console.log("inside")
+    formData.append('file', e.target.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl)
-    dispatch(updateFormData("pImage", resData.signedUrl));
+    formik.setFieldValue("pImage", resData.image)
+
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    dispatch(updateFormData("pImage", resData.image));
   };
 
   //text value onchange
@@ -676,7 +703,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                           }}
                         >
                           <img
-                            src={formik.values.pImage}
+                            src={signedUrl}
                             alt="ProductImage"
                             style={{
                               width: "100%",

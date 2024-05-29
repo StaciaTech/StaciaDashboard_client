@@ -36,27 +36,29 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, formik, changeArchive }
     setImageOverlayShow(false)
     console.log(e.dataTransfer.files[0])
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl);
-    dispatch(updateFormData("image", resData.signedUrl));
+    formik.setFieldValue("pImage", resData.pImage);
+    dispatch(updateFormData("pImage", resData.pImage));
   }
 
   //image onchange
   const onChange = async (e) => {
+    console.log("edit primary dropped")
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.target.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl)
-    dispatch(updateFormData("image", resData.signedUrl));
+    console.log(resData);
+    formik.setFieldValue("pImage", resData.pImage)
+    dispatch(updateFormData("pImage", resData.pImage));
   };
 
   const handleChange = event => {
