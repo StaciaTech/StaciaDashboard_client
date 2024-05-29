@@ -1,0 +1,15 @@
+.project-container{
+    padding: 1rem;
+    /* background-color: lightcoral; */
+    display: flex;  
+    flex-direction: column;
+    min-width: calc(100vw - 356px);
+    margin: 0 auto;
+    min-height: 100vh;
+}
+.borderline{
+    background-color: #0000001A;
+    height: 1px;
+    margin: 1rem 0;
+    
+}

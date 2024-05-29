@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import SideBar from "./components/sideBar/SideBar";
 import TopNavbard from "./components/TopNavbar";
@@ -30,6 +30,10 @@ import Password from "./pages/LoginPage/Passoword.jsx";
 import ForgotPassword from "./pages/LoginPage/ForgotPassword.jsx";
 import OtpVerify from "./pages/LoginPage/OtpVerify.jsx";
 import CreatePassword from "./pages/LoginPage/CreatePassword.jsx";
+import { Toaster } from "react-hot-toast";
+import HomeProduct from "./pages/HomePage.jsx/HomeProduct.jsx";
+import HomeServices from "./pages/HomePage.jsx/HomeServices.jsx";
+import HomeClients from "./pages/HomePage.jsx/HomeClients.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,14 +46,7 @@ function App() {
           {/* <div style={{ display: "flex", height: "100%" }}> */}
           {/* <ProductProvider><SideBar /></ProductProvider> */}
           <Routes>
-            <Route
-              path="/admin"
-              element={
-                <AdminLayout>
-                  <OverViewPage />
-                </AdminLayout>
-              }
-            />
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
 
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/password" element={<Password />} />
@@ -70,6 +67,36 @@ function App() {
               element={
                 <AdminLayout>
                   <HomePage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Home/products"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <HomeProduct />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Home/clients"
+              element={
+                <AdminLayout>
+                  <ProductProvider>
+                    <HomeClients />
+                  </ProductProvider>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="admin/Home/service"
+              element={
+                <AdminLayout>
+                  <ServiceProvider>
+                    <HomeServices />
+                  </ServiceProvider>
                 </AdminLayout>
               }
             />
@@ -145,10 +172,6 @@ function App() {
               }
             />
             <Route
-              path="admin/Resource/Articles/AddNewArticle"
-              element={<AdminLayout>{<AddNewArticles />}</AdminLayout>}
-            />
-            <Route
               path="admin/Product/EditProduct/:id"
               element={
                 <AdminLayout>
@@ -201,6 +224,16 @@ function App() {
             />
           </Routes>
           {/* </div> */}
+          <Toaster
+            reverseOrder={false}
+            toastOptions={{
+              style: {
+                padding: "16px",
+                fontSize: "1rem",
+              },
+              duration: 3000,
+            }}
+          />
         </>
       )}
     </>

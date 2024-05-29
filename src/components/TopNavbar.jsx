@@ -49,7 +49,7 @@ const TopNavbard = () => {
         </div>
         <div className="modalright">
           <div className="user-details">
-          <div className="username">User Name</div>
+          <div className="username">Admin</div>
         <div className="user-email">admin@staciacorp.com</div>
           </div>
        <div className="btn-holder">

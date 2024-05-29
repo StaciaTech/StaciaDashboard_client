@@ -62,7 +62,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
   }
 
   //onchange image
-  const onChange = async (e) => {
+  const onChange = async (e) => { 
     console.log("dropped")
     const formData = new FormData();
     formData.append('file', e.target.files[0]);

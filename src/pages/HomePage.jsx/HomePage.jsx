@@ -1,75 +1,85 @@
 import React from "react";
-import "../../styles/Home.css";
-import dotsIcon from "../../assets/6dotsIcon.svg";
+import "../../styles/Homepage.css";
+import dragAndDrop from "../../assets/DragandDropicon.svg";
+import dragAndDropBlue from "../../assets/DragandDropiconBlue.svg";
+
+import { useLocation, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const homelist = [
+    {
+      name: "Products",
+      link: "/admin/Home/products",
+    },
+    {
+      name: "Our Clients",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Our Service",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Events",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Case Study",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Our Projects",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Articles",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Foundation Four",
+      link: "/admin/Home/service",
+    },
+    {
+      name: "Testinomials",
+      link: "/admin/Home/service",
+    },
+  ];
+
   return (
-    <div
-      style={{
-        marginLeft: "1rem",
-        backgroundColor: "#fff",
-        width: "100%",
-        padding: "1rem 3rem",
-      }}
-    >
-      <div className="home-options">
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Products</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>
-            <div>Our Clients</div>
-          </div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Our Services</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Events</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Case Study</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Our Projects</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Articles</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Foundation Four</div>
-        </div>
-        <div>
-          <div>
-            <img src={dotsIcon} alt="" srcset="" />
-          </div>
-          <div>Testimonials</div>
-        </div>
+    <div className="home-container">
+      <div className="home-header">
+        {homelist.map((listitem) => {
+          return (
+            <div
+              className="single-header"
+              style={{
+                backgroundColor:
+                  location.pathname === listitem.link ? "#0047FF1A" : "#F5F5F5",
+                color:
+                  location.pathname === listitem.link ? "#0047FF" : "#787878",
+              }}
+              onClick={() => navigate(`${listitem.link}`)}
+            >
+              <div className="header-icon">
+                <img
+                  src={
+                    location.pathname === listitem.link
+                      ? dragAndDropBlue
+                      : dragAndDrop
+                  }
+                  alt=""
+                  style={{ cursor: "move" }}
+                />
+              </div>
+              <div className="header-name">{listitem.name}</div>
+            </div>
+          );
+        })}
       </div>
+      <div className="line-break"></div>
     </div>
   );
 };

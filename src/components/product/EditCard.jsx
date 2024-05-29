@@ -14,12 +14,15 @@ import { useFormik } from "formik";
 import { ProductContext } from "../../context/ProductContext";
 import { updateFormData } from "../../redux/action";
 import ReactModal from "react-modal";
+import axios from "axios";
 
 const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
   const fileInputRef = useRef(null);
   const history = useNavigate();
   const id = useParams()
   const dispatch = useDispatch()
+  const [signedUrl, SetSignedUrl] =useState("")
+
 
 
   const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, dirty, setDirty, imageOverlayShow, setImageOverlayShow, btnStatus } = useContext(ProductContext);
@@ -34,27 +37,41 @@ const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
     e.preventDefault();
     setImageOverlayShow(false)
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.dataTransfer.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    dispatch(updateFormData("image", resData.signedUrl));
+    formik.setFieldValue("image", resData.image)
+    formik.setFieldValue("imageType", resData.imageType)
+
+    axios.post("http://localhost:8000/product/getimageurl",{
+      image:resData.image,
+    imageType:resData.imageType,
+    }).then(function (response) {
+
+      console.log("signedurl :",response.data.url);
+      SetSignedUrl(response.data.url)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    dispatch(updateFormData("image", resData.image));
   }
 
   //image change
   const onChange = async (e) => {
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append('file', e.target.files[0]);
+    const res = await fetch("http://localhost:8000/product/uploadfile", {
       method: "POST",
       body: formData
     })
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
-    dispatch(updateFormData("image", resData.signedUrl));
+    console.log("edit dropped : ",resData)
+    formik.setFieldValue("image", resData.image)
+    dispatch(updateFormData("image", resData.image));
   };
 
 
@@ -470,7 +487,7 @@ const EditData = ({ onNext, removeRedux, formik, changeArchive }) => {
                           }}
                         >
                           <img
-                            src={formik.values.internalUrl}
+                            src={formik.values.image}
                             alt="ProductImage"
                             style={{
                               width: "100%",
