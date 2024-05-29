@@ -117,6 +117,10 @@ function App() {
               }
             />
             <Route
+              path="admin/Resource/Articles/AddNewArticle"
+              element={<AdminLayout>{<AddNewArticles />}</AdminLayout>}
+            />
+            <Route
               path="admin/Resources/Articles"
               element={
                 <AdminLayout>
