@@ -18,6 +18,7 @@ export const Card = ({
   fixHandelClick,
   card,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(
@@ -43,25 +44,29 @@ export const Card = ({
   );
   const opacity = isDragging ? 0.2 : 2;
 
-  const { setBtnStatus } = useContext(ServiceContext)
+  const { setBtnStatus } = useContext(ServiceContext);
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+    const res = await fetch(`${apiUrl}/service/findService/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedService.archive)
-    console.log(data.selectedService.archive)
+    setBtnStatus(data.selectedService.archive);
+    console.log(data.selectedService.archive);
     dispatch(updateServiceFormData("des", data.selectedService.des));
     dispatch(updateServiceFormData("image", data.selectedService.image));
     dispatch(updateServiceFormData("altText", data.selectedService.altText));
     dispatch(updateServiceFormData("form", data.selectedService.form));
-    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
-    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage));
+    dispatch(
+      updateServiceFormData("pAlterNativeText", data.selectedService.pAltText)
+    );
     dispatch(updateServiceFormData("heading", data.selectedService.title));
-    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(
+      updateServiceFormData("domainName", data.selectedService.domainName)
+    );
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
     history(`/admin/Service/EditService/${id}`);
   };
@@ -115,14 +120,11 @@ export const Card = ({
           </div>
         ) : (
           <div
-           ref={(node) => drag(drop(node))}
-          style={{ width: "100%", position: "relative", display: "flex" }}>
+            ref={(node) => drag(drop(node))}
+            style={{ width: "100%", position: "relative", display: "flex" }}
+          >
             <div style={{ padding: "12px 22px", width: "238px" }}>
-              <img
-                src={dragAndDrop}
-                alt=""
-                style={{ cursor: "move" }}
-              />
+              <img src={dragAndDrop} alt="" style={{ cursor: "move" }} />
 
               <div
                 style={{
@@ -181,7 +183,11 @@ export const Card = ({
                   height: "75%",
                 }}
               >
-                <img src={card.image} alt="ServiceImage" style={{ width: "10.439rem" }} />
+                <img
+                  src={card.image}
+                  alt="ServiceImage"
+                  style={{ width: "10.439rem" }}
+                />
               </div>
               <div
                 style={{
@@ -205,7 +211,7 @@ export const Card = ({
                   <img
                     src={fix}
                     alt=""
-                    style={{ paddingLeft: "5px", cursor:"pointer" }}
+                    style={{ paddingLeft: "5px", cursor: "pointer" }}
                     onClick={() => {
                       fixHandelClick(card);
                     }}

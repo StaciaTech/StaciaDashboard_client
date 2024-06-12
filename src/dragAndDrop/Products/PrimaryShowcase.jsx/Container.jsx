@@ -12,21 +12,24 @@ import {
 } from "../../../redux/productSlice.js";
 
 const Container = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     (async () => {
-      const res = await fetch(
-        "http://localhost:8000/product/primaryShowcaseProducts"
-      );
+      const res = await fetch(`${apiUrl}/product/primaryShowcaseProducts`);
       const resData = await res.json();
       dispatch(primaryShowcase(resData.data));
     })();
   }, [dispatch]);
-  const primaryShowcaseProduct = useSelector((state) => state.product.primaryShowcase);
+  const primaryShowcaseProduct = useSelector(
+    (state) => state.product.primaryShowcase
+  );
   const [cards, setCards] = useState([]);
   useEffect(() => {
-    const data = primaryShowcaseProduct.filter((item) => item.archive === false)
+    const data = primaryShowcaseProduct.filter(
+      (item) => item.archive === false
+    );
     setCards(data);
   }, [primaryShowcaseProduct]);
 
@@ -36,7 +39,7 @@ const Container = () => {
     )[0];
     const _id = dragedId._id;
     const res = await fetch(
-      `http://localhost:8000/product/update-PrimaryProduct/${_id}/${position}`,
+      `${apiUrl}/product/update-PrimaryProduct/${_id}/${position}`,
       {
         method: "PATCH",
       }
@@ -47,7 +50,7 @@ const Container = () => {
 
   const redioButtonHandel = async (product) => {
     const res = await fetch(
-      `http://localhost:8000/product/addPrimaryShowcase/${product._id}`,
+      `${apiUrl}/product/addPrimaryShowcase/${product._id}`,
       {
         method: "POST",
       }
@@ -59,12 +62,9 @@ const Container = () => {
 
   // Function to handle the click event
   const fixHandelClick = async (item) => {
-    const res = await fetch(
-      `http://localhost:8000/product/addArichve/${item._id}`,
-      {
-        method: "POST",
-      }
-    );
+    const res = await fetch(`${apiUrl}/product/addArichve/${item._id}`, {
+      method: "POST",
+    });
     const data = await res.json();
     dispatch(archiveCard(data.archiveProduct));
     dispatch(newData(data.positionWise));

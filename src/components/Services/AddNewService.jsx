@@ -9,11 +9,12 @@ import { ServiceContext } from "../../context/ServiceContext";
 
 // Parent component
 const ServiceAddForm = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
-  const [formDatas, setformDatas] = useState()
+  const [formDatas, setformDatas] = useState();
   const [step, setStep] = useState(1);
   const savedData = useSelector((state) => state.services);
-  const { setSuccessfullModel,} = useContext(ServiceContext)
+  const { setSuccessfullModel } = useContext(ServiceContext);
 
   useEffect(() => {
     setformDatas(savedData);
@@ -25,11 +26,15 @@ const ServiceAddForm = () => {
       des: savedData.des ? savedData.des : "",
       altText: savedData.altText ? savedData.altText : "",
       image: savedData.image ? savedData.image : "",
-      form: savedData.form ? savedData.form : [{ id: 1, heading: "", description: "" }],
+      form: savedData.form
+        ? savedData.form
+        : [{ id: 1, heading: "", description: "" }],
       pImage: savedData.pImage ? savedData.pImage : "",
-      pAlterNativeText: savedData.pAlterNativeText ? savedData.pAlterNativeText : "",
+      pAlterNativeText: savedData.pAlterNativeText
+        ? savedData.pAlterNativeText
+        : "",
       heading: savedData.heading ? savedData.heading : "",
-      domainName: savedData.domainName ? savedData.domainName : '',
+      domainName: savedData.domainName ? savedData.domainName : "",
       hashTag: savedData.hashTag ? savedData.hashTag : [],
     },
   });
@@ -45,7 +50,6 @@ const ServiceAddForm = () => {
     setStep(step - 1);
   };
 
-
   const remove = () => {
     dispatch(updateServiceFormData("des", ""));
     dispatch(updateServiceFormData("image", ""));
@@ -55,11 +59,11 @@ const ServiceAddForm = () => {
     dispatch(updateServiceFormData("pAlterNativeText", ""));
     dispatch(updateServiceFormData("heading", ""));
     dispatch(updateServiceFormData("domainName", ""));
-    dispatch(updateServiceFormData("hashTag", ""))
-  }
+    dispatch(updateServiceFormData("hashTag", ""));
+  };
   const handleSubmit = async () => {
-    console.log(formDatas)
-    const res = await fetch("http://localhost:8000/service/create", {
+    console.log(formDatas);
+    const res = await fetch(`${apiUrl}/service/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,8 +72,8 @@ const ServiceAddForm = () => {
     });
     const resData = await res.json();
     if (resData.message === "Data upload successfully") {
-     remove()
-    setSuccessfullModel(true)
+      remove();
+      setSuccessfullModel(true);
     }
   };
 

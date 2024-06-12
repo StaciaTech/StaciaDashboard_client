@@ -15,88 +15,96 @@ import Archive from "../Archive";
 import { updateServiceFormData } from "../../redux/action";
 import { ServiceContext } from "../../context/ServiceContext";
 import ReactModal from "react-modal";
-import close from '../../assets/close.svg'
+import close from "../../assets/close.svg";
 import axios from "axios";
 
 const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
-  const [signedUrl, SetSignedUrl] =useState("")
+  const [signedUrl, SetSignedUrl] = useState("");
 
   const fileInputRef = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow } = useContext(ServiceContext);
+  const {
+    showModel,
+    setShowModel,
+    showCardSuccessfull,
+    setShowCardSuccessfull,
+    imageOverlayShow,
+    setImageOverlayShow,
+  } = useContext(ServiceContext);
 
-  //drag and drop image 
+  //drag and drop image
   const handleDragOver = (e) => {
-    e.preventDefault()
-    setImageOverlayShow(true)
-  }
+    e.preventDefault();
+    setImageOverlayShow(true);
+  };
 
   const handleDrop = async (e) => {
-    setImageOverlayShow(false)
+    setImageOverlayShow(false);
     e.preventDefault();
     const formData = new FormData();
-    formData.append('file', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
+    formData.append("file", e.dataTransfer.files[0]);
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
     const resData = await res.json();
-    console.log(resData)
-    formik.setFieldValue("image", resData.image)
-    formik.setFieldValue("imageType", resData.imageType)
-   
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
+    console.log(resData);
+    formik.setFieldValue("image", resData.image);
+    formik.setFieldValue("imageType", resData.imageType);
 
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     // console.log(resData.signedUrl)
     dispatch(updateServiceFormData("image", resData.image));
-  }
+  };
   //onchange image
   const onChange = async (e) => {
     const formData = new FormData();
-    formData.append('file', e.target.files[0]);
+    formData.append("file", e.target.files[0]);
     // formData.append("image", "")
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
     const resData = await res.json();
-    console.log(resData)
-    formik.setFieldValue("image", resData.image)
-    formik.setFieldValue("imageType", resData.imageType)
-   
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
+    console.log(resData);
+    formik.setFieldValue("image", resData.image);
+    formik.setFieldValue("imageType", resData.imageType);
 
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     // console.log(resData.signedUrl)
     dispatch(updateServiceFormData("image", resData.image));
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     formik.setFieldValue(name, value);
     dispatch(updateServiceFormData(name, value));
   };
-
-
 
   //Notification Model Style
   const customStyles = {
@@ -127,12 +135,12 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       width: "38.813rem",
-      height: '28.625rem'
+      height: "28.625rem",
     },
     overlay: {
       background: "rgba(0,0,0,0.25)",
-    }
-  }
+    },
+  };
 
   //final back button
   const handelBack = () => {
@@ -140,39 +148,39 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
     if (formik.dirty) {
       // non-empty values
       // console.log("hello")
-      setShowModel(true)
+      setShowModel(true);
     } else {
       // all values being empty
-      history("/admin/Service/AllService")
-      removeRedux()
+      history(-1);
+      removeRedux();
     }
-  }
+  };
 
   //Filled Value save As Draft
   const saveAsDraftbtn = async () => {
-    const res = await fetch("http://localhost:8000/service/addDraft", {
+    const res = await fetch(`${apiUrl}/service/addDraft`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(savedData)
+      body: JSON.stringify(savedData),
     });
-    setShowCardSuccessfull(true)
-    setShowModel(false)
-  }
+    setShowCardSuccessfull(true);
+    setShowModel(false);
+  };
   //UnSaved Back
   const backbtn = () => {
-    history("/admin/Service/AllService")
-    setShowModel(false)
-    removeRedux()
-  }
+    history("/admin/Service/AllService");
+    setShowModel(false);
+    removeRedux();
+  };
 
   //Successfull Draft Button
   const createDraft = () => {
-    history("/admin/Service/AllService")
-    setShowCardSuccessfull(false)
-    removeRedux()
-  }
+    history("/admin/Service/AllService");
+    setShowCardSuccessfull(false);
+    removeRedux();
+  };
   return (
     <>
       <div>
@@ -181,26 +189,44 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }} className="cursor" onClick={() => setShowModel(!showModel)}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+            className="cursor"
+            onClick={() => setShowModel(!showModel)}
+          >
             <img src={close} alt="closebtn" />
           </div>
-          <div
-          >
-            <p style={{ width: "100%", textAlign: "left", fontFamily: "EuclidMedium", fontSize: "18px" }}>
-              You have unsaved changes. Leaving this page
-              will discard them
+          <div>
+            <p
+              style={{
+                width: "100%",
+                textAlign: "left",
+                fontFamily: "EuclidMedium",
+                fontSize: "18px",
+              }}
+            >
+              You have unsaved changes. Leaving this page will discard them
             </p>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-              columnGap: "1rem",
-            }}
-              className="popupbtns">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "100%",
+                columnGap: "1rem",
+              }}
+              className="popupbtns"
+            >
               <button
                 className="popupbtn colour cursor"
-                onClick={() => backbtn()}>Okay</button>
+                onClick={() => backbtn()}
+              >
+                Okay
+              </button>
               <button
                 className="popupbtn cursor"
                 onClick={() => saveAsDraftbtn()}
@@ -229,8 +255,8 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
             <img src={successful} alt="successfull" />
             <h1>Saved as Draft</h1>
             <p style={{ width: "25.075rem", textAlign: "center" }}>
-              Your edits have been successfully saved as a draft.
-              Take your time to review and refine your work.
+              Your edits have been successfully saved as a draft. Take your time
+              to review and refine your work.
             </p>
             <button
               style={{
@@ -357,7 +383,6 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
                     >
                       {formik.values.des.length}/ 250
                     </span>
-
                   </div>
                 </div>
                 <div style={{ width: "849px" }}>
@@ -373,34 +398,33 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
                       marginTop: "15px",
                       color: "#787878",
                       display: "flex",
-                      filter: imageOverlayShow && 'blur(0.8px)',
-                      justifyContent: 'center',
-                      position: 'relative',
+                      filter: imageOverlayShow && "blur(0.8px)",
+                      justifyContent: "center",
+                      position: "relative",
                       // backgroundColor:"red"
                     }}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    {imageOverlayShow &&
+                    {imageOverlayShow && (
                       <>
                         <div
                           style={{
-                            position: 'absolute',
-                            width: '98%',
-                            height: '98%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
-                            border: '2px dashed #fff',
-                            borderRadius: '5px',
+                            position: "absolute",
+                            width: "98%",
+                            height: "98%",
+                            backgroundColor: "rgba(0, 0, 0, 0.56)",
+                            border: "2px dashed #fff",
+                            borderRadius: "5px",
                             zIndex: 9999,
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
                           }}
                           onDragLeave={() => setImageOverlayShow(false)}
-                        >
-                        </div>
+                        ></div>
                       </>
-                    }
+                    )}
                     <div
                       style={{
                         width: "50px",
@@ -411,15 +435,23 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
                         marginRight: "36px",
                       }}
                     >
-                      {formik.values.image &&
+                      {formik.values.image && (
                         <img
                           src={Trash}
                           alt="deletebutton"
                           onClick={() => formik.setFieldValue("image", "")}
-                        />}
+                        />
+                      )}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}
-                      onClick={() => { fileInputRef.current.click(); }}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onClick={() => {
+                        fileInputRef.current.click();
+                      }}
                     >
                       {formik.values.image ? (
                         <div
@@ -451,29 +483,47 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
                             flexDirection: "column",
                           }}
                         >
-                          <div style={{
-                            width: "608px",
-                            height: "420px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                          }}
+                          <div
+                            style={{
+                              width: "608px",
+                              height: "420px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
                           >
                             <img
                               src={DefaultProductIcon}
                               alt="DefaultProductIcon"
                             />
-                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <input
+                              type="file"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "none",
+                              }}
+                              ref={fileInputRef}
+                              onChange={(e) => onChange(e)}
+                            />
                             <p
                               style={{
                                 maxWidth: "299px",
                                 lineHeight: "200%",
-                                textAlign: "center"
-                              }}>
-                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                                textAlign: "center",
+                              }}
+                            >
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>
+                                Click or drag{" "}
+                                <span
+                                  style={{ color: "blue", cursor: "pointer" }}
+                                >
+                                  file
+                                </span>{" "}
+                                to this area to upload
+                              </div>
                               <div>upload image “1920 x 1080” size</div>
-
                             </p>
                           </div>
                         </div>
@@ -571,38 +621,37 @@ const AddNewServiceData = ({ onNext, savedData, formik, removeRedux }) => {
             >
               Cancel
             </div>
-            {
-              formik.values.image !== "" &&
-                formik.values.des !== "" &&
-                formik.values.altText !== "" ? (
-                <div
-                  className="save_button"
-                  style={{
-                    backgroundColor: "#0044FF",
-                    color: "#ffff",
-                  }}
-                  onClick={onNext}
-                >
-                  Next
-                </div>
-              ) : (
-                <div
-                  className="save_button"
-                  style={{
-                    // width: "141px",
-                    background: "#0044FF",
-                    color: "#FFFFFF",
-                    opacity: 0.2,
-                    cursor: "default",
-                    // height: "3.5rem",
-                  }}
-                >
-                  Next
-                </div>
-              )}
+            {formik.values.image !== "" &&
+            formik.values.des !== "" &&
+            formik.values.altText !== "" ? (
+              <div
+                className="save_button"
+                style={{
+                  backgroundColor: "#0044FF",
+                  color: "#ffff",
+                }}
+                onClick={onNext}
+              >
+                Next
+              </div>
+            ) : (
+              <div
+                className="save_button"
+                style={{
+                  // width: "141px",
+                  background: "#0044FF",
+                  color: "#FFFFFF",
+                  opacity: 0.2,
+                  cursor: "default",
+                  // height: "3.5rem",
+                }}
+              >
+                Next
+              </div>
+            )}
           </div>
-        </Container >
-      </AddNewserviceContainer >
+        </Container>
+      </AddNewserviceContainer>
     </>
   );
 };

@@ -10,88 +10,96 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ProductContext } from "../../context/ProductContext";
 import ReactModal from "react-modal";
-import close from '../../assets/close.svg'
+import close from "../../assets/close.svg";
 import successful from "../../assets/successful.svg";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../redux/action";
 import axios from "axios";
 
 const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const fileInputRef = useRef(null);
   const history = useNavigate();
-  const dispatch = useDispatch()
-  const [signedUrl, SetSignedUrl] =useState("")
-  
+  const dispatch = useDispatch();
+  const [signedUrl, SetSignedUrl] = useState("");
 
-  const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext);
+  const {
+    showModel,
+    setShowModel,
+    showCardSuccessfull,
+    setShowCardSuccessfull,
+    imageOverlayShow,
+    setImageOverlayShow,
+  } = useContext(ProductContext);
 
-  //drag and drop image 
+  //drag and drop image
   const handleDragOver = (e) => {
-    e.preventDefault()
-    setImageOverlayShow(true)
-  }
+    e.preventDefault();
+    setImageOverlayShow(true);
+  };
 
   const handleDrop = async (e) => {
-    
-    setImageOverlayShow(false)
+    setImageOverlayShow(false);
     e.preventDefault();
     const formData = new FormData();
-    formData.append('file', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
+    formData.append("file", e.dataTransfer.files[0]);
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
     const resData = await res.json();
-    console.log(resData)
-    formik.setFieldValue("image", resData.image)
-    formik.setFieldValue("imageType", resData.imageType)
-   
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
+    console.log(resData);
+    formik.setFieldValue("image", resData.image);
+    formik.setFieldValue("imageType", resData.imageType);
 
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    // console.log(resData.signedUrl)
-    dispatch(updateFormData("image", resData.image));
-  }
-
-  //onchange image
-  const onChange = async (e) => { 
-    console.log("dropped")
-    const formData = new FormData();
-    formData.append('file', e.target.files[0]);
-    // formData.append("image", "")
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
-      method: "POST",
-      body: formData
-    });
-    const resData = await res.json();
-    console.log(resData)
-    formik.setFieldValue("image", resData.image)
-    formik.setFieldValue("imageType", resData.imageType)
-   
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
-
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     // console.log(resData.signedUrl)
     dispatch(updateFormData("image", resData.image));
   };
 
-  const handleChange = event => {
+  //onchange image
+  const onChange = async (e) => {
+    console.log("dropped");
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    // formData.append("image", "")
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
+      method: "POST",
+      body: formData,
+    });
+    const resData = await res.json();
+    console.log(resData);
+    formik.setFieldValue("image", resData.image);
+    formik.setFieldValue("imageType", resData.imageType);
+
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // console.log(resData.signedUrl)
+    dispatch(updateFormData("image", resData.image));
+  };
+
+  const handleChange = (event) => {
     const { name, value } = event.target;
     formik.setFieldValue(name, value);
     dispatch(updateFormData(name, value));
@@ -113,8 +121,6 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
   //     onNext(values)
   //   },
   // });
-
-
 
   //Notification Model Style
   const customStyles = {
@@ -145,19 +151,24 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       width: "38.813rem",
-      height: '28.625rem'
+      height: "28.625rem",
     },
     overlay: {
       background: "rgba(0,0,0,0.25)",
-    }
-  }
+    },
+  };
 
   //final back button
   const handelBack = () => {
-    const value = savedData
+    const value = savedData;
     function hasNonEmptyValue(obj) {
       for (const key in obj) {
-        if (obj[key] !== '' && obj[key] !== null && obj[key] !== undefined && obj[key].length !== 0) {
+        if (
+          obj[key] !== "" &&
+          obj[key] !== null &&
+          obj[key] !== undefined &&
+          obj[key].length !== 0
+        ) {
           return true; // Found a non-empty value
         }
       }
@@ -166,38 +177,38 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
     // Check if any value is non-empty
     if (hasNonEmptyValue(value)) {
       // non-empty values
-      setShowModel(true)
+      setShowModel(true);
     } else {
       // all values being empty
-      history("/admin/Product/AllProduct")
-      removeRedux()
+      // history("/admin/Product/AllProduct")
+      removeRedux();
     }
-  }
+  };
 
   //Filled Value save As Draft
   const saveAsDraftbtn = async () => {
-    const res = await fetch("http://localhost:8000/product/addDraft", {
+    const res = await fetch(`${apiUrl}/product/addDraft`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(savedData)
+      body: JSON.stringify(savedData),
     });
-    setShowCardSuccessfull(true)
-    setShowModel(false)
-  }
+    setShowCardSuccessfull(true);
+    setShowModel(false);
+  };
   //Successfull Draft Button
   const createDraft = () => {
-    history("/admin/Product/AllProduct")
-    setShowCardSuccessfull(false)
-    removeRedux()
-  }
+    history("/admin/Product/AllProduct");
+    setShowCardSuccessfull(false);
+    removeRedux();
+  };
   //UnSaved Back
   const backbtn = () => {
-    history("/admin/Product/AllProduct")
-    setShowModel(false)
-    removeRedux()
-  }
+    history("/admin/Product/AllProduct");
+    setShowModel(false);
+    removeRedux();
+  };
   return (
     <>
       <div>
@@ -206,28 +217,50 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }} className="cursor" onClick={() => setShowModel(!showModel)}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+            className="cursor"
+            onClick={() => setShowModel(!showModel)}
+          >
             <img src={close} alt="closebtn" />
           </div>
-          <div
-          >
-            <p style={{ width: "100%", textAlign: "left", fontFamily: "EuclidMedium", fontSize: "18px" }}>
-              You have unsaved changes. Leaving this page
-              will discard them
+          <div>
+            <p
+              style={{
+                width: "100%",
+                textAlign: "left",
+                fontFamily: "EuclidMedium",
+                fontSize: "18px",
+              }}
+            >
+              You have unsaved changes. Leaving this page will discard them
             </p>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-              columnGap: "1rem",
-            }}
-              className="popupbtns">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "100%",
+                columnGap: "1rem",
+              }}
+              className="popupbtns"
+            >
               <button
                 className="popupbtn colour cursor"
-                onClick={() => backbtn()}>Okay</button>
-              <button className="popupbtn cursor"
-                onClick={() => saveAsDraftbtn()}>Save as Draft</button>
+                onClick={() => backbtn()}
+              >
+                Okay
+              </button>
+              <button
+                className="popupbtn cursor"
+                onClick={() => saveAsDraftbtn()}
+              >
+                Save as Draft
+              </button>
             </div>
           </div>
         </ReactModal>
@@ -250,8 +283,8 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
             <img src={successful} alt="successfull" />
             <h1>Saved as Draft</h1>
             <p style={{ width: "25.075rem", textAlign: "center" }}>
-              Your edits have been successfully saved as a draft.
-              Take your time to review and refine your work.
+              Your edits have been successfully saved as a draft. Take your time
+              to review and refine your work.
             </p>
             <button
               style={{
@@ -288,7 +321,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                 paddingTop: "17.5px",
                 cursor: "pointer",
               }}
-              onClick={() => handelBack()}
+              onClick={() => history(-1)}
             >
               <img src={Backicon} alt="" />
               <div
@@ -376,7 +409,6 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                         right: "10px",
                         bottom: "16px",
                         color: "#787878",
-
                       }}
                     >
                       {formik.values.waterMark.length}/ 25
@@ -454,34 +486,33 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                       marginTop: "15px",
                       color: "#787878",
                       display: "flex",
-                      filter: imageOverlayShow && 'blur(0.8px)',
-                      justifyContent: 'center',
-                      position: 'relative',
+                      filter: imageOverlayShow && "blur(0.8px)",
+                      justifyContent: "center",
+                      position: "relative",
                       // backgroundColor:"red"
                     }}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    {imageOverlayShow &&
+                    {imageOverlayShow && (
                       <>
                         <div
                           style={{
-                            position: 'absolute',
-                            width: '98%',
-                            height: '98%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
-                            border: '2px dashed #fff',
-                            borderRadius: '5px',
+                            position: "absolute",
+                            width: "98%",
+                            height: "98%",
+                            backgroundColor: "rgba(0, 0, 0, 0.56)",
+                            border: "2px dashed #fff",
+                            borderRadius: "5px",
                             zIndex: 9999,
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
                           }}
                           onDragLeave={() => setImageOverlayShow(false)}
-                        >
-                        </div>
+                        ></div>
                       </>
-                    }
+                    )}
                     <div
                       style={{
                         width: "50px",
@@ -492,15 +523,23 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                         marginRight: "36px",
                       }}
                     >
-                      {formik.values.image &&
+                      {formik.values.image && (
                         <img
                           src={Trash}
                           alt="deletebutton"
                           onClick={() => formik.setFieldValue("image", "")}
-                        />}
+                        />
+                      )}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}
-                      onClick={() => { fileInputRef.current.click(); }}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onClick={() => {
+                        fileInputRef.current.click();
+                      }}
                     >
                       {formik.values.image ? (
                         <div
@@ -532,29 +571,47 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
                             flexDirection: "column",
                           }}
                         >
-                          <div style={{
-                            width: "608px",
-                            height: "420px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                          }}
+                          <div
+                            style={{
+                              width: "608px",
+                              height: "420px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
                           >
                             <img
                               src={DefaultProductIcon}
                               alt="DefaultProductIcon"
                             />
-                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <input
+                              type="file"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "none",
+                              }}
+                              ref={fileInputRef}
+                              onChange={(e) => onChange(e)}
+                            />
                             <p
                               style={{
                                 maxWidth: "299px",
                                 lineHeight: "200%",
-                                textAlign: "center"
-                              }}>
-                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                                textAlign: "center",
+                              }}
+                            >
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>
+                                Click or drag{" "}
+                                <span
+                                  style={{ color: "blue", cursor: "pointer" }}
+                                >
+                                  file
+                                </span>{" "}
+                                to this area to upload
+                              </div>
                               <div>upload image “1920 x 1080” size</div>
-
                             </p>
                           </div>
                         </div>
@@ -646,16 +703,13 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
               marginTop: "33px",
             }}
           >
-            <div
-              className="save_button"
-              onClick={() => handelBack()}
-            >
+            <div className="save_button" onClick={() => handelBack()}>
               Cancel
             </div>
             {formik.values.waterMark !== "" &&
-              formik.values.image !== "" &&
-              formik.values.des !== "" &&
-              formik.values.altText !== "" ? (
+            formik.values.image !== "" &&
+            formik.values.des !== "" &&
+            formik.values.altText !== "" ? (
               <div
                 className="save_button"
                 style={{
@@ -680,8 +734,8 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
               </div>
             )}
           </div>
-        </Container >
-      </AddNewProductContainer >
+        </Container>
+      </AddNewProductContainer>
     </>
   );
 };
@@ -689,7 +743,7 @@ const AddNewProduct = ({ onNext, savedData, removeRedux, formik }) => {
 export default AddNewProduct;
 
 const AddNewProductContainer = styled.div`
-   min-width: calc(100vw - 356px);
+  min-width: calc(100vw - 356px);
   background-color: #ffffff;
   margin: 0 22px 0 18px;
   min-height: 100vh;

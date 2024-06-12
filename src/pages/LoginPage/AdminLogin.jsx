@@ -7,6 +7,7 @@ import { MdOutlineVisibilityOff } from "react-icons/md";
 import axios from "axios";
 
 function AdminLogin() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [emailVerified, SetEmailVerified] = useState(false);
   const [email, SetEmail] = useState("");
   const [passwordValue, SetPasswordValue] = useState("nil");
@@ -24,7 +25,7 @@ function AdminLogin() {
           email: tempEmail,
         };
         axios
-          .post("http://localhost:8000/admin/verify-email", userData)
+          .post(`${apiUrl}/admin/verify-email`, userData)
           .then((response) => {
             console.log(response, response.status, response.data);
             if (response.data.success) {
@@ -83,19 +84,17 @@ function AdminLogin() {
         email: email,
         password: tempPassword,
       };
-      axios
-        .post("http://localhost:8000/admin/login", userData)
-        .then((response) => {
-          console.log(response, response.status, response.data);
-          if (response.data.success) {
-            // alert(response.data.message)
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("role", "admin");
-            navigate("/admin/dashboard");
-          } else {
-            alert(response.data.message);
-          }
-        });
+      axios.post(`${apiUrl}/admin/login`, userData).then((response) => {
+        console.log(response, response.status, response.data);
+        if (response.data.success) {
+          // alert(response.data.message)
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("role", "admin");
+          navigate("/admin/dashboard");
+        } else {
+          alert(response.data.message);
+        }
+      });
     };
 
     const handlepasswordtype = () => {

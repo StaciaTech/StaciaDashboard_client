@@ -20,6 +20,8 @@ import careerIcon from "../../assets/careerIcon.svg";
 import careerIconA from "../../assets/careerIconA.svg";
 import whatsnewA from "../../assets/whatsnewA.svg";
 import whatsnew from "../../assets/whatsnew.svg";
+import Settings from "../../assets/settingsIcon.svg";
+import BlueSettings from "../../assets/settingsBlue.svg";
 import { ProductContext } from "../../context/ProductContext";
 const routes = [
   {
@@ -60,7 +62,7 @@ const routes = [
     subRoutes: [],
   },
   {
-    path: "/admin/Resources",
+    path: "",
     name: "Resources",
     icon: resourcesIcon,
     iconA: resourcesIconA,
@@ -85,10 +87,25 @@ const routes = [
     subRoutes: [],
   },
   {
-    path: "/admin/Whats New",
+    path: "/admin/WhatsNew",
     name: "What’s New",
     icon: whatsnew,
     iconA: whatsnewA,
+    subRoutes: [],
+  },
+  {
+    path: "",
+    name: "Help",
+    icon: "",
+    iconA: "",
+    subRoutes: [],
+  },
+
+  {
+    path: "/admin/settings",
+    name: "Settings",
+    icon: Settings,
+    iconA: BlueSettings,
     subRoutes: [],
   },
 ];
@@ -144,19 +161,6 @@ const SideBar = () => {
       >
         <section className="routes">
           {routes.map((route, index) => {
-            {
-              /* if (route.subRoutes) {
-              return (
-                <SidebarMenu
-                  setIsOpen={setIsOpen}
-                  route={route}
-                  showAnimation={showAnimation}
-                  isOpen={isOpen}
-                  key={index}
-                />
-              );
-            } */
-            }
             return (
               <div>
                 <div
@@ -168,7 +172,11 @@ const SideBar = () => {
                   <Link
                     to={route.path}
                     key={index}
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                     className="link"
                     onClick={(event) => handleClick(index, route.path)}
                   >
@@ -188,7 +196,11 @@ const SideBar = () => {
                         <span style={{ paddingRight: "15px" }}>
                           {location.pathname === route.page ||
                           location.pathname === route.path ? (
-                            <img src={route.iconA} />
+                            <img
+                              src={route.iconA}
+                              width={"25rem"}
+                              height={"25rem"}
+                            />
                           ) : (
                             <img src={route.icon} />
                           )}

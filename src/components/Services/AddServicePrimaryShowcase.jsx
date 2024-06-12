@@ -15,23 +15,38 @@ import { ProductContext } from "../../context/ProductContext";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { updateFormData, updateServiceFormData } from "../../redux/action";
-import dived from "../../assets/dived.svg"
-import dropdown from "../../assets/DropDown.svg"
-import close_btn from "../../assets/close.svg"
+import dived from "../../assets/dived.svg";
+import dropdown from "../../assets/DropDown.svg";
+import close_btn from "../../assets/close.svg";
 import { ServiceContext } from "../../context/ServiceContext";
 
 const AddServicePrimaryShowcase = ({
   onPrevious,
   onSubmitValue,
   savedData,
-  formik
+  formik,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const fileInputRef = useRef(null);
-  const { hashTagModel, setHashModel, successfullModel, setSuccessfullModel, imageOverlayShow, setImageOverlayShow, showModel, setShowModel } = useContext(ServiceContext)
+  const {
+    hashTagModel,
+    setHashModel,
+    successfullModel,
+    setSuccessfullModel,
+    imageOverlayShow,
+    setImageOverlayShow,
+    showModel,
+    setShowModel,
+  } = useContext(ServiceContext);
 
   const [dropdownShow, setDropdownShow] = useState(false);
-  const [dropdownOptions, setDropdownOptions] = useState(["Add New", 'Agriculture', 'Technology', "Electronics"]);
+  const [dropdownOptions, setDropdownOptions] = useState([
+    "Add New",
+    "Agriculture",
+    "Technology",
+    "Electronics",
+  ]);
 
   const dispatch = useDispatch();
 
@@ -67,45 +82,45 @@ const AddServicePrimaryShowcase = ({
     overlay: {
       background: "rgba(0,0,0,0.25)",
     },
-  }
+  };
 
-  //image DragandDrop 
+  //image DragandDrop
   const handleDragOver = (e) => {
-    e.preventDefault()
-    setImageOverlayShow(true)
-  }
+    e.preventDefault();
+    setImageOverlayShow(true);
+  };
   const handleDrop = async (e) => {
-    setImageOverlayShow(false)
+    setImageOverlayShow(false);
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append("image", e.dataTransfer.files[0]);
+    const res = await fetch(`${apiUrl}/upload`, {
       method: "POST",
-      body: formData
-    })
+      body: formData,
+    });
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl)
+    formik.setFieldValue("pImage", resData.signedUrl);
     dispatch(updateServiceFormData("pImage", resData.signedUrl));
-  }
+  };
 
   //image onchange value
   const onChange = async (e) => {
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append("image", e.target.files[0]);
+    const res = await fetch(`${apiUrl}/upload`, {
       method: "POST",
-      body: formData
-    })
+      body: formData,
+    });
     const resData = await res.json();
-    formik.setFieldValue("pImage", resData.signedUrl)
+    formik.setFieldValue("pImage", resData.signedUrl);
     dispatch(updateServiceFormData("pImage", resData.signedUrl));
   };
 
   //text value onchange
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     formik.setFieldValue(name, value);
-    dispatch(updateServiceFormData(name, value))
+    dispatch(updateServiceFormData(name, value));
   };
   const btn_handeler = () => {
     setShowModel(false);
@@ -113,23 +128,22 @@ const AddServicePrimaryShowcase = ({
   };
 
   const continues = () => {
-    setHashModel(true)
-  }
+    setHashModel(true);
+  };
   const handleInputChange = (value) => {
     if (value === "Add New") {
-      formik.setFieldValue("domainName", "")
-      dispatch(updateServiceFormData("domainName", ""))
-      setDropdownShow(false)
+      formik.setFieldValue("domainName", "");
+      dispatch(updateServiceFormData("domainName", ""));
+      setDropdownShow(false);
     } else {
-      formik.setFieldValue("domainName", value)
-      setDropdownShow(false)
-      dispatch(updateServiceFormData("domainName", value))
+      formik.setFieldValue("domainName", value);
+      setDropdownShow(false);
+      dispatch(updateServiceFormData("domainName", value));
     }
   };
 
-
   const handleDropdownChange = (event) => {
-    setDropdownShow(!dropdownShow)
+    setDropdownShow(!dropdownShow);
     // const selectedOption = event.target.value;
     // if (selectedOption === 'add_new') {
     //   formik.setFieldValue("domainName", "") // Clear input value
@@ -140,7 +154,7 @@ const AddServicePrimaryShowcase = ({
     // }
   };
 
-  const [hashInputValue, sethashInputValue] = useState('');
+  const [hashInputValue, sethashInputValue] = useState("");
   const [filteredWords, setFilteredWords] = useState([]);
 
   const handleHashInputChange = (event) => {
@@ -154,38 +168,40 @@ const AddServicePrimaryShowcase = ({
     } else {
       setFilteredWords([]);
     }
-  }, [hashInputValue])
+  }, [hashInputValue]);
   const fetchWords = async (input) => {
     try {
       const response = await fetch(`https://api.datamuse.com/sug?s=${input}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch words');
+        throw new Error("Failed to fetch words");
       }
       const data = await response.json();
       // Extract titles from fetched data
-      const words = data.map(item => item.word);
+      const words = data.map((item) => item.word);
       setFilteredWords(words.slice(0, 6));
     } catch (error) {
-      console.error('Error fetching words:', error);
+      console.error("Error fetching words:", error);
     }
   };
 
   const enterInputValue = (value) => {
-    formik.setFieldValue("hashTag", [...formik.values.hashTag, value])
-    sethashInputValue("")
-    dispatch(updateServiceFormData("hashTag", [...formik.values.hashTag, value]))
-  }
+    formik.setFieldValue("hashTag", [...formik.values.hashTag, value]);
+    sethashInputValue("");
+    dispatch(
+      updateServiceFormData("hashTag", [...formik.values.hashTag, value])
+    );
+  };
 
   const handelRemove = (tag) => {
-    const newArray = formik.values.hashTag.filter((value) => value !== tag)
-    formik.setFieldValue("hashTag", newArray)
-    dispatch(updateServiceFormData("hashTag", newArray))
-  }
+    const newArray = formik.values.hashTag.filter((value) => value !== tag);
+    formik.setFieldValue("hashTag", newArray);
+    dispatch(updateServiceFormData("hashTag", newArray));
+  };
 
   const savePost = () => {
-    onSubmitValue()
-    setHashModel(false)
-  }
+    onSubmitValue();
+    setHashModel(false);
+  };
   return (
     <>
       <div>
@@ -204,13 +220,13 @@ const AddServicePrimaryShowcase = ({
               height: "100%",
             }}
           >
-            <form style={{ width: "100%", height: "100%", }}>
+            <form style={{ width: "100%", height: "100%" }}>
               <div style={{ width: "100%", marginBottom: "8px" }}>
                 <Lable> Heading</Lable>
                 <div
                   className="modelBox"
                   style={{
-                    border: "1px solid  rgba(0, 0, 0, 0.1)"
+                    border: "1px solid  rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <input
@@ -220,8 +236,7 @@ const AddServicePrimaryShowcase = ({
                       fontSize: "16px",
                       width: "430px",
                       height: "48px",
-                      color:
-                        "#000000",
+                      color: "#000000",
                       border: "none",
                       "::placeholder": {
                         color: "#787878",
@@ -241,7 +256,7 @@ const AddServicePrimaryShowcase = ({
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    border: "1px solid rgba(0, 0, 0, 0.1)"
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <input
@@ -261,7 +276,12 @@ const AddServicePrimaryShowcase = ({
                     onChange={handleChange}
                   />
                   <img src={dived} alt="" />
-                  <img src={dropdown} alt="" style={{ margin: "18px" }} onClick={handleDropdownChange} />
+                  <img
+                    src={dropdown}
+                    alt=""
+                    style={{ margin: "18px" }}
+                    onClick={handleDropdownChange}
+                  />
                 </div>
                 <div
                   className=""
@@ -269,31 +289,35 @@ const AddServicePrimaryShowcase = ({
                     position: "absolute",
                     width: "93%",
                     background: "#FFFFFF",
-                    zIndex: 1
+                    zIndex: 1,
                   }}
                 >
-                  {dropdownShow &&
+                  {dropdownShow && (
                     <div
                       style={{
                         width: "100%",
                         marginTop: "8px",
                         boxShadow: "0px 4px 4px 2px rgba(0, 0, 0, 0.1)",
                         borderRadius: "8px",
-                        position: "relative"
-                      }}>
+                        position: "relative",
+                      }}
+                    >
                       {dropdownOptions.map((item, id) => (
-                        <div key={id} style={{
-                          // width: "100%",
-                          borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-                          padding: "10px",
-                          cursor: "pointer"
-                        }}
-                          onClick={() => handleInputChange(item)}>
+                        <div
+                          key={id}
+                          style={{
+                            // width: "100%",
+                            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                            padding: "10px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleInputChange(item)}
+                        >
                           <span>{item}</span>
                         </div>
                       ))}
                     </div>
-                  }
+                  )}
                 </div>
               </div>
               <div>
@@ -305,8 +329,9 @@ const AddServicePrimaryShowcase = ({
                     display: "flex",
                     flexWrap: "wrap",
                     alignContent: "flex-start",
-                    border: "1px solid rgba(0, 0, 0, 0.1)"
-                  }}>
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -316,23 +341,27 @@ const AddServicePrimaryShowcase = ({
                     }}
                   >
                     {formik.values.hashTag.map((tag, index) => (
-                      <div key={index}
+                      <div
+                        key={index}
                         style={{
                           backgroundColor: "#F7F9FB",
                           // color: "#000000",
                           fontSize: "16px",
                           height: "40px",
-                          display: 'flex',
+                          display: "flex",
                           alignItems: "center",
                           borderRadius: "8px",
                           fontFamily: "EuclidMedium",
                           justifyContent: "space-between",
-
-                        }}>
-                        <p
-                          style={{ padding: "0px 10px" }}
-                        >{tag}</p>
-                        <img src={close_btn} alt="hello" style={{ padding: "0px 10px", cursor: "pointer", }} onClick={() => handelRemove(tag)} />
+                        }}
+                      >
+                        <p style={{ padding: "0px 10px" }}>{tag}</p>
+                        <img
+                          src={close_btn}
+                          alt="hello"
+                          style={{ padding: "0px 10px", cursor: "pointer" }}
+                          onClick={() => handelRemove(tag)}
+                        />
                       </div>
                     ))}
                   </div>
@@ -355,8 +384,11 @@ const AddServicePrimaryShowcase = ({
                 </div>
                 <Lable
                   style={{
-                    marginTop: "10px"
-                  }}>Suggested Tags</Lable>
+                    marginTop: "10px",
+                  }}
+                >
+                  Suggested Tags
+                </Lable>
                 <div
                   className="modelBox"
                   style={{
@@ -366,35 +398,40 @@ const AddServicePrimaryShowcase = ({
                     rowGap: "1rem",
                     flexWrap: "wrap",
                     marginTop: "8px",
-                  }}>
+                  }}
+                >
                   {filteredWords.map((tag, index) => (
-                    <div key={index}
+                    <div
+                      key={index}
                       style={{
                         backgroundColor: "#F7F9FB",
                         color: "#000000",
                         fontSize: "16px",
                         height: "40px",
-                        display: 'flex',
+                        display: "flex",
                         alignItems: "center",
                         borderRadius: "8px",
                         fontFamily: "EuclidMedium",
-                        cursor: "pointer"
+                        cursor: "pointer",
                       }}
-                      onClick={() => enterInputValue(tag)}>
+                      onClick={() => enterInputValue(tag)}
+                    >
                       <span style={{ padding: "20px 20px" }}>{tag}</span>
                     </div>
                   ))}
                 </div>
               </div>
               {/* save and Cancel button */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                width: "100%",
-                columnGap: "1rem",
-                marginTop: "83px",
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                  columnGap: "1rem",
+                  marginTop: "83px",
+                }}
+              >
                 <div
                   className="save_button"
                   onClick={() => setHashModel(false)}
@@ -614,34 +651,33 @@ const AddServicePrimaryShowcase = ({
                 marginTop: "15px",
                 color: "#787878",
                 display: "flex",
-                filter: imageOverlayShow && 'blur(0.8px)',
-                justifyContent: 'center',
-                position: 'relative',
+                filter: imageOverlayShow && "blur(0.8px)",
+                justifyContent: "center",
+                position: "relative",
                 // backgroundColor:"red"
               }}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
             >
-              {imageOverlayShow &&
+              {imageOverlayShow && (
                 <>
                   <div
                     style={{
-                      position: 'absolute',
-                      width: '98%',
-                      height: '98%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.56)',
-                      border: '2px dashed #fff',
-                      borderRadius: '5px',
+                      position: "absolute",
+                      width: "98%",
+                      height: "98%",
+                      backgroundColor: "rgba(0, 0, 0, 0.56)",
+                      border: "2px dashed #fff",
+                      borderRadius: "5px",
                       zIndex: 9999,
                       display: "flex",
                       justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                     onDragLeave={() => setImageOverlayShow(false)}
-                  >
-                  </div>
+                  ></div>
                 </>
-              }
+              )}
               <div
                 style={{
                   width: "50px",
@@ -652,15 +688,23 @@ const AddServicePrimaryShowcase = ({
                   marginRight: "36px",
                 }}
               >
-                {formik.values.pImage &&
+                {formik.values.pImage && (
                   <img
                     src={Trash}
                     alt="deletebutton"
                     onClick={() => formik.setFieldValue("pImage", "")}
-                  />}
+                  />
+                )}
               </div>
-              <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', }}
-                onClick={() => { fileInputRef.current.click(); }}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onClick={() => {
+                  fileInputRef.current.click();
+                }}
               >
                 {formik.values.pImage ? (
                   <div
@@ -692,29 +736,42 @@ const AddServicePrimaryShowcase = ({
                       flexDirection: "column",
                     }}
                   >
-                    <div style={{
-                      width: "608px",
-                      height: "420px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
+                    <div
+                      style={{
+                        width: "608px",
+                        height: "420px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                      }}
                     >
-                      <img
-                        src={DefaultProductIcon}
-                        alt="DefaultProductIcon"
+                      <img src={DefaultProductIcon} alt="DefaultProductIcon" />
+                      <input
+                        type="file"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          display: "none",
+                        }}
+                        ref={fileInputRef}
+                        onChange={(e) => onChange(e)}
                       />
-                      <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
                       <p
                         style={{
                           maxWidth: "299px",
                           lineHeight: "200%",
-                          textAlign: "center"
-                        }}>
-                        <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                          textAlign: "center",
+                        }}
+                      >
+                        <div style={{ fontFamily: "EuclidSemiBold" }}>
+                          Click or drag{" "}
+                          <span style={{ color: "blue", cursor: "pointer" }}>
+                            file
+                          </span>{" "}
+                          to this area to upload
+                        </div>
                         <div>upload image “1920 x 1080” size</div>
-
                       </p>
                     </div>
                   </div>
@@ -800,34 +857,33 @@ const AddServicePrimaryShowcase = ({
             <div className="save_button" onClick={onPrevious}>
               Previous
             </div>
-            {
-              formik.values.pAlterNativeText !== "" &&
-                formik.values.pImage !== "" ? (
-                <div
-                  className="save_button"
-                  style={{
-                    backgroundColor: "#0044FF",
-                    color: "#ffff",
-                  }}
-                  onClick={() => continues()}
-                >
-                  Continue
-                </div>
-              ) : (
-                <div
-                  className="save_button"
-                  style={{
-                    // width: "141px",
-                    background: "#0044FF",
-                    color: "#FFFFFF",
-                    opacity: 0.2,
-                    cursor: "default",
-                    // height: "3.5rem",
-                  }}
-                >
-                  Continue
-                </div>
-              )}
+            {formik.values.pAlterNativeText !== "" &&
+            formik.values.pImage !== "" ? (
+              <div
+                className="save_button"
+                style={{
+                  backgroundColor: "#0044FF",
+                  color: "#ffff",
+                }}
+                onClick={() => continues()}
+              >
+                Continue
+              </div>
+            ) : (
+              <div
+                className="save_button"
+                style={{
+                  // width: "141px",
+                  background: "#0044FF",
+                  color: "#FFFFFF",
+                  opacity: 0.2,
+                  cursor: "default",
+                  // height: "3.5rem",
+                }}
+              >
+                Continue
+              </div>
+            )}
           </div>
         </Container>
       </AddNewserviceContainer>

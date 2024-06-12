@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
 const AddNewProductPage = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [formDatas, setformDatas] = useState();
@@ -90,7 +91,7 @@ const AddNewProductPage = () => {
       domainName: formDatas.domainName,
       hashTag: formDatas.hashTags,
     };
-    const res = await fetch("http://localhost:8000/product/create", {
+    const res = await fetch(`${apiUrl}/product/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

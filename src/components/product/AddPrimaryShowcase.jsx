@@ -7,87 +7,106 @@ import DefaultProductIcon from "../../assets/DefaultProductIcon.svg";
 import Trash from "../../assets/Trash.svg";
 import { ProductContext } from "../../context/ProductContext";
 import ReactModal from "react-modal";
-import dived from "../../assets/dived.svg"
-import dropdown from "../../assets/DropDown.svg"
+import dived from "../../assets/dived.svg";
+import dropdown from "../../assets/DropDown.svg";
 import successful from "../../assets/successful.svg";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { updateFormData } from "../../redux/action";
-import close from "../../assets/close.svg"
+import close from "../../assets/close.svg";
 import axios from "axios";
 
-const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) => {
+const AddPrimaryShowcase = ({
+  onPrevious,
+  onSubmitValue,
+  savedData,
+  formik,
+}) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
-  const dispatch = useDispatch()
-  const [signedUrl, SetSignedUrl] =useState("")
+  const dispatch = useDispatch();
+  const [signedUrl, SetSignedUrl] = useState("");
 
   const fileInputRef = useRef(null);
 
-
-  console.log(formik.values)
-  const { hashTagModel, setHashModel, successfullModel, setSuccessfullModel, imageOverlayShow, setImageOverlayShow } = useContext(ProductContext)
+  console.log(formik.values);
+  const {
+    hashTagModel,
+    setHashModel,
+    successfullModel,
+    setSuccessfullModel,
+    imageOverlayShow,
+    setImageOverlayShow,
+  } = useContext(ProductContext);
 
   const [dropdownShow, setDropdownShow] = useState(false);
-  const [dropdownOptions, setDropdownOptions] = useState(["Add New", 'Agriculture', 'Technology', "Electronics"]);
+  const [dropdownOptions, setDropdownOptions] = useState([
+    "Add New",
+    "Agriculture",
+    "Technology",
+    "Electronics",
+  ]);
 
-  //image DragandDrop 
+  //image DragandDrop
   const handleDragOver = (e) => {
-    e.preventDefault()
-    setImageOverlayShow(true)
-  }
+    e.preventDefault();
+    setImageOverlayShow(true);
+  };
   const handleDrop = async (e) => {
-    setImageOverlayShow(false)
+    setImageOverlayShow(false);
     e.preventDefault();
     const formData = new FormData();
-    formData.append('file', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
+    formData.append("file", e.dataTransfer.files[0]);
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
       method: "POST",
-      body: formData
-    })
-    const resData = await res.json();
-    formik.setFieldValue("pImage", resData.image)
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
-
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
+      body: formData,
     });
+    const resData = await res.json();
+    formik.setFieldValue("pImage", resData.image);
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     dispatch(updateFormData("pImage", resData.image));
-  }
+  };
 
   //image onchange value
   const onChange = async (e) => {
     const formData = new FormData();
-    console.log("inside")
-    formData.append('file', e.target.files[0]);
-    const res = await fetch("http://localhost:8000/product/uploadfile", {
+    console.log("inside");
+    formData.append("file", e.target.files[0]);
+    const res = await fetch(`${apiUrl}/product/uploadfile`, {
       method: "POST",
-      body: formData
-    })
-    const resData = await res.json();
-    formik.setFieldValue("pImage", resData.image)
-
-    axios.post("http://localhost:8000/product/getimageurl",{
-      image:resData.image,
-    imageType:resData.imageType,
-    }).then(function (response) {
-
-      console.log("signedurl :",response.data.url);
-      SetSignedUrl(response.data.url)
-    })
-    .catch(function (error) {
-      console.log(error);
+      body: formData,
     });
+    const resData = await res.json();
+    formik.setFieldValue("pImage", resData.image);
+
+    axios
+      .post(`${apiUrl}/product/getimageurl`, {
+        image: resData.image,
+        imageType: resData.imageType,
+      })
+      .then(function (response) {
+        console.log("signedurl :", response.data.url);
+        SetSignedUrl(response.data.url);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     dispatch(updateFormData("pImage", resData.image));
   };
 
   //text value onchange
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     formik.setFieldValue(name, value);
     dispatch(updateFormData(name, value));
@@ -99,9 +118,8 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
     },
     onSubmit: (values) => {
       // console.log(values.pDomainName, hashTageValues)
-    }
+    },
   });
-
 
   const customStyles = {
     content: {
@@ -135,37 +153,37 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
     overlay: {
       background: "rgba(0,0,0,0.25)",
     },
-  }
+  };
   const Done = () => {
     setSuccessfullModel(false);
-    history("/admin/Product/AllProduct")
-  }
+    history("/admin/Product/AllProduct");
+  };
 
   const continues = () => {
-    setHashModel(true)
-  }
+    setHashModel(true);
+  };
 
   const handleInputChange = (value) => {
     if (value === "Add New") {
-      formik.setFieldValue("domainName", "")
-      dispatch(updateFormData("domainName", ""))
-      setDropdownShow(false)
+      formik.setFieldValue("domainName", "");
+      dispatch(updateFormData("domainName", ""));
+      setDropdownShow(false);
     } else {
-      formik.setFieldValue("domainName", value)
-      setDropdownShow(false)
-      dispatch(updateFormData("domainName", value))
+      formik.setFieldValue("domainName", value);
+      setDropdownShow(false);
+      dispatch(updateFormData("domainName", value));
     }
   };
 
   const handelInputValue = (e) => {
-    formik.setFieldValue("domainName", e.target.value)
-    dispatch(updateFormData("domainName", e.target.value))
-  }
+    formik.setFieldValue("domainName", e.target.value);
+    dispatch(updateFormData("domainName", e.target.value));
+  };
   const handleDropdownChange = (event) => {
-    setDropdownShow(!dropdownShow)
+    setDropdownShow(!dropdownShow);
   };
 
-  const [hashInputValue, sethashInputValue] = useState('');
+  const [hashInputValue, sethashInputValue] = useState("");
   const [filteredWords, setFilteredWords] = useState([]);
 
   const handleHashInputChange = (event) => {
@@ -179,38 +197,38 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
     } else {
       setFilteredWords([]);
     }
-  }, [hashInputValue])
+  }, [hashInputValue]);
   const fetchWords = async (input) => {
     try {
       const response = await fetch(`https://api.datamuse.com/sug?s=${input}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch words');
+        throw new Error("Failed to fetch words");
       }
       const data = await response.json();
       // Extract titles from fetched data
-      const words = data.map(item => item.word);
+      const words = data.map((item) => item.word);
       setFilteredWords(words.slice(0, 6));
     } catch (error) {
-      console.error('Error fetching words:', error);
+      console.error("Error fetching words:", error);
     }
   };
 
   const enterInputValue = (value) => {
-    formik.setFieldValue("hashTash", [...formik.values.hashTash, value])
-    sethashInputValue("")
-    dispatch(updateFormData("hashTag", [...formik.values.hashTash, value]))
-  }
+    formik.setFieldValue("hashTash", [...formik.values.hashTash, value]);
+    sethashInputValue("");
+    dispatch(updateFormData("hashTag", [...formik.values.hashTash, value]));
+  };
 
   const handelRemove = (tag) => {
-    const newArray = formik.values.hashTash.filter((value) => value !== tag)
-    formik.setFieldValue("hashTash", newArray)
-    dispatch(updateFormData("hashTag", newArray))
-  }
+    const newArray = formik.values.hashTash.filter((value) => value !== tag);
+    formik.setFieldValue("hashTash", newArray);
+    dispatch(updateFormData("hashTag", newArray));
+  };
 
   const savePost = () => {
-    onSubmitValue()
-    setHashModel(false)
-  }
+    onSubmitValue();
+    setHashModel(false);
+  };
 
   return (
     <>
@@ -230,13 +248,13 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
               height: "100%",
             }}
           >
-            <form style={{ width: "100%", height: "100%", }}>
+            <form style={{ width: "100%", height: "100%" }}>
               <div style={{ width: "100%", marginBottom: "8px" }}>
                 <Lable> Heading</Lable>
                 <div
                   className="modelBox"
                   style={{
-                    border: "1px solid  rgba(0, 0, 0, 0.1)"
+                    border: "1px solid  rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <input
@@ -246,8 +264,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                       fontSize: "16px",
                       width: "430px",
                       height: "48px",
-                      color:
-                        "#000000",
+                      color: "#000000",
                       border: "none",
                       "::placeholder": {
                         color: "#787878",
@@ -267,7 +284,7 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    border: "1px solid rgba(0, 0, 0, 0.1)"
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <input
@@ -287,7 +304,12 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                     onChange={handleChange}
                   />
                   <img src={dived} alt="" />
-                  <img src={dropdown} alt="" style={{ margin: "18px" }} onClick={handleDropdownChange} />
+                  <img
+                    src={dropdown}
+                    alt=""
+                    style={{ margin: "18px" }}
+                    onClick={handleDropdownChange}
+                  />
                 </div>
                 <div
                   className=""
@@ -295,31 +317,35 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                     position: "absolute",
                     width: "93%",
                     background: "#FFFFFF",
-                    zIndex: 1
+                    zIndex: 1,
                   }}
                 >
-                  {dropdownShow &&
+                  {dropdownShow && (
                     <div
                       style={{
                         width: "100%",
                         marginTop: "8px",
                         boxShadow: "0px 4px 4px 2px rgba(0, 0, 0, 0.1)",
                         borderRadius: "8px",
-                        position: "relative"
-                      }}>
+                        position: "relative",
+                      }}
+                    >
                       {dropdownOptions.map((item, id) => (
-                        <div key={id} style={{
-                          // width: "100%",
-                          borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-                          padding: "10px",
-                          cursor: "pointer"
-                        }}
-                          onClick={() => handleInputChange(item)}>
+                        <div
+                          key={id}
+                          style={{
+                            // width: "100%",
+                            borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                            padding: "10px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleInputChange(item)}
+                        >
                           <span>{item}</span>
                         </div>
                       ))}
                     </div>
-                  }
+                  )}
                 </div>
               </div>
               <div>
@@ -331,8 +357,9 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                     display: "flex",
                     flexWrap: "wrap",
                     alignContent: "flex-start",
-                    border: "1px solid rgba(0, 0, 0, 0.1)"
-                  }}>
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -342,23 +369,27 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                     }}
                   >
                     {formiks.values.hashTash.map((tag, index) => (
-                      <div key={index}
+                      <div
+                        key={index}
                         style={{
                           backgroundColor: "#F7F9FB",
                           // color: "#000000",
                           fontSize: "16px",
                           height: "40px",
-                          display: 'flex',
+                          display: "flex",
                           alignItems: "center",
                           borderRadius: "8px",
                           fontFamily: "EuclidMedium",
                           justifyContent: "space-between",
-
-                        }}>
-                        <p
-                          style={{ padding: "0px 10px" }}
-                        >{tag}</p>
-                        <img src={close} alt="hello" style={{ padding: "0px 10px", cursor: "pointer", }} onClick={() => handelRemove(tag)} />
+                        }}
+                      >
+                        <p style={{ padding: "0px 10px" }}>{tag}</p>
+                        <img
+                          src={close}
+                          alt="hello"
+                          style={{ padding: "0px 10px", cursor: "pointer" }}
+                          onClick={() => handelRemove(tag)}
+                        />
                       </div>
                     ))}
                   </div>
@@ -381,8 +412,11 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                 </div>
                 <Lable
                   style={{
-                    marginTop: "10px"
-                  }}>Suggested Tags</Lable>
+                    marginTop: "10px",
+                  }}
+                >
+                  Suggested Tags
+                </Lable>
                 <div
                   className="modelBox"
                   style={{
@@ -392,39 +426,41 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                     rowGap: "1rem",
                     flexWrap: "wrap",
                     marginTop: "8px",
-                  }}>
+                  }}
+                >
                   {filteredWords.map((tag, index) => (
-                    <div key={index}
+                    <div
+                      key={index}
                       style={{
                         backgroundColor: "#F7F9FB",
                         color: "#000000",
                         fontSize: "16px",
                         height: "40px",
-                        display: 'flex',
+                        display: "flex",
                         alignItems: "center",
                         borderRadius: "8px",
                         fontFamily: "EuclidMedium",
-                        cursor: "pointer"
+                        cursor: "pointer",
                       }}
-                      onClick={() => enterInputValue(tag)}>
+                      onClick={() => enterInputValue(tag)}
+                    >
                       <span style={{ padding: "20px 20px" }}>{tag}</span>
                     </div>
                   ))}
                 </div>
               </div>
               {/* save and Cancel button */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                width: "100%",
-                columnGap: "1rem",
-                marginTop: "83px",
-              }}>
-                <div
-                  className="save_button"
-                  onClick={() => setHashModel()}
-                >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                  columnGap: "1rem",
+                  marginTop: "83px",
+                }}
+              >
+                <div className="save_button" onClick={() => setHashModel()}>
                   Previous
                 </div>
 
@@ -461,7 +497,8 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
             <img src={successful} alt="successfull" />
             <h1>Add Successfully!</h1>
             <p style={{ width: "32.375rem", textAlign: "center" }}>
-              Your Product information has been successfully added to the Website. Thank you for updating your details!
+              Your Product information has been successfully added to the
+              Website. Thank you for updating your details!
             </p>
             <button
               style={{
@@ -524,7 +561,13 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
           ></div>
           <div style={{ width: "100%", marginTop: "34px" }}>
             <form>
-              <div style={{ display: "flex", justifyContent: "space-between", height: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  height: "100%",
+                }}
+              >
                 <div>
                   <div style={{ position: "relative" }}>
                     <div
@@ -561,7 +604,10 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                           height: "170px",
                           border: "none",
                           resize: "none",
-                          color: formik.values.pDes1.length <= 50 ? "#000000" : "#E52f2f",
+                          color:
+                            formik.values.pDes1.length <= 50
+                              ? "#000000"
+                              : "#E52f2f",
                           fontFamily: "EuclidRegular",
                           "::placeholder": {
                             color: "#787878",
@@ -615,7 +661,10 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                           fontSize: "16px",
                           width: "430px",
                           height: "170px",
-                          color: formik.values.pDes2.length <= 50 ? "#000000" : "#E52f2f",
+                          color:
+                            formik.values.pDes2.length <= 50
+                              ? "#000000"
+                              : "#E52f2f",
                           border: "none",
                           fontFamily: "EuclidRegular",
                           "::placeholder": {
@@ -650,33 +699,32 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                       marginTop: "15px",
                       color: "#787878",
                       display: "flex",
-                      justifyContent: 'center',
-                      position: 'relative',
-                      filter: imageOverlayShow && 'blur(0.8px)',
+                      justifyContent: "center",
+                      position: "relative",
+                      filter: imageOverlayShow && "blur(0.8px)",
                     }}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    {imageOverlayShow &&
+                    {imageOverlayShow && (
                       <>
                         <div
                           style={{
-                            position: 'absolute',
-                            width: '98%',
-                            height: '98%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
-                            border: '2px dashed #fff',
-                            borderRadius: '5px',
+                            position: "absolute",
+                            width: "98%",
+                            height: "98%",
+                            backgroundColor: "rgba(0, 0, 0, 0.56)",
+                            border: "2px dashed #fff",
+                            borderRadius: "5px",
                             zIndex: 9999,
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
                           }}
                           onDragLeave={() => setImageOverlayShow(false)}
-                        >
-                        </div>
+                        ></div>
                       </>
-                    }
+                    )}
                     <div
                       style={{
                         width: "50px",
@@ -687,14 +735,21 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                         marginRight: "36px",
                       }}
                     >
-                      {formik.values.pImage &&
+                      {formik.values.pImage && (
                         <img
                           src={Trash}
                           alt="deletebutton"
                           onClick={() => formik.setFieldValue("pImage", "")}
-                        />}
+                        />
+                      )}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       {formik.values.pImage ? (
                         <div
                           style={{
@@ -725,28 +780,50 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                             flexDirection: "column",
                           }}
                         >
-                          <div style={{
-                            width: "608px",
-                            height: "420px",
-                            margin: "90px 140px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                          }}
-                            onClick={() => { fileInputRef.current.click(); }}>
+                          <div
+                            style={{
+                              width: "608px",
+                              height: "420px",
+                              margin: "90px 140px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
+                            onClick={() => {
+                              fileInputRef.current.click();
+                            }}
+                          >
                             <img
                               src={DefaultProductIcon}
                               alt="DefaultProductIcon"
                             />
-                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <input
+                              type="file"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "none",
+                              }}
+                              ref={fileInputRef}
+                              onChange={(e) => onChange(e)}
+                            />
                             <p
                               style={{
                                 maxWidth: "299px",
                                 lineHeight: "200%",
-                                textAlign: "center"
-                              }}>
-                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                                textAlign: "center",
+                              }}
+                            >
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>
+                                Click or drag{" "}
+                                <span
+                                  style={{ color: "blue", cursor: "pointer" }}
+                                >
+                                  file
+                                </span>{" "}
+                                to this area to upload
+                              </div>
                               <div>upload image “1920 x 1080” size</div>
                             </p>
                           </div>
@@ -786,7 +863,10 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
                           fontSize: "16px",
                           width: "749px",
                           height: "48px",
-                          color: formik.values.pAltText.length <= 25 ? "#000000" : "#E52f2f",
+                          color:
+                            formik.values.pAltText.length <= 25
+                              ? "#000000"
+                              : "#E52f2f",
                           border: "none",
                           "::placeholder": {
                             color: "#787878",
@@ -824,50 +904,48 @@ const AddPrimaryShowcase = ({ onPrevious, onSubmitValue, savedData, formik }) =>
           ></div>
 
           {/* save and Cancel button */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            width: "100%",
-            columnGap: "1rem",
-            marginTop: "33px",
-          }}>
-            <div
-              className="save_button"
-              onClick={() => onPrevious()}
-            >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+              columnGap: "1rem",
+              marginTop: "33px",
+            }}
+          >
+            <div className="save_button" onClick={() => onPrevious()}>
               Previous
             </div>
-            {
-              formik.values.pDes1 !== "" &&
-                formik.values.pDes2 !== "" &&
-                formik.values.pAltText !== "" &&
-                formik.values.pImage !== "" ? (
-                <div
-                  className="save_button"
-                  style={{
-                    backgroundColor: "#0044FF",
-                    color: "#ffff",
-                  }}
-                  onClick={() => continues()}
-                >
-                  Continue
-                </div>
-              ) : (
-                <div
-                  className="save_button"
-                  style={{
-                    // width: "141px",
-                    background: "#0044FF",
-                    color: "#FFFFFF",
-                    opacity: 0.2,
-                    cursor: "default",
-                    // height: "3.5rem",
-                  }}
-                >
-                  Continue
-                </div>
-              )}
+            {formik.values.pDes1 !== "" &&
+            formik.values.pDes2 !== "" &&
+            formik.values.pAltText !== "" &&
+            formik.values.pImage !== "" ? (
+              <div
+                className="save_button"
+                style={{
+                  backgroundColor: "#0044FF",
+                  color: "#ffff",
+                }}
+                onClick={() => continues()}
+              >
+                Continue
+              </div>
+            ) : (
+              <div
+                className="save_button"
+                style={{
+                  // width: "141px",
+                  background: "#0044FF",
+                  color: "#FFFFFF",
+                  opacity: 0.2,
+                  cursor: "default",
+                  // height: "3.5rem",
+                }}
+              >
+                Continue
+              </div>
+            )}
           </div>
         </Container>
       </AddNewProductContainer>

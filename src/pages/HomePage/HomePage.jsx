@@ -16,7 +16,7 @@ const HomePage = () => {
     },
     {
       name: "Our Clients",
-      link: "/admin/Home/service",
+      link: "/admin/Home/clients",
     },
     {
       name: "Our Service",
@@ -24,7 +24,7 @@ const HomePage = () => {
     },
     {
       name: "Events",
-      link: "/admin/Home/service",
+      link: "/admin/Home/events",
     },
     {
       name: "Case Study",
@@ -39,12 +39,12 @@ const HomePage = () => {
       link: "/admin/Home/service",
     },
     {
-      name: "Foundation Four",
-      link: "/admin/Home/service",
+      name: "Founders",
+      link: "/admin/Home/founders",
     },
     {
       name: "Testinomials",
-      link: "/admin/Home/service",
+      link: "/admin/Home/testimonials",
     },
   ];
 
