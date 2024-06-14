@@ -13,7 +13,7 @@ function FileUploadQuestion({
   return (
     <>
       <div className="singleQuestion-Container">
-        {questionIndex + 1}.
+        {/* {questionIndex + 1}. */}
         <ReactQuill
           modules={module}
           theme="snow"

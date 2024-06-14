@@ -162,7 +162,7 @@ const SideBar = () => {
         <section className="routes">
           {routes.map((route, index) => {
             return (
-              <div>
+              <div key={index}>
                 <div
                   style={{}}
                   className="link_container"
@@ -180,7 +180,7 @@ const SideBar = () => {
                     className="link"
                     onClick={(event) => handleClick(index, route.path)}
                   >
-                    <a
+                    <div
                       // href={route.path}
                       className="link_text"
                       style={{
@@ -206,8 +206,8 @@ const SideBar = () => {
                           )}
                         </span>
                       )}
-                      <p style={{ margin: "0px" }}>{route.name}</p>
-                    </a>
+                      <div style={{ margin: "0px" }}>{route.name}</div>
+                    </div>
                   </Link>
                   {(hoveredIndex === index ||
                     location.pathname === route.path ||
@@ -222,7 +222,7 @@ const SideBar = () => {
                   )}
                 </div>
                 {route.subRoutes.map(({ name, path }, index) => (
-                  <p
+                  <div
                     key={index}
                     onClick={() => {
                       history(path);
@@ -234,7 +234,7 @@ const SideBar = () => {
                     }}
                   >
                     <p style={{ padding: "5px", cursor: "pointer" }}>{name}</p>
-                  </p>
+                  </div>
                 ))}
                 {/* {route.subRoutes && (
                   <div style={{ width: "100%", textAlign: "center" }}>

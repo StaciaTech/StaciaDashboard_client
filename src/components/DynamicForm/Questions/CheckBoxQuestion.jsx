@@ -24,7 +24,7 @@ function CheckBoxQuestion({
   return (
     <>
       <div>
-        {questionIndex + 1}
+        {/* {questionIndex + 1} */}
         <ReactQuill
           modules={module}
           theme="snow"

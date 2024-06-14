@@ -49,3 +49,6 @@ body::-webkit-scrollbar {
   opacity: 0.6;
   border-radius: 10px;
 }
+.ql-container.ql-snow {
+  border: none;
+}

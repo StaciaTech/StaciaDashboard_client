@@ -50,23 +50,25 @@ function QuestionContainer({ id, children, title, activeContainerIndex }) {
         <div>
           <div>
             <div>
-              <ReactQuill
+              {/* <ReactQuill
                 modules={module}
                 theme="snow"
                 value={title.title}
                 onFocus={() => setIsFocusedTitle(true)}
                 onBlur={() => setIsFocusedTitle(false)}
                 onChange={handleContainerTitleChange}
-              />
+                style={{ backgroundColor: "#0047ff" }}
+              /> */}
             </div>
             <div>
-              <ReactQuill
+              {/* <ReactQuill
                 modules={module}
                 theme="snow"
                 value={title.formDescription}
                 onFocus={() => setIsFocusedDescription(true)}
                 onBlur={() => setIsFocusedDescription(false)}
-              />
+                style={{ backgroundColor: "#0047ff" }}
+              /> */}
             </div>
           </div>
         </div>

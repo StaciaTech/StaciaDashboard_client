@@ -116,6 +116,7 @@ export const formSlice = createSlice({
 
     deleteQuestion: (state, action) => {
       const { id, containerIndex } = action.payload;
+      console.log(action.payload);
       return {
         ...state,
         form: state.form.map((container, cIndex) => {

@@ -11,16 +11,16 @@ const FormContextProvider = ({ children }) => {
 
   return (
     <FormContext.Provider
-      value={
-        (activeQuestion,
+      value={{
+        activeQuestion,
         setActiveQuestion,
         activeContainerIndex,
         setActiveContainerIndex,
         openQuestion,
         setOpenQuestion,
         openQuestionSetting,
-        setOpenQuestionSetting)
-      }
+        setOpenQuestionSetting,
+      }}
     >
       {children}
     </FormContext.Provider>

@@ -21,7 +21,7 @@ function MultipleChoice({ id, question, questionIndex, module }) {
   return (
     <>
       <div className="singleQuestion-Container">
-        {questionIndex + 1}.
+        {/* {questionIndex + 1}. */}
         {/* {isFocusedQuestion ? (
       <ReactQuill
         modules={module}

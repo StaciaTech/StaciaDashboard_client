@@ -19,6 +19,9 @@ function TextComponent({ id, text, icon }) {
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
   };
 
   const handleDragOver = () => {
@@ -39,8 +42,8 @@ function TextComponent({ id, text, icon }) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
-        {icon}
-        {text}
+        <div>{icon}</div>
+        <div>{text}</div>
         {isDraggingOver && <div>Drop here</div>}
       </div>
     </>

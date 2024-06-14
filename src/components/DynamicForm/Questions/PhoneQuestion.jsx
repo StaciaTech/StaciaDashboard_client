@@ -14,7 +14,7 @@ function PhoneQuestion({
   return (
     <>
       <div className="singleQuestion_name_Container">
-        {questionIndex + 1}.
+        {/* {questionIndex + 1}. */}
         <ReactQuill
           modules={module}
           theme="snow"

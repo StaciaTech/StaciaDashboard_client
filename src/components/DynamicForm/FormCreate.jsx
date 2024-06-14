@@ -27,6 +27,33 @@ import {
   updatevalueFrom,
 } from "../../redux/FormSlice";
 import ReactQuill from "react-quill";
+import ShortAnswerIcon from "../.././assets/short-text.svg";
+import ParagraphIcon from "../.././assets/Long.svg";
+import MultiChoiceIcon from "../.././assets/MultiChoice.svg";
+import CheckBoxIcon from "../.././assets/CheckBox.svg";
+import DropDownIcon from "../.././assets/DropDownForm.svg";
+import MultiInputIcon from "../.././assets/MultiInput.svg";
+import FileUploadIcon from "../.././assets/FileUpload.svg";
+import PhoneIcon from "../.././assets/phoneIcon.svg";
+import CountryIcon from "../.././assets/CountryIcon.svg";
+import StateIcon from "../.././assets/StatesIcon.svg";
+import CityIcon from "../.././assets/cityIcon.svg";
+import SectionIcon from "../../assets/columns.svg";
+import LocationIcon from "../../assets/location.svg";
+import MailIcon from "../../assets/mail.svg";
+import CalenderIcon from "../../assets/calendar.svg";
+import TimeIcon from "../../assets/TimeForm.svg";
+import DateTimeIcon from "../../assets/dateTimeForm.svg";
+import RatingScaleIcon from "../../assets/ratingScale.svg";
+import WebsiteIcon from "../../assets/websiteForm.svg";
+import SignIcon from "../../assets/signForm.svg";
+import PlayIcon from "../../assets/playForm.svg";
+import AppointmentIcon from "../../assets/AppointmentIcon.svg";
+import PaymentIcon from "../../assets/PaymentIconForm.svg";
+import CaptchaIcon from "../../assets/captchaIconForm.svg";
+import SpinnerIcon from "../../assets/spinnerIconForm.svg";
+import TimerIcon from "../../assets/timer.svg";
+import AddIcon from "../../assets/Add.svg";
 
 function FormCreate() {
   const [activeId, setActiveId] = useState(null);
@@ -52,181 +79,203 @@ function FormCreate() {
     setHoveredComponent(null);
   };
 
+  {
+    /** add logos */
+  }
+
   const [textItems, setTextItems] = useState([
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="shortAnswer" />,
+      icon: <img src={ShortAnswerIcon} alt="" />,
       text: "Short Answer",
       type: "Short Answer",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={ShortAnswerIcon} alt="" />,
+    //   text: "Name",
+    //   type: "Name",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="name" />,
-      text: "Name",
-      type: "Name",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="paragraph" />,
+      icon: <img src={ParagraphIcon} alt="" />,
       text: "Paragraph",
       type: "Paragraph",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={SectionIcon} alt="" />,
+    //   text: "Section",
+    //   type: "Section",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="section" />,
-      text: "Section",
-      type: "Section",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="phone" />,
+      icon: <img src={PhoneIcon} alt="" />,
       text: "Phone",
       type: "Phone",
     },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="MultipleChoiceIcon" />,
+      icon: <img src={MultiChoiceIcon} alt="" />,
       text: "Multiple Choice",
       type: "Multiple Choice",
     },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="CheckBoxIcon" />,
+      icon: <img src={CheckBoxIcon} alt="" />,
       text: "Check Box",
       type: "Check Box",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={LocationIcon} alt="" />,
+    //   text: "Location",
+    //   type: "Location",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={MailIcon} alt="" />,
+    //   text: "Email",
+    //   type: "Email",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="location" />,
-      text: "Location",
-      type: "Location",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="email" />,
-      text: "Email",
-      type: "Email",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="dropDown" />,
+      icon: <img src={DropDownIcon} alt="" />,
       text: "Dropdown",
       type: "Dropdown",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={PhoneIcon} alt="" />,
+    //   text: "Number",
+    //   type: "Number",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={SectionIcon} alt="" />,
+    //   text: "Line Scale",
+    //   type: "Line Scale",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={CalenderIcon} alt="" />,
+    //   text: "Date",
+    //   type: "Date",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="number" />,
-      text: "Number",
-      type: "Number",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="linescale" />,
-      text: "Line Scale",
-      type: "Line Scale",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="date" />,
-      text: "Date",
-      type: "Date",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="multipleChoice" />,
+      icon: <img src={MultiInputIcon} alt="" />,
       text: "Multiple Choice grid",
       type: "Multiple Choice grid",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={TimeIcon} alt="" />,
+    //   text: "Time",
+    //   type: "Time",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="time" />,
-      text: "Time",
-      type: "Time",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="tickboxGrid" />,
+      icon: <img src={CheckBoxIcon} alt="" />,
       text: "Check box grid",
       type: "Check box grid",
     },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={DateTimeIcon} alt="" />,
+    //   text: "Date - Time",
+    //   type: "Date - Time",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={RatingScaleIcon} alt="" />,
+    //   text: "Rating Scale",
+    //   type: "Rating Scale",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={WebsiteIcon} alt="" />,
+    //   text: "Website",
+    //   type: "Website",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={ParagraphIcon} alt="" />,
+    //   text: "Description",
+    //   type: "Description",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={SignIcon} alt="" />,
+    //   text: "Signature",
+    //   type: "Signature",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={PlayIcon} alt="" />,
+    //   text: "Audio/Video Upload",
+    //   type: "Audio/Video Upload",
+    // },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="dateAndTime" />,
-      text: "Date - Time",
-      type: "Date - Time",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="RatingScale" />,
-      text: "Rating Scale",
-      type: "Rating Scale",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="website" />,
-      text: "Website",
-      type: "Website",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="description" />,
-      text: "Description",
-      type: "Description",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="signature" />,
-      text: "Signature",
-      type: "Signature",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="audiovideo" />,
-      text: "Audio/Video Upload",
-      type: "Audio/Video Upload",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="fileUpload" />,
+      icon: <img src={FileUploadIcon} alt="" />,
       text: "File Upload",
       type: "File Upload",
     },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="timer" />,
-      text: "Timer",
-      type: "Timer",
+      icon: <img src={CountryIcon} alt="" />,
+      text: "Country",
+      type: "Country",
     },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="AddProduct" />,
-      text: "AddProduct",
-      type: "AddProduct",
+      icon: <img src={StateIcon} alt="" />,
+      text: "State",
+      type: "State",
     },
     {
       id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="payament" />,
-      text: "payament",
-      type: "payament",
+      icon: <img src={CityIcon} alt="" />,
+      text: "City",
+      type: "City",
     },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="captcha" />,
-      text: "Captcha",
-      type: "Captcha",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="spinner" />,
-      text: "Spinner",
-      type: "Spinner",
-    },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={""} alt="Appointment" />,
-      text: "Appointment",
-      type: "Appointment",
-    },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={TimerIcon} alt="" />,
+    //   text: "Timer",
+    //   type: "Timer",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={AddIcon} alt="" />,
+    //   text: "AddProduct",
+    //   type: "AddProduct",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={PaymentIcon} alt="" />,
+    //   text: "payament",
+    //   type: "payament",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={CaptchaIcon} alt="" />,
+    //   text: "Captcha",
+    //   type: "Captcha",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={SpinnerIcon} alt="" />,
+    //   text: "Spinner",
+    //   type: "Spinner",
+    // },
+    // {
+    //   id: `text-${uuidv4()}`,
+    //   icon: <img src={AppointmentIcon} alt="" />,
+    //   text: "Appointment",
+    //   type: "Appointment",
+    // },
   ]);
 
   const findquestion = (type) => {
@@ -291,31 +340,31 @@ function FormCreate() {
           required: false,
         };
         break;
-      case "Name":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          question: "Name",
-          firstName: "First Name",
-          lastName: "Last Name",
-          sublabel: "",
-          type: "Name",
-          answer: "",
-          required: false,
-        };
-        break;
-      case "Line Scale":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          question: "Who is best PM of India in history",
-          type: "Line Scale",
-          sublabel: "",
-          placeholderMin: "Enter left label",
-          placeholderMax: "Enter right label",
-          minRange: { value: 0, labelName: "" },
-          maxRange: { value: 5, labelName: "" },
-          required: false,
-        };
-        break;
+      // case "Name":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     question: "Name",
+      //     firstName: "First Name",
+      //     lastName: "Last Name",
+      //     sublabel: "",
+      //     type: "Name",
+      //     answer: "",
+      //     required: false,
+      //   };
+      //   break;
+      // case "Line Scale":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     question: "Who is best PM of India in history",
+      //     type: "Line Scale",
+      //     sublabel: "",
+      //     placeholderMin: "Enter left label",
+      //     placeholderMax: "Enter right label",
+      //     minRange: { value: 0, labelName: "" },
+      //     maxRange: { value: 5, labelName: "" },
+      //     required: false,
+      //   };
+      //   break;
       case "Phone":
         newQuestion = {
           id: `item-${uuidv4()}`,
@@ -327,65 +376,65 @@ function FormCreate() {
           required: false,
         };
         break;
-      case "Website":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          question: "Website",
-          answer: "",
-          type: "Website",
-          required: false,
-          placeHolder: "",
-        };
-        break;
-      case "Email":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          question: "Email",
-          answer: "",
-          type: "Email",
-          required: false,
-          sublabel: "",
-          placeHolder: "",
-          domainValidation: "",
-          characterlimit: "",
-        };
-        break;
-      case "Number":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Number",
-          question: "Farmer ID number",
-          answer: "",
-          required: false,
-          placeHolder: "",
-          sublabel: "",
-        };
-        break;
-      case "Spinner":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Spinner",
-          question: "Spinner",
-          answer: 0,
-          sublabel: "",
-          maxValue: 0,
-          minValue: 0,
-          intervelAmount: 0,
-          required: false,
-        };
-        break;
-      case "Signature":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Signature",
-          question: "Signature",
-          answer: "",
-          required: false,
-          sublabel: "",
-          boxWidth: "",
-          boxHeight: "",
-        };
-        break;
+      // case "Website":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     question: "Website",
+      //     answer: "",
+      //     type: "Website",
+      //     required: false,
+      //     placeHolder: "",
+      //   };
+      //   break;
+      // case "Email":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     question: "Email",
+      //     answer: "",
+      //     type: "Email",
+      //     required: false,
+      //     sublabel: "",
+      //     placeHolder: "",
+      //     domainValidation: "",
+      //     characterlimit: "",
+      //   };
+      //   break;
+      // case "Number":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Number",
+      //     question: "Farmer ID number",
+      //     answer: "",
+      //     required: false,
+      //     placeHolder: "",
+      //     sublabel: "",
+      //   };
+      //   break;
+      // case "Spinner":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Spinner",
+      //     question: "Spinner",
+      //     answer: 0,
+      //     sublabel: "",
+      //     maxValue: 0,
+      //     minValue: 0,
+      //     intervelAmount: 0,
+      //     required: false,
+      //   };
+      //   break;
+      // case "Signature":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Signature",
+      //     question: "Signature",
+      //     answer: "",
+      //     required: false,
+      //     sublabel: "",
+      //     boxWidth: "",
+      //     boxHeight: "",
+      //   };
+      //   break;
       case "File Upload":
         newQuestion = {
           id: `item-${uuidv4()}`,
@@ -400,42 +449,42 @@ function FormCreate() {
           fileTypes: "",
         };
         break;
-      case "Audio/Video Upload":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Audio/Video Upload",
-          question: "Audio&Video FileUpload",
-          answer: "",
-          required: false,
-          sublabel: "",
-          mediaType: "",
-          uploadMinLimt: "",
-          uploadMaxLimt: "",
-          fileSizeMax: "",
-          fileSizeMin: "",
-          fileTypes: [],
-        };
-        break;
-      case "Date":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Date",
-          question: "",
-          answer: "",
-          sublable: "",
-          required: false,
-        };
-        break;
-      case "Date - Time":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Date - Time",
-          question: "",
-          answer: "",
-          sublable: "",
-          required: false,
-        };
-        break;
+      // case "Audio/Video Upload":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Audio/Video Upload",
+      //     question: "Audio&Video FileUpload",
+      //     answer: "",
+      //     required: false,
+      //     sublabel: "",
+      //     mediaType: "",
+      //     uploadMinLimt: "",
+      //     uploadMaxLimt: "",
+      //     fileSizeMax: "",
+      //     fileSizeMin: "",
+      //     fileTypes: [],
+      //   };
+      //   break;
+      // case "Date":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Date",
+      //     question: "",
+      //     answer: "",
+      //     sublable: "",
+      //     required: false,
+      //   };
+      //   break;
+      // case "Date - Time":
+      //   newQuestion = {
+      //     id: `item-${uuidv4()}`,
+      //     type: "Date - Time",
+      //     question: "",
+      //     answer: "",
+      //     sublable: "",
+      //     required: false,
+      //   };
+      //   break;
       case "Multiple Choice grid":
         newQuestion = {
           id: `item-${uuidv4()}`,
@@ -454,6 +503,33 @@ function FormCreate() {
           question: "",
           row: [{ id: uuidv4(), rowText: "Row 1" }],
           column: [{ id: uuidv4(), columnText: "Column 1" }],
+        };
+        break;
+      case "Country":
+        newQuestion = {
+          id: `item-${uuidv4()}`,
+          type: "Country",
+          question: "what is your country name",
+          answer: "",
+          require: false,
+        };
+        break;
+      case "State":
+        newQuestion = {
+          id: `item-${uuidv4()}`,
+          type: "State",
+          question: "What is Your State",
+          answer: "",
+          require: false,
+        };
+        break;
+      case "City":
+        newQuestion = {
+          id: `item-${uuidv4()}`,
+          type: "City",
+          question: "what is Your City",
+          answer: "",
+          require: false,
         };
         break;
       default:
@@ -513,6 +589,7 @@ function FormCreate() {
 
   //HANDLE DRAG MOVE
   const handleDragMove = (event) => {
+    console.log("drag end!!");
     const { active, over } = event;
     // Handle Items Sorting
     if (
@@ -632,6 +709,7 @@ function FormCreate() {
   //HANDLE DRAG END
   function handleDragEnd(event) {
     const { active, over } = event;
+    // console.log("jygjhgjhg");
     // Handling Container Sorting
     if (
       active.id.toString().includes("container") &&
@@ -775,6 +853,7 @@ function FormCreate() {
         // Add the text item to the over container
         let newItems = findquestion(active.data.current.text);
         dispatch(createForm({ overContainerIndex, newItems }));
+        console.log(newItems);
         setActiveQuestion(newItems.id);
 
         setActiveContainerIndex(overContainerIndex);
@@ -825,7 +904,10 @@ function FormCreate() {
   return (
     <>
       <div>
-        <div className="flex-container">
+        <div
+          className="flex-container"
+          style={{ display: "flex", width: "100%", columnGap: "1rem" }}
+        >
           <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}
@@ -833,7 +915,7 @@ function FormCreate() {
             onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
           >
-            <div className="component">
+            <div className="component" style={{ width: "80%" }}>
               <SortableContext items={form.map((i) => i.id)}>
                 {form.map((container, cindex) => (
                   <QuestionContainer
@@ -862,26 +944,30 @@ function FormCreate() {
                 ))}
               </SortableContext>
             </div>
-
-            {openQuestionSetting ? (
-              <NewComponent setOpenQuestionSetting={setOpenQuestionSetting} />
-            ) : (
-              // <div></div>
-              <div className="text-container">
-                <div className="text-container1">
-                  <SortableContext items={textItems.map((i) => i.id)}>
-                    {textItems.map((i) => (
-                      <TextComponent
-                        key={i.id}
-                        id={i.id}
-                        text={i.text}
-                        icon={i.icon}
-                      />
-                    ))}
-                  </SortableContext>
+            <div style={{ width: "20%" }}>
+              {openQuestionSetting ? (
+                <NewComponent setOpenQuestionSetting={setOpenQuestionSetting} />
+              ) : (
+                // <div></div>
+                <div className="side-item-container">
+                  <div className="text-container1">
+                    <SortableContext items={textItems.map((i) => i.id)}>
+                      {textItems.map((i) => (
+                        <div className="side-item" key={i.id}>
+                          <TextComponent
+                            key={i.id}
+                            id={i.id}
+                            text={i.text}
+                            icon={i.icon}
+                          />
+                        </div>
+                      ))}
+                    </SortableContext>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
             <DragOverlay adjustScale={false}>
               {/* Drag Overlay For item Item */}
               {activeId && activeId.toString().includes("item") && (
@@ -933,10 +1019,17 @@ function NewComponent({ setOpenQuestionSetting }) {
   };
   return (
     <div
-      className={` text-container ${moveRight ? "move-right" : "slide-in"}`}
-      style={{ padding: "1.8rem" }}
+      // className={`text-container ${moveRight ? "move-right" : "slide-in"}`}
+      style={{
+        padding: "1.8rem",
+      }}
     >
-      <div style={{ width: "100%", height: "100%" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      >
         {renderQuestionProperties(
           question,
           handleClick,

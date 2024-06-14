@@ -1,0 +1,67 @@
+.side-item-container {
+  border: 2px solid #0001;
+  padding: 0.5rem;
+  border-radius: 10px;
+  width: 100%;
+  /* height: 80vh;
+  overflow-y: scroll; */
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+  align-items: center;
+}
+/* .side-item-container::-webkit-scrollbar {
+  width: 6px;
+  background-color: #e5edff;
+}
+.side-item-container::-webkit-scrollbar-thumb {
+  background-color: #0047ff;
+  border-radius: 4px;
+} */
+.side-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.question-container {
+  width: 100%;
+}
+
+/* quill Styles */
+.ql-editor {
+  border: 1px solid #0001 !important;
+  height: 3rem !important;
+  border-radius: 10px;
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-toolbar {
+  border: 1px solid #0001 !important;
+  border-radius: 10px;
+  margin: 0.5rem 0rem;
+  height: 3rem !important;
+}
+/* .custom {
+  display: flex;
+  flex-direction: column-reverse;
+} */
+.custom.focus .ql-toolbar {
+  display: block;
+}
+.custom .ql-toolbar {
+  display: none;
+}
+/* .custom {
+  display: none;
+} */
+.answer-container {
+  border: 1px solid #0001;
+  border-radius: 10px;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  padding-left: 0.6rem;
+  color: #010a13;
+  width: 100%;
+  margin: 0.5rem 0rem;
+}

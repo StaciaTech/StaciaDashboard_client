@@ -1,7 +1,10 @@
 import React from "react";
 import ReactQuill from "react-quill";
+import { updateItemQuestion } from "../../../redux/FormSlice";
+import { useDispatch } from "react-redux";
+import "../../../styles/DynamicForm.css";
 
-function EmailQuestion({
+function CountryQuestion({
   id,
   question,
   module,
@@ -10,10 +13,13 @@ function EmailQuestion({
   setOpenQuestion,
   containerIndex,
 }) {
+  const dispatch = useDispatch();
+  const handleQuestionChange = (value) => {
+    dispatch(updateItemQuestion({ value, id, containerIndex }));
+  };
   return (
     <>
-      <div className="singleQuestion_name_Container">
-        {questionIndex + 1}.
+      <div>
         <ReactQuill
           modules={module}
           theme="snow"
@@ -21,16 +27,12 @@ function EmailQuestion({
           onFocus={() => setOpenQuestion(question.id)}
           onBlur={() => setOpenQuestion(null)}
           value={question.question}
+          onChange={handleQuestionChange}
         />
       </div>
-      <div className="nameAns_container">
-        <div className="Name" style={{ display: "flex", gap: "0.5rem" }}>
-          <img src={""} alt="email_icon_Form" />
-          {question.palceHolder}
-        </div>
-      </div>
+      <div className="answer-container">{question.placeHolder}</div>
     </>
   );
 }
 
-export default EmailQuestion;
+export default CountryQuestion;

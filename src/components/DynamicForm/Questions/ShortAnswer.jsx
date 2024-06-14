@@ -2,6 +2,7 @@ import React from "react";
 import ReactQuill from "react-quill";
 import { updateItemQuestion } from "../../../redux/FormSlice";
 import { useDispatch } from "react-redux";
+import "../../../styles/DynamicForm.css";
 
 function ShortAnswer({
   id,
@@ -19,7 +20,6 @@ function ShortAnswer({
   return (
     <>
       <div className="singleQuestion-Container">
-        {questionIndex + 1}.
         <ReactQuill
           modules={module}
           theme="snow"
@@ -27,6 +27,7 @@ function ShortAnswer({
           onFocus={() => setOpenQuestion(question.id)}
           onBlur={() => setOpenQuestion(null)}
           value={question.question}
+          z
           onChange={handleQuestionChange}
         />
       </div>
