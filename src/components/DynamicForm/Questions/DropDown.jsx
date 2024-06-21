@@ -1,21 +1,18 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
 import ReactQuill from "react-quill";
-import "../../../styles/DynamicForm.css"
+import "../../../styles/DynamicForm.css";
 import { useDispatch } from "react-redux";
+import DndIcon from "../../../assets/DragandDropicon.svg";
+import TrashIcon from "../../../assets/binForm.svg";
+import PlusIcon from "../../../assets/PlusForm.svg";
 import {
   addOptionSingleChoiceop,
   deleteSingleChoiseOption,
   updateItemQuestion,
   updateSingleChoiceOp,
 } from "../../../redux/FormSlice";
-import { useSelector } from "react-redux";
-import MultipleIcon from "../../../assets/multipleChoiceIcon.svg"
-import PlusIcon from "../../../assets/PlusForm.svg"
-import DndIcon from "../../../assets/DragandDropicon.svg"
-import TrashIcon from "../../../assets/binForm.svg"
 
-
-function MultipleChoice({
+function DropDown({
   id,
   question,
   module,
@@ -24,7 +21,7 @@ function MultipleChoice({
   setOpenQuestion,
   containerIndex,
 }) {
-  const [multiOtionFocused, setMultiOptionfocused] = useState(null);
+  const [inputFocused, setInputFocused] = useState(null);
   const dispatch = useDispatch();
   const handleQuestionChange = (newQuestion) => {
     dispatch(
@@ -41,19 +38,17 @@ function MultipleChoice({
       })
     );
   };
-
-  const deleteSingleChoiceOp = (optionIndex) => {
+  const deleteOption = (optionIndex) => {
     dispatch(
       deleteSingleChoiseOption({ optionIndex, questionIndex, containerIndex })
     );
   };
-
   const addNewOption = () => {
     dispatch(addOptionSingleChoiceop({ questionIndex, containerIndex }));
   };
   return (
     <>
-      <div className="singleQuestion-Container">
+      <div>
         <ReactQuill
           modules={module}
           theme="snow"
@@ -67,45 +62,41 @@ function MultipleChoice({
       <div>
         {question.options.map((data, index) => (
           <div
-            className="choice-box"
             key={index}
-            onClick={() => setMultiOptionfocused(data.id)}
+            onClick={() => setInputFocused(data.id)}
+            className="choice-box"
           >
-            <img src={MultipleIcon} alt="singleChoiceIcon" />
+            <div style={{ width: "1rem" }} >{index + 1}.</div>
             <input
               type="text"
-              placeholder={`Add choice ${data.optionText}`}
-              value={data.optionText}
+              name=""
+              id=""
               className="choice-input"
-              onFocus={() => {
-                setMultiOptionfocused(data.id); // Set focused question ID
-              }}
+              value={data.optionText}
+              onFocus={() => setInputFocused(data.id)}
               onChange={(e) => handleOptionTextChange(index, e.target.value)}
             />
             <div style={{ display: "flex", alignItems: "center", gap: "4rem" }}>
               <img
                 src={DndIcon}
-                alt="optionDND"
+                alt=""
                 style={{
-                  display: multiOtionFocused === data.id ? "block" : "none",
+                  display: inputFocused === data.id ? "block" : "none",
                 }}
               />
               <img
                 src={TrashIcon}
-                alt="trash"
+                alt=""
                 style={{
-                  display: multiOtionFocused === data.id ? "block" : "none",
+                  display: inputFocused === data.id ? "block" : "none",
                 }}
                 className="optionTrash"
-                onClick={() => deleteSingleChoiceOp(index)}
+                onClick={deleteOption}
               />
             </div>
           </div>
         ))}
-        <div
-          className="column_add_button"
-          onClick={() => addNewOption()}
-        >
+        <div className="column_add_button" onClick={() => addNewOption()}>
           <img src={PlusIcon} alt="addSingleOptionButton" />
           <p className="add-Option">Add Option</p>
         </div>
@@ -114,4 +105,4 @@ function MultipleChoice({
   );
 }
 
-export default MultipleChoice;
+export default DropDown;

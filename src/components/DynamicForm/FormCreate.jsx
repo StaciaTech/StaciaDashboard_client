@@ -67,8 +67,17 @@ function FormCreate() {
     setActiveQuestion,
     setActiveContainerIndex,
     activeContainerIndex,
+    setActiveContainer,
+    openSideItem,
+    setOpenSideItems,
+    containerDragItems,
+    setContainerDragItems,
+    cardDragItems,
+    setCardDragItems
   } = useContext(FormContext);
   const dispatch = useDispatch();
+
+
 
   const form = useSelector((state) => state.form.form);
   const handleMouseEnter = (index) => {
@@ -90,29 +99,17 @@ function FormCreate() {
       text: "Short Answer",
       type: "Short Answer",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={ShortAnswerIcon} alt="" />,
-    //   text: "Name",
-    //   type: "Name",
-    // },
     {
       id: `text-${uuidv4()}`,
       icon: <img src={ParagraphIcon} alt="" />,
-      text: "Paragraph",
-      type: "Paragraph",
+      text: "Long Answer",
+      type: "Long Answer",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={SectionIcon} alt="" />,
-    //   text: "Section",
-    //   type: "Section",
-    // },
     {
       id: `text-${uuidv4()}`,
       icon: <img src={PhoneIcon} alt="" />,
-      text: "Phone",
-      type: "Phone",
+      text: "Phone Number",
+      type: "Phone Number",
     },
     {
       id: `text-${uuidv4()}`,
@@ -126,96 +123,18 @@ function FormCreate() {
       text: "Check Box",
       type: "Check Box",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={LocationIcon} alt="" />,
-    //   text: "Location",
-    //   type: "Location",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={MailIcon} alt="" />,
-    //   text: "Email",
-    //   type: "Email",
-    // },
     {
       id: `text-${uuidv4()}`,
       icon: <img src={DropDownIcon} alt="" />,
       text: "Dropdown",
       type: "Dropdown",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={PhoneIcon} alt="" />,
-    //   text: "Number",
-    //   type: "Number",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={SectionIcon} alt="" />,
-    //   text: "Line Scale",
-    //   type: "Line Scale",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={CalenderIcon} alt="" />,
-    //   text: "Date",
-    //   type: "Date",
-    // },
     {
       id: `text-${uuidv4()}`,
       icon: <img src={MultiInputIcon} alt="" />,
-      text: "Multiple Choice grid",
-      type: "Multiple Choice grid",
+      text: "Multiple Input",
+      type: "Multiple Input",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={TimeIcon} alt="" />,
-    //   text: "Time",
-    //   type: "Time",
-    // },
-    {
-      id: `text-${uuidv4()}`,
-      icon: <img src={CheckBoxIcon} alt="" />,
-      text: "Check box grid",
-      type: "Check box grid",
-    },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={DateTimeIcon} alt="" />,
-    //   text: "Date - Time",
-    //   type: "Date - Time",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={RatingScaleIcon} alt="" />,
-    //   text: "Rating Scale",
-    //   type: "Rating Scale",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={WebsiteIcon} alt="" />,
-    //   text: "Website",
-    //   type: "Website",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={ParagraphIcon} alt="" />,
-    //   text: "Description",
-    //   type: "Description",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={SignIcon} alt="" />,
-    //   text: "Signature",
-    //   type: "Signature",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={PlayIcon} alt="" />,
-    //   text: "Audio/Video Upload",
-    //   type: "Audio/Video Upload",
-    // },
     {
       id: `text-${uuidv4()}`,
       icon: <img src={FileUploadIcon} alt="" />,
@@ -240,45 +159,10 @@ function FormCreate() {
       text: "City",
       type: "City",
     },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={TimerIcon} alt="" />,
-    //   text: "Timer",
-    //   type: "Timer",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={AddIcon} alt="" />,
-    //   text: "AddProduct",
-    //   type: "AddProduct",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={PaymentIcon} alt="" />,
-    //   text: "payament",
-    //   type: "payament",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={CaptchaIcon} alt="" />,
-    //   text: "Captcha",
-    //   type: "Captcha",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={SpinnerIcon} alt="" />,
-    //   text: "Spinner",
-    //   type: "Spinner",
-    // },
-    // {
-    //   id: `text-${uuidv4()}`,
-    //   icon: <img src={AppointmentIcon} alt="" />,
-    //   text: "Appointment",
-    //   type: "Appointment",
-    // },
   ]);
 
   const findquestion = (type) => {
+    console.log(type)
     let newQuestion;
     switch (type) {
       case "Short Answer":
@@ -295,12 +179,12 @@ function FormCreate() {
           placeHolder: "",
         };
         break;
-      case "Paragraph":
+      case "Long Answer":
         newQuestion = {
           id: `item-${uuidv4()}`,
           question: "Un question Paragraph",
           answer: "",
-          type: "Paragraph",
+          type: "Long Answer",
           required: false,
           minWords: 25,
           maxWords: 50,
@@ -313,12 +197,10 @@ function FormCreate() {
         newQuestion = {
           id: `item-${uuidv4()}`,
           sublabel: "",
-          question: "Which is capital of TamilNadu",
+          question: "Tick Your Choice",
           options: [
-            { id: `item-${uuidv4()}`, optionText: " Chennai" },
-            { id: `item-${uuidv4()}`, optionText: " Erode" },
-            { id: `item-${uuidv4()}`, optionText: " Coimbatore" },
-            { id: `item-${uuidv4()}`, optionText: " Madurai" },
+            { id: `item-${uuidv4()}`, optionText: " Option1" },
+            { id: `item-${uuidv4()}`, optionText: " Option2" },
           ],
           type: "Check Box",
           required: false,
@@ -328,47 +210,31 @@ function FormCreate() {
       case "Multiple Choice":
         newQuestion = {
           id: `item-${uuidv4()}`,
-          question: "Which is capital of TamilNadu",
+          question: "Select a option",
           options: [
-            { id: `item-${uuidv4()}`, optionText: " Chennai" },
-            { id: `item-${uuidv4()}`, optionText: " Erode" },
-            { id: `item-${uuidv4()}`, optionText: " Coimbatore" },
-            { id: `item-${uuidv4()}`, optionText: " Madurai" },
+            { id: `item-${uuidv4()}`, optionText: " Option1" },
+            { id: `item-${uuidv4()}`, optionText: " Option2" },
           ],
           type: "Multiple Choice",
-          sublabel: "",
           required: false,
+          PredefinedOption: "none"
         };
         break;
-      // case "Name":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     question: "Name",
-      //     firstName: "First Name",
-      //     lastName: "Last Name",
-      //     sublabel: "",
-      //     type: "Name",
-      //     answer: "",
-      //     required: false,
-      //   };
-      //   break;
-      // case "Line Scale":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     question: "Who is best PM of India in history",
-      //     type: "Line Scale",
-      //     sublabel: "",
-      //     placeholderMin: "Enter left label",
-      //     placeholderMax: "Enter right label",
-      //     minRange: { value: 0, labelName: "" },
-      //     maxRange: { value: 5, labelName: "" },
-      //     required: false,
-      //   };
-      //   break;
-      case "Phone":
+      case "Dropdown":
         newQuestion = {
           id: `item-${uuidv4()}`,
-          type: "Phone",
+          question: "Select a Dropdown option",
+          type: "Dropdown",
+          options: [
+            { id: `item-${uuidv4()}`, optionText: "Option1" },
+            { id: `item-${uuidv4()}`, optionText: "Option2" },
+          ],
+        }
+        break;
+      case "Phone Number":
+        newQuestion = {
+          id: `item-${uuidv4()}`,
+          type: "Phone Number",
           question: "Phone Number",
           sublabel: "",
           placeHolder: "",
@@ -376,65 +242,6 @@ function FormCreate() {
           required: false,
         };
         break;
-      // case "Website":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     question: "Website",
-      //     answer: "",
-      //     type: "Website",
-      //     required: false,
-      //     placeHolder: "",
-      //   };
-      //   break;
-      // case "Email":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     question: "Email",
-      //     answer: "",
-      //     type: "Email",
-      //     required: false,
-      //     sublabel: "",
-      //     placeHolder: "",
-      //     domainValidation: "",
-      //     characterlimit: "",
-      //   };
-      //   break;
-      // case "Number":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Number",
-      //     question: "Farmer ID number",
-      //     answer: "",
-      //     required: false,
-      //     placeHolder: "",
-      //     sublabel: "",
-      //   };
-      //   break;
-      // case "Spinner":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Spinner",
-      //     question: "Spinner",
-      //     answer: 0,
-      //     sublabel: "",
-      //     maxValue: 0,
-      //     minValue: 0,
-      //     intervelAmount: 0,
-      //     required: false,
-      //   };
-      //   break;
-      // case "Signature":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Signature",
-      //     question: "Signature",
-      //     answer: "",
-      //     required: false,
-      //     sublabel: "",
-      //     boxWidth: "",
-      //     boxHeight: "",
-      //   };
-      //   break;
       case "File Upload":
         newQuestion = {
           id: `item-${uuidv4()}`,
@@ -449,60 +256,17 @@ function FormCreate() {
           fileTypes: "",
         };
         break;
-      // case "Audio/Video Upload":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Audio/Video Upload",
-      //     question: "Audio&Video FileUpload",
-      //     answer: "",
-      //     required: false,
-      //     sublabel: "",
-      //     mediaType: "",
-      //     uploadMinLimt: "",
-      //     uploadMaxLimt: "",
-      //     fileSizeMax: "",
-      //     fileSizeMin: "",
-      //     fileTypes: [],
-      //   };
-      //   break;
-      // case "Date":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Date",
-      //     question: "",
-      //     answer: "",
-      //     sublable: "",
-      //     required: false,
-      //   };
-      //   break;
-      // case "Date - Time":
-      //   newQuestion = {
-      //     id: `item-${uuidv4()}`,
-      //     type: "Date - Time",
-      //     question: "",
-      //     answer: "",
-      //     sublable: "",
-      //     required: false,
-      //   };
-      //   break;
-      case "Multiple Choice grid":
+      case "Multiple Input":
         newQuestion = {
           id: `item-${uuidv4()}`,
-          type: "Multiple Choice grid",
+          type: "Multiple Input",
           question: "",
-          row: [{ id: uuidv4(), rowText: "Row 1" }],
-          column: [{ id: uuidv4(), columnText: "Column 1" }],
           sublable: "",
           required: false,
-        };
-        break;
-      case "Check box grid":
-        newQuestion = {
-          id: `item-${uuidv4()}`,
-          type: "Check box grid",
-          question: "",
-          row: [{ id: uuidv4(), rowText: "Row 1" }],
-          column: [{ id: uuidv4(), columnText: "Column 1" }],
+          options: [
+            { id: `item-${uuidv4()}`, optionText: "Option1" },
+            { id: `item-${uuidv4()}`, optionText: "Option2" },
+          ],
         };
         break;
       case "Country":
@@ -855,7 +619,9 @@ function FormCreate() {
         dispatch(createForm({ overContainerIndex, newItems }));
         console.log(newItems);
         setActiveQuestion(newItems.id);
-
+        setActiveContainer(false)
+        setContainerDragItems(false)
+        setCardDragItems(false)
         setActiveContainerIndex(overContainerIndex);
       } else if (over.id.toString().includes("item")) {
         // Find the over container
@@ -893,13 +659,23 @@ function FormCreate() {
             newItems,
           })
         );
-
+        setActiveContainer(false)
         setActiveQuestion(newItems.id);
         setActiveContainerIndex(overContainerIndex);
         setDraggedOverItemId(null);
       }
     }
   }
+
+  const colneQuestion = (type, containerIndex) => {
+    const newItems = findquestion(type);
+    // Find the index of the over container
+    const overContainerIndex = form.findIndex(
+      (container) => container.id === containerIndex
+    );
+    dispatch(createForm({ overContainerIndex, newItems }));
+    setActiveQuestion(newItems.id);
+  };
 
   return (
     <>
@@ -915,13 +691,15 @@ function FormCreate() {
             onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
           >
-            <div className="component" style={{ width: "80%" }}>
+            <div className="component" style={openSideItem ? { width: "80%" } : { width: "100%" }}>
               <SortableContext items={form.map((i) => i.id)}>
                 {form.map((container, cindex) => (
                   <QuestionContainer
                     id={container.id}
                     title={container}
+                    textItems={textItems}
                     key={container.id}
+
                     onAddItem={() => {
                       setCurrentContainerId(container.id);
                     }}
@@ -931,11 +709,13 @@ function FormCreate() {
                       {container.items.map((i, index) => (
                         <div key={index}>
                           <QustionCard
+                            textItems={textItems}
                             question={i}
                             id={i.id}
                             key={i.id}
                             questionIndex={index}
-                            containerIndex={container.id}
+                            containerIndex={cindex}
+                            colneQuestion={colneQuestion}
                           />
                         </div>
                       ))}
@@ -944,29 +724,27 @@ function FormCreate() {
                 ))}
               </SortableContext>
             </div>
-            <div style={{ width: "20%" }}>
-              {openQuestionSetting ? (
-                <NewComponent setOpenQuestionSetting={setOpenQuestionSetting} />
-              ) : (
-                // <div></div>
-                <div className="side-item-container">
-                  <div className="text-container1">
-                    <SortableContext items={textItems.map((i) => i.id)}>
-                      {textItems.map((i) => (
-                        <div className="side-item" key={i.id}>
-                          <TextComponent
-                            key={i.id}
-                            id={i.id}
-                            text={i.text}
-                            icon={i.icon}
-                          />
-                        </div>
-                      ))}
-                    </SortableContext>
-                  </div>
+
+            {openSideItem && (<div style={{ width: "20%" }}>
+
+              <div className="side-item-container">
+                <div className="text-container1">
+                  <SortableContext items={textItems.map((i) => i.id)}>
+                    {textItems.map((i) => (
+                      <div className="side-item" key={i.id}>
+                        <TextComponent
+                          key={i.id}
+                          id={i.id}
+                          text={i.text}
+                          icon={i.icon}
+                        />
+                      </div>
+                    ))}
+                  </SortableContext>
                 </div>
-              )}
+              </div>
             </div>
+            )}
 
             <DragOverlay adjustScale={false}>
               {/* Drag Overlay For item Item */}
@@ -1066,16 +844,16 @@ const renderQuestionProperties = (
           questionIndex={questionIndex}
         />
       );
-    case "Multiple Choice":
-      return (
-        <SingleChoicePro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Check Box":
+    // case "Multiple Choice":
+    //   return (
+    //     <SingleChoicePro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    case "Multiple choice":
       return (
         <MultipleChoice
           handleClick={handleClick}
@@ -1084,24 +862,24 @@ const renderQuestionProperties = (
           questionIndex={questionIndex}
         />
       );
-    case "Line Scale":
-      return (
-        <LineScalePro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Name":
-      return (
-        <NamePro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
+    // case "Line Scale":
+    //   return (
+    //     <LineScalePro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    // case "Name":
+    //   return (
+    //     <NamePro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
     case "Phone":
       return (
         <PhonePro
@@ -1111,51 +889,51 @@ const renderQuestionProperties = (
           questionIndex={questionIndex}
         />
       );
-    case "Email":
-      return (
-        <EmailPro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Website":
-      return (
-        <WebsitePro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Number":
-      return (
-        <NumberPro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Spinner":
-      return (
-        <SpinnerPro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
-    case "Signature":
-      return (
-        <SignaturePro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
+    // case "Email":
+    //   return (
+    //     <EmailPro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    // case "Website":
+    //   return (
+    //     <WebsitePro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    // case "Number":
+    //   return (
+    //     <NumberPro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    // case "Spinner":
+    //   return (
+    //     <SpinnerPro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
+    // case "Signature":
+    //   return (
+    //     <SignaturePro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
     case "File Upload":
       return (
         <FileUploadPro
@@ -1165,15 +943,15 @@ const renderQuestionProperties = (
           questionIndex={questionIndex}
         />
       );
-    case "Audio/Video Upload":
-      return (
-        <AVFileUploadPro
-          handleClick={handleClick}
-          question={question}
-          activeContainerIndex={activeContainerIndex}
-          questionIndex={questionIndex}
-        />
-      );
+    // case "Audio/Video Upload":
+    //   return (
+    //     <AVFileUploadPro
+    //       handleClick={handleClick}
+    //       question={question}
+    //       activeContainerIndex={activeContainerIndex}
+    //       questionIndex={questionIndex}
+    //     />
+    //   );
     case "Multiple Choice grid":
       return (
         <MultipleChoicegridPro

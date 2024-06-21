@@ -3,12 +3,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import FileUploadQuestion from "./Questions/FileUploadQuestion";
 import MultipleChoice from "./Questions/MultipleChoice";
-import MultipleChoicegridQuestion from "./Questions/MultipleChoicegridQuestion";
 import ShortAnswer from "./Questions/ShortAnswer";
 import PhoneQuestion from "./Questions/PhoneQuestion";
 import Paragraph from "./Questions/Paragraph";
-import SingleChoice from "./Questions/SingleChoice";
-import CheckBoxQuestion from "./Questions/CheckBoxQuestion";
 import CountryQuestion from "./Questions/CountryQuestion";
 import StateQuestion from "./Questions/StateQuestion";
 import CityQuestion from "./Questions/CityQuestion";
@@ -18,12 +15,18 @@ import { FormContext } from "../../context/FormContext";
 import "../.././styles/DynamicForm.css";
 import DndIcon from "../../assets/DragandDropicon.svg";
 import PlusIcon from "../../assets/PlusForm.svg";
+import Cancle from "../../assets/close-circle.svg"
 import SettingsIcon from "../../assets/SettingForm.svg";
 import Section from "../../assets/secitonSplitForm.svg";
 import RepeatIcon from "../../assets/repeatForm.svg";
 import BinIcon from "../../assets/binForm.svg";
+import { SortableContext } from "@dnd-kit/sortable";
+import TextComponent from "./TextComponent";
+import MultipleInput from "./Questions/MultipleInput";
+import DropDown from "./Questions/DropDown";
+import CheckBox from "./Questions/CheckBox";
 
-function QustionCard({ id, question, questionIndex, containerIndex }) {
+function QustionCard({ id, question, questionIndex, containerIndex, textItems, colneQuestion }) {
   const {
     attributes,
     listeners,
@@ -52,7 +55,10 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
     setOpenQuestion,
     activeQuestion,
     setActiveQuestion,
-    setOpenQuestionSetting,
+    setOpenQuestionSetting, openSideItem,
+    cardDragItems,
+    setCardDragItems,
+    setOpenSideItems
   } = useContext(FormContext);
 
   const openSetting = (question) => {
@@ -64,6 +70,8 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
     dispatch(deleteQuestion({ id, containerIndex }));
   };
 
+  const [openPopItems, setOpenPopItems] = useState(false)
+
   return (
     <div
       style={{
@@ -71,7 +79,8 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
         width: "100%",
       }}
     >
-      <div style={{ width: "10%" }}>
+      <div style={{ width: "10%", display: "flex" }}>
+        {/* <div>heloooo</div>   */}
         {activeQuestion === question.id && (
           <div
             className="container-right"
@@ -90,15 +99,15 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
           >
             {/* <div>Sidebar</div> */}
             <img
-              src={PlusIcon}
+              src={!openPopItems ? PlusIcon : Cancle}
               alt="Plus"
-              onClick={() => console.log("hello")}
+              onClick={() => setOpenPopItems(!openPopItems)}
               style={{ cursor: "pointer" }}
             />
             <img
               src={SettingsIcon}
               alt="settings"
-              onClick={() => openSetting(question.id)}
+              onClick={() => setOpenSideItems(!openSideItem)}
               style={{ cursor: "pointer" }}
             />
             <img
@@ -110,7 +119,7 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
             <img
               src={RepeatIcon}
               alt="replace"
-              onClick={() => console.log("hello")}
+              onClick={() => colneQuestion(question.type, containerIndex)}
               style={{ cursor: "pointer" }}
             />
             <img
@@ -122,6 +131,35 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
               }}
               style={{ cursor: "pointer" }}
             />
+          </div>
+        )}
+        {activeQuestion === question.id && openPopItems && (
+          <div
+            style={{
+              position: "absolute",
+              marginLeft: "5rem",
+              backgroundColor: "#fff",
+              padding: "1rem",
+              border: "1px solid #0001",
+              zIndex: 3,
+            }}
+          >
+            {/* <div>
+                  <div>side Item</div>
+                  <div onClick={() => setShowDragItems(false)}>X</div>
+                </div> */}
+            <SortableContext items={textItems.map((i) => i.id)}>
+              {textItems.map((i) => (
+                <div className="side-item" key={i.id}>
+                  <TextComponent
+                    key={i.id}
+                    id={i.id}
+                    text={i.text}
+                    icon={i.icon}
+                  />
+                </div>
+              ))}
+            </SortableContext>
           </div>
         )}
       </div>
@@ -173,6 +211,8 @@ function QustionCard({ id, question, questionIndex, containerIndex }) {
             </div>
           </div>
         </div>
+
+
         {renderItemComponent(
           question,
           module,
@@ -194,6 +234,7 @@ const renderItemComponent = (
   setOpenQuestion,
   containerIndex
 ) => {
+  console.log(question)
   switch (question.type) {
     case "Short Answer":
       return (
@@ -207,7 +248,7 @@ const renderItemComponent = (
           id={question.id}
         />
       );
-    case "Paragraph":
+    case "Long Answer":
       return (
         <Paragraph
           question={question}
@@ -219,7 +260,7 @@ const renderItemComponent = (
           id={question.id}
         />
       );
-    case "Check Box":
+    case "Multiple Choice":
       return (
         <MultipleChoice
           question={question}
@@ -231,43 +272,43 @@ const renderItemComponent = (
           containerIndex={containerIndex}
         />
       );
-    case "Multiple Choice":
+    case "Multiple Input":
       return (
-        <SingleChoice
+        <MultipleInput
           question={question}
-          module={module}
           questionIndex={questionIndex}
+          module={module}
           openQuestion={openQuestion}
           setOpenQuestion={setOpenQuestion}
-          containerIndex={containerIndex}
           id={question.id}
+          containerIndex={containerIndex}
         />
       );
-    // case "Name":
-    //   return (
-    //     <Name
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Line Scale":
-    //   return (
-    //     <LineScale
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    case "Phone":
+    case "Dropdown":
+      return (
+        <DropDown
+          question={question}
+          questionIndex={questionIndex}
+          module={module}
+          openQuestion={openQuestion}
+          setOpenQuestion={setOpenQuestion}
+          id={question.id}
+          containerIndex={containerIndex}
+        />
+      );
+    case "Check Box":
+      return (
+        <CheckBox
+          question={question}
+          questionIndex={questionIndex}
+          module={module}
+          openQuestion={openQuestion}
+          setOpenQuestion={setOpenQuestion}
+          id={question.id}
+          containerIndex={containerIndex}
+        />
+      );
+    case "Phone Number":
       return (
         <PhoneQuestion
           question={question}
@@ -279,129 +320,9 @@ const renderItemComponent = (
           containerIndex={containerIndex}
         />
       );
-    // case "Email":
-    //   return (
-    //     <EmailQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Website":
-    //   return (
-    //     <Website
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Number":
-    //   return (
-    //     <NumberQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Spinner":
-    //   return (
-    //     <SpinnerQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Signature":
-    //   return (
-    //     <SignatureQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
     case "File Upload":
       return (
         <FileUploadQuestion
-          question={question}
-          questionIndex={questionIndex}
-          module={module}
-          openQuestion={openQuestion}
-          setOpenQuestion={setOpenQuestion}
-          id={question.id}
-          containerIndex={containerIndex}
-        />
-      );
-    // case "Audio/Video Upload":
-    //   return (
-    //     <AVFileUploadQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Date":
-    //   return (
-    //     <DateQuestion
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    // case "Date - Time":
-    //   return (
-    //     <DateAndTime
-    //       question={question}
-    //       questionIndex={questionIndex}
-    //       module={module}
-    //       openQuestion={openQuestion}
-    //       setOpenQuestion={setOpenQuestion}
-    //       id={question.id}
-    //       containerIndex={containerIndex}
-    //     />
-    //   );
-    case "Multiple Choice grid":
-      return (
-        <MultipleChoicegridQuestion
-          question={question}
-          questionIndex={questionIndex}
-          module={module}
-          openQuestion={openQuestion}
-          setOpenQuestion={setOpenQuestion}
-          id={question.id}
-          containerIndex={containerIndex}
-        />
-      );
-    case "Check box grid":
-      return (
-        <CheckBoxQuestion
           question={question}
           questionIndex={questionIndex}
           module={module}

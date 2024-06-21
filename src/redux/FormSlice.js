@@ -32,6 +32,64 @@ export const formSlice = createSlice({
       );
     },
 
+    //update Question value for each question
+    updateItemQuestion: (state, action) => {
+      const { containerIndex, questionIndex, newQuestion } = action.payload;
+      state.form[containerIndex].items[questionIndex].question = newQuestion;
+    },
+    //update Required for each question
+    updateRequiredChange: (state, action) => {
+      const { questionIndex, containerIndex, value } = action.payload;
+      state.form[containerIndex].items[questionIndex].required = value;
+    },
+
+    //detele question
+    deleteQuestion: (state, action) => {
+      const { questionI, containerIndex } = action.payload;
+      state.form[containerIndex].items.splice(questionI, 1);
+    },
+
+    //update Singele choice option value
+    updateSingleChoiceOp: (state, action) => {
+      const { optionIndex, questionIndex, containerIndex, option } =
+        action.payload;
+      state.form[containerIndex].items[questionIndex].options[
+        optionIndex
+      ].optionText = option;
+    },
+
+    //delete option
+    deleteSingleChoiseOption: (state, action) => {
+      const { optionIndex, questionIndex, containerIndex } = action.payload;
+      state.form[containerIndex].items[questionIndex].options.splice(
+        optionIndex,
+        1
+      );
+    },
+
+    //Add option
+    addOptionSingleChoiceop: (state, action) => {
+      const { questionIndex, containerIndex } = action.payload;
+      const Question = state.form[containerIndex].items[questionIndex];
+      state.form[containerIndex].items[questionIndex].options.push({
+        id: `item-${uuidv4()}`,
+        optionText: `Option ${Question.options.length + 1}`,
+      });
+    },
+    //add option from pro
+    addOptionSingleChoiceopPro: (state, action) => {
+      const { optionIndex, questionIndex, containerIndex } = action.payload;
+      const Question = state.form[containerIndex].items[questionIndex];
+      state.form[containerIndex].items[questionIndex].options.splice(
+        optionIndex + 1,
+        0,
+        {
+          id: `item-${uuidv4()}`,
+          optionText: `Option ${Question.options.length + 1}`,
+        }
+      );
+    },
+
     updatevalueFrom: (state, action) => {
       const { name, value, activeContainerIndex, questionIndex } =
         action.payload;
@@ -83,49 +141,6 @@ export const formSlice = createSlice({
             return {
               ...container,
               formDescription: value,
-            };
-          }
-          return container;
-        }),
-      };
-    },
-
-    updateItemQuestion: (state, action) => {
-      const { value, id, containerIndex } = action.payload;
-      return {
-        ...state,
-        form: state.form.map((container) => {
-          if (container.id === containerIndex) {
-            return {
-              ...container,
-              items: container.items.map((item) => {
-                if (item.id === id) {
-                  return {
-                    ...item,
-                    question: value,
-                  };
-                }
-                return item;
-              }),
-            };
-          }
-          return container;
-        }),
-      };
-    },
-
-    deleteQuestion: (state, action) => {
-      const { id, containerIndex } = action.payload;
-      console.log(action.payload);
-      return {
-        ...state,
-        form: state.form.map((container, cIndex) => {
-          if (container.id === containerIndex) {
-            return {
-              ...container,
-              items: container.items.filter((item) => {
-                return item.id !== id;
-              }),
             };
           }
           return container;
@@ -206,7 +221,11 @@ export const formSlice = createSlice({
 export const {
   createForm,
   updateFormOverQuestion,
+  updateRequiredChange,
+  deleteSingleChoiseOption,
+  addOptionSingleChoiceop,
   updatevalueFrom,
+  addOptionSingleChoiceopPro,
   updateFormTitile,
   updateFormDescription,
   updateItemQuestion,
@@ -214,5 +233,6 @@ export const {
   addMultiChoice,
   deleteMultiChoice,
   changeMultipleOption,
+  updateSingleChoiceOp,
 } = formSlice.actions;
 export default formSlice.reducer;

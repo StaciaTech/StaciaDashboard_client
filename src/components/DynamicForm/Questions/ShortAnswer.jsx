@@ -14,8 +14,8 @@ function ShortAnswer({
   containerIndex,
 }) {
   const dispatch = useDispatch();
-  const handleQuestionChange = (value) => {
-    dispatch(updateItemQuestion({ value, id, containerIndex }));
+  const handleQuestionChange = (newQuestion) => {
+    dispatch(updateItemQuestion({ containerIndex, questionIndex, newQuestion }));
   };
   return (
     <>
@@ -27,7 +27,7 @@ function ShortAnswer({
           onFocus={() => setOpenQuestion(question.id)}
           onBlur={() => setOpenQuestion(null)}
           value={question.question}
-          z
+
           onChange={handleQuestionChange}
         />
       </div>

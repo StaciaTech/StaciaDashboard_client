@@ -14,8 +14,8 @@ function CountryQuestion({
   containerIndex,
 }) {
   const dispatch = useDispatch();
-  const handleQuestionChange = (value) => {
-    dispatch(updateItemQuestion({ value, id, containerIndex }));
+  const handleQuestionChange = (newQuestion) => {
+    dispatch(updateItemQuestion({containerIndex, questionIndex, newQuestion}));
   };
   return (
     <>

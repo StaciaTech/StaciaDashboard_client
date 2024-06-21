@@ -1,5 +1,8 @@
 import React from "react";
 import ReactQuill from "react-quill";
+import Flag from "../../../assets/IndiaFlag.svg"
+import DownArrow from "../../../assets/DropDown.svg"
+
 
 function PhoneQuestion({
   question,
@@ -10,7 +13,7 @@ function PhoneQuestion({
   setOpenQuestion,
   containerIndex,
 }) {
-  const handleQuestionChange = (value) => {};
+  const handleQuestionChange = (value) => { };
   return (
     <>
       <div className="singleQuestion_name_Container">
@@ -26,10 +29,18 @@ function PhoneQuestion({
             handleQuestionChange(question.id, html);
           }}
         />
+        <div>
+          <div className="title-paddings">Answer</div>
+          <div className="number-container">
+            <div>
+              <img src={Flag} alt="" />
+            </div>
+            <div className="number-seperator" />
+            <div>Enter Your Number</div>
+          </div>
+        </div>
       </div>
-      <div className="nameAns_container">
-        <div className="Name">{question.palceHolder}( International )</div>
-      </div>
+
     </>
   );
 }
