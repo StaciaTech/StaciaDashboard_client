@@ -1,0 +1,82 @@
+.home-clients-container {
+  height: 100vh;
+  background-color: white;
+  max-width: 100%;
+  margin: 0rem 1.5rem;
+  padding: 0rem 2.5rem;
+  overflow-x: hidden;
+}
+.client-items {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0rem;
+}
+.add-client-card {
+  width: 32rem;
+  height: 10rem;
+  border: 1px solid #0047ff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mapped-client-card {
+  width: 31rem;
+  height: 10rem;
+  border: 1px solid #0001;
+  border-radius: 10px;
+  padding: 1rem;
+}
+.client-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.add-client-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0002;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.add-client-logo-card {
+  /* position: absolute;
+  top: 50%;
+  left: 50%; */
+  width: 38rem;
+  height: 29rem;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  z-index: 3;
+}
+.client-logo-input {
+  width: 100%;
+  height: 18rem;
+  border: 2px solid #0047ff;
+  border-radius: 10px;
+  position: relative;
+}
+.curved-underline {
+  position: relative;
+  text-decoration: none;
+  color: #0047ff;
+  font-weight: 600;
+}
+
+.curved-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #0047ff;
+  border-radius: 10px;
+}

@@ -20,6 +20,7 @@ export const Card = ({
   fixHandelClick,
   redioButtonHandel,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(
@@ -36,7 +37,7 @@ export const Card = ({
   const [, drop] = useDrop(
     () => ({
       accept: "card",
-      hover(item) { },
+      hover(item) {},
       drop: (item) => {
         moveCard(item.position, position);
       },
@@ -47,25 +48,29 @@ export const Card = ({
 
   const [pageName, setPageName] = useState(card.page);
 
-  const { setBtnStatus } = useContext(ServiceContext)
+  const { setBtnStatus } = useContext(ServiceContext);
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+    const res = await fetch(`${apiUrl}/service/findService/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedService.archive)
-    console.log(data.selectedService.archive)
+    setBtnStatus(data.selectedService.archive);
+    console.log(data.selectedService.archive);
     dispatch(updateServiceFormData("des", data.selectedService.des));
     dispatch(updateServiceFormData("image", data.selectedService.image));
     dispatch(updateServiceFormData("altText", data.selectedService.altText));
     dispatch(updateServiceFormData("form", data.selectedService.form));
-    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
-    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage));
+    dispatch(
+      updateServiceFormData("pAlterNativeText", data.selectedService.pAltText)
+    );
     dispatch(updateServiceFormData("heading", data.selectedService.title));
-    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(
+      updateServiceFormData("domainName", data.selectedService.domainName)
+    );
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
     history(`/admin/Service/EditService/${id}`);
   };
@@ -130,14 +135,10 @@ export const Card = ({
         ) : (
           <div
             ref={(node) => drag(drop(node))}
-            style={{ width: "100%", position: "relative", display: "flex" }}>
+            style={{ width: "100%", position: "relative", display: "flex" }}
+          >
             <div style={{ padding: "12px 22px", width: "238px" }}>
-              <img
-
-                src={dragAndDrop}
-                alt=""
-                style={{ cursor: "move" }}
-              />
+              <img src={dragAndDrop} alt="" style={{ cursor: "move" }} />
 
               <div
                 style={{
@@ -181,7 +182,10 @@ export const Card = ({
                     checked={card.primaryShowcase === true}
                     onChange={() => redioButtonHandel(card)}
                   />
-                  <span className="checkmark" style={{cursor:"pointer"}}></span>
+                  <span
+                    className="checkmark"
+                    style={{ cursor: "pointer" }}
+                  ></span>
                   Primary Showcase
                 </label>
               </div>
@@ -244,27 +248,32 @@ export const Card = ({
 };
 
 export const ArchiveCard = ({ key, card, fixHandelClick }) => {
-  const dispatch = useDispatch()
-  const history = useNavigate()
-  const { setBtnStatus } = useContext(ServiceContext)
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const dispatch = useDispatch();
+  const history = useNavigate();
+  const { setBtnStatus } = useContext(ServiceContext);
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+    const res = await fetch(`${apiUrl}/service/findService/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedService.archive)
-    console.log(data.selectedService.archive)
+    setBtnStatus(data.selectedService.archive);
+    console.log(data.selectedService.archive);
     dispatch(updateServiceFormData("des", data.selectedService.des));
     dispatch(updateServiceFormData("image", data.selectedService.image));
     dispatch(updateServiceFormData("altText", data.selectedService.altText));
     dispatch(updateServiceFormData("form", data.selectedService.form));
-    dispatch(updateServiceFormData("pImage", data.selectedService.pImage))
-    dispatch(updateServiceFormData("pAlterNativeText", data.selectedService.pAltText));
+    dispatch(updateServiceFormData("pImage", data.selectedService.pImage));
+    dispatch(
+      updateServiceFormData("pAlterNativeText", data.selectedService.pAltText)
+    );
     dispatch(updateServiceFormData("heading", data.selectedService.title));
-    dispatch(updateServiceFormData("domainName", data.selectedService.domainName));
+    dispatch(
+      updateServiceFormData("domainName", data.selectedService.domainName)
+    );
     dispatch(updateServiceFormData("hashTag", data.selectedService.hashTag));
     history(`/admin/Service/EditService/${id}`);
   };
@@ -292,9 +301,9 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
             top: "166px",
             bottom: "200px",
           }}
-        // onClick={() => {
-        //   setFreezeCardOff(false);
-        // }}
+          // onClick={() => {
+          //   setFreezeCardOff(false);
+          // }}
         >
           <img
             src={Edit}

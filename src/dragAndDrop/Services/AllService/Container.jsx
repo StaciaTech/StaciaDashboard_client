@@ -13,10 +13,11 @@ import { ArchiveCard, Card } from "./Card.jsx";
 
 export const Container = () => {
   const dispatch = useDispatch();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:8000/service/all-service`);
+      const res = await fetch(`${apiUrl}/service/all-service`);
       const resData = await res.json();
       dispatch(newData(resData.serviceBasedPosition));
       dispatch(archiveCard(resData.archiveService));
@@ -37,7 +38,7 @@ export const Container = () => {
     const dragedId = cards.filter((items) => items.position === id)[0];
     const _id = dragedId._id;
     const res = await fetch(
-      `http://localhost:8000/service/update-service/${_id}/${position}`,
+      `${apiUrl}/service/update-service/${_id}/${position}`,
       {
         method: "PATCH",
       }
@@ -48,7 +49,7 @@ export const Container = () => {
 
   const redioButtonHandel = async (services) => {
     const res = await fetch(
-      `http://localhost:8000/service/addPrimaryShowcase/${services._id}`,
+      `${apiUrl}/service/addPrimaryShowcase/${services._id}`,
       {
         method: "POST",
       }
@@ -60,12 +61,9 @@ export const Container = () => {
 
   // Function to handle the click event
   const fixHandelClick = async (item) => {
-    const res = await fetch(
-      `http://localhost:8000/service/addArichve/${item._id}`,
-      {
-        method: "POST",
-      }
-    );
+    const res = await fetch(`${apiUrl}/service/addArichve/${item._id}`, {
+      method: "POST",
+    });
     const data = await res.json();
     dispatch(archiveCard(data.archiveservice));
     dispatch(newData(data.positionWise));

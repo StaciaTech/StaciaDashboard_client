@@ -10,13 +10,14 @@ import { ProductContext } from "../../context/ProductContext";
 import { ServiceContext } from "../../context/ServiceContext";
 
 const EditService = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [step, setStep] = useState(1);
   const id = useParams();
-  const history = useNavigate()
+  const history = useNavigate();
   const [formDatas, setformDatas] = useState({});
   const dispatch = useDispatch();
 
-  const { setSuccessfullModel } = useContext(ServiceContext)
+  const { setSuccessfullModel } = useContext(ServiceContext);
   const savedData = useSelector((state) => state.services);
   useEffect(() => {
     setformDatas(savedData);
@@ -27,11 +28,15 @@ const EditService = () => {
       des: savedData.des ? savedData.des : "",
       altText: savedData.altText ? savedData.altText : "",
       image: savedData.image ? savedData.image : "",
-      form: savedData.form ? savedData.form : [{ id: 1, heading: "", description: "" }],
+      form: savedData.form
+        ? savedData.form
+        : [{ id: 1, heading: "", description: "" }],
       pImage: savedData.pImage ? savedData.pImage : "",
-      pAlterNativeText: savedData.pAlterNativeText ? savedData.pAlterNativeText : "",
+      pAlterNativeText: savedData.pAlterNativeText
+        ? savedData.pAlterNativeText
+        : "",
       heading: savedData.heading ? savedData.heading : "",
-      domainName: savedData.domainName ? savedData.domainName : '',
+      domainName: savedData.domainName ? savedData.domainName : "",
       hashTag: savedData.hashTag ? savedData.hashTag : [],
     },
   });
@@ -54,38 +59,35 @@ const EditService = () => {
     dispatch(updateServiceFormData("pAlterNativeText", ""));
     dispatch(updateServiceFormData("heading", ""));
     dispatch(updateServiceFormData("domainName", ""));
-    dispatch(updateServiceFormData("hashTag", ""))
-  }
+    dispatch(updateServiceFormData("hashTag", ""));
+  };
 
   const handleSubmit = async () => {
     // Submit the form data
-    console.log(formik.values)
-    const res = await fetch(
-      `http://localhost:8000/service/selectedService/${id.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formDatas),
-      }
-    );
-    if (res.status === 200) {
-      setSuccessfullModel(true);
-      remove()
-    }
-  };
-  const changeandupdate = async () => {
-    const res = await fetch(`http://localhost:8000/service/ArchiveandUnArchive/${id.id}`, {
+    console.log(formik.values);
+    const res = await fetch(`${apiUrl}/service/selectedService/${id.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formik.values)
+      body: JSON.stringify(formDatas),
     });
-    history("/admin/Service/AllService")
-    remove()
-  }
+    if (res.status === 200) {
+      setSuccessfullModel(true);
+      remove();
+    }
+  };
+  const changeandupdate = async () => {
+    const res = await fetch(`${apiUrl}/service/ArchiveandUnArchive/${id.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formik.values),
+    });
+    history("/admin/Service/AllService");
+    remove();
+  };
   return (
     <div>
       {step === 1 && (

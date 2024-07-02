@@ -16,11 +16,12 @@ export const Container = ({
   handleProductSelect,
   setSelectedProducts,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
   const history = useNavigate();
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:8000/product/all-products`);
+      const res = await fetch(`${apiUrl}/product/all-products`);
       const resData = await res.json();
       dispatch(newData(resData.productBasedPosition));
       dispatch(archiveCard(resData.archiveProduct));
@@ -41,7 +42,7 @@ export const Container = ({
     const dragedId = cards.filter((items) => items.position === id)[0];
     const _id = dragedId._id;
     const res = await fetch(
-      `http://localhost:8000/product/update-Product/${_id}/${position}`,
+      `${apiUrl}/product/update-Product/${_id}/${position}`,
       {
         method: "PATCH",
       }
@@ -50,10 +51,10 @@ export const Container = ({
     dispatch(newData(data.productBasedPosition));
   };
 
-  // change primaryShowcase 
+  // change primaryShowcase
   const redioButtonHandel = async (product) => {
     const res = await fetch(
-      `http://localhost:8000/product/addPrimaryShowcase/${product._id}`,
+      `${apiUrl}/product/addPrimaryShowcase/${product._id}`,
       {
         method: "POST",
       }
@@ -67,12 +68,9 @@ export const Container = ({
 
   // Function to handle the click event
   const fixHandelClick = async (item) => {
-    const res = await fetch(
-      `http://localhost:8000/product/addArichve/${item._id}`,
-      {
-        method: "POST",
-      }
-    );
+    const res = await fetch(`${apiUrl}/product/addArichve/${item._id}`, {
+      method: "POST",
+    });
     const data = await res.json();
     dispatch(archiveCard(data.archiveProduct));
     dispatch(newData(data.positionWise));

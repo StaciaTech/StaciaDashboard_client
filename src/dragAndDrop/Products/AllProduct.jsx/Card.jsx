@@ -21,8 +21,9 @@ export const Card = ({
   fixHandelClick,
   redioButtonHandel,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
-  const { setBtnStatus } = useContext(ProductContext)
+  const { setBtnStatus } = useContext(ProductContext);
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "card",
@@ -37,7 +38,7 @@ export const Card = ({
   const [, drop] = useDrop(
     () => ({
       accept: "card",
-      hover(item) { },
+      hover(item) {},
       drop: (item) => {
         moveCard(item.position, position);
       },
@@ -47,38 +48,30 @@ export const Card = ({
   const opacity = isDragging ? 0.4 : 1;
 
   const [pageName, setPageName] = useState(card.page);
-  
-  const dispatch = useDispatch()
+
+  const dispatch = useDispatch();
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
+    const res = await fetch(`${apiUrl}/product/findProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedProduct.archive)
+    setBtnStatus(data.selectedProduct.archive);
     dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
     dispatch(updateFormData("des", data.selectedProduct.des));
     dispatch(updateFormData("image", data.selectedProduct.image));
     dispatch(updateFormData("altText", data.selectedProduct.altText));
 
-    dispatch(
-      updateFormData("pDes1", data.selectedProduct.pDes1)
-    );
-    dispatch(
-      updateFormData("pDes2", data.selectedProduct.pDes2)
-    );
-    dispatch(
-      updateFormData("pImage", data.selectedProduct.pImage)
-    );
-    dispatch(
-      updateFormData("pAltText", data.selectedProduct.pAltText)
-    );
-    dispatch(updateFormData("domainName", data.selectedProduct.domainName))
+    dispatch(updateFormData("pDes1", data.selectedProduct.pDes1));
+    dispatch(updateFormData("pDes2", data.selectedProduct.pDes2));
+    dispatch(updateFormData("pImage", data.selectedProduct.pImage));
+    dispatch(updateFormData("pAltText", data.selectedProduct.pAltText));
+    dispatch(updateFormData("domainName", data.selectedProduct.domainName));
     dispatch(updateFormData("heading", data.selectedProduct.title));
-    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
-    
+    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag));
+
     history(`/admin/Product/EditProduct/${id}`);
   };
   const undohandeler = (product) => {
@@ -90,7 +83,7 @@ export const Card = ({
         : [...prevSelected, product];
     });
   };
-  
+
   return (
     <>
       <div
@@ -141,16 +134,12 @@ export const Card = ({
             </div>
           </div>
         ) : (
-          <div 
-          ref={(node) => drag(drop(node))} 
-          style={{ width: "100%", position: "relative", display: "flex",
-           }}>
+          <div
+            ref={(node) => drag(drop(node))}
+            style={{ width: "100%", position: "relative", display: "flex" }}
+          >
             <div style={{ padding: "12px 22px", width: "238px" }}>
-              <img
-                src={dragAndDrop}
-                alt=""
-                style={{ cursor: "move" }}
-              />
+              <img src={dragAndDrop} alt="" style={{ cursor: "move" }} />
 
               <div
                 style={{
@@ -258,38 +247,31 @@ export const Card = ({
 };
 
 export const ArchiveCard = ({ key, card, fixHandelClick }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
-  const dispatch = useDispatch()
-  const { setBtnStatus } = useContext(ProductContext)
+  const dispatch = useDispatch();
+  const { setBtnStatus } = useContext(ProductContext);
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
+    const res = await fetch(`${apiUrl}/product/findProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedProduct.archive)
-       dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
+    setBtnStatus(data.selectedProduct.archive);
+    dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
     dispatch(updateFormData("des", data.selectedProduct.des));
     dispatch(updateFormData("image", data.selectedProduct.image));
     dispatch(updateFormData("altText", data.selectedProduct.altText));
 
-    dispatch(
-      updateFormData("pDes1", data.selectedProduct.pDes1)
-    );
-    dispatch(
-      updateFormData("pDes2", data.selectedProduct.pDes2)
-    );
-    dispatch(
-      updateFormData("pImage", data.selectedProduct.pImage)
-    );
-    dispatch(
-      updateFormData("pAltText", data.selectedProduct.pAltText)
-    );
-    dispatch(updateFormData("domainName", data.selectedProduct.domainName))
+    dispatch(updateFormData("pDes1", data.selectedProduct.pDes1));
+    dispatch(updateFormData("pDes2", data.selectedProduct.pDes2));
+    dispatch(updateFormData("pImage", data.selectedProduct.pImage));
+    dispatch(updateFormData("pAltText", data.selectedProduct.pAltText));
+    dispatch(updateFormData("domainName", data.selectedProduct.domainName));
     dispatch(updateFormData("heading", data.selectedProduct.title));
-    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
+    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag));
     history(`/admin/Product/EditProduct/${id}`);
   };
   return (
@@ -316,9 +298,9 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
             top: "166px",
             bottom: "200px",
           }}
-        // onClick={() => {
-        //   setFreezeCardOff(false);
-        // }}
+          // onClick={() => {
+          //   setFreezeCardOff(false);
+          // }}
         >
           <img
             src={Edit}

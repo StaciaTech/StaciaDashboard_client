@@ -12,34 +12,36 @@ import {
 } from "../../../redux/serviceSlice.js";
 
 const Container = ({ handleProductSelect }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     (async () => {
-      const res = await fetch(
-        "http://localhost:8000/service/primaryShowcaseService"
-      );
+      const res = await fetch(`${apiUrl}/service/primaryShowcaseService`);
       const resData = await res.json();
       dispatch(primaryShowcaseService(resData.data));
     })();
   }, [dispatch]);
-  const primaryShowcaseProduct = useSelector((state) => state.service.primaryShowcase);
+  const primaryShowcaseProduct = useSelector(
+    (state) => state.service.primaryShowcase
+  );
   const [cards, setCards] = useState([]);
   useEffect(() => {
-    const data = primaryShowcaseProduct.filter((item) => item.archive === false)
+    const data = primaryShowcaseProduct.filter(
+      (item) => item.archive === false
+    );
     setCards(data);
   }, [primaryShowcaseProduct]);
 
-
   const moveCard = async (id, position) => {
     // const positionValue = {position:position}
-    console.log(id, position)
+    console.log(id, position);
     const dragedId = cards.filter(
       (items) => items.primaryShowcasePosition === id
     )[0];
     const _id = dragedId._id;
     const res = await fetch(
-      `http://localhost:8000/service/update-PrimaryService/${_id}/${position}`,
+      `${apiUrl}/service/update-PrimaryService/${_id}/${position}`,
       {
         method: "PATCH",
       }
@@ -50,7 +52,7 @@ const Container = ({ handleProductSelect }) => {
 
   const redioButtonHandel = async (services) => {
     const res = await fetch(
-      `http://localhost:8000/service/addPrimaryShowcase/${services._id}`,
+      `${apiUrl}/service/addPrimaryShowcase/${services._id}`,
       {
         method: "POST",
       }
@@ -62,12 +64,9 @@ const Container = ({ handleProductSelect }) => {
 
   // Function to handle the click event
   const fixHandelClick = async (item) => {
-    const res = await fetch(
-      `http://localhost:8000/service/addArichve/${item._id}`,
-      {
-        method: "POST",
-      }
-    );
+    const res = await fetch(`${apiUrl}/service/addArichve/${item._id}`, {
+      method: "POST",
+    });
     const data = await res.json();
     dispatch(archiveCard(data.archiveservice));
     dispatch(newData(data.positionWise));

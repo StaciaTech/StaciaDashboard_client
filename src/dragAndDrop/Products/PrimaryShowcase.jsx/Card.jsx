@@ -18,8 +18,9 @@ export const Card = ({
   fixHandelClick,
   card,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
-  const { setBtnStatus } = useContext(ProductContext)
+  const { setBtnStatus } = useContext(ProductContext);
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "card",
@@ -34,7 +35,7 @@ export const Card = ({
   const [, drop] = useDrop(
     () => ({
       accept: "card",
-      hover(item) { },
+      hover(item) {},
       drop: (item) => {
         moveCard(item.primaryShowcasePosition, primaryShowcasePosition);
       },
@@ -43,16 +44,16 @@ export const Card = ({
   );
   const opacity = isDragging ? 0.2 : 2;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/product/findProduct/${id}`, {
+    const res = await fetch(`${apiUrl}/product/findProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const data = await res.json();
-    setBtnStatus(data.selectedProduct.archive)
+    setBtnStatus(data.selectedProduct.archive);
     dispatch(updateFormData("waterMark", data.selectedProduct.waterMark));
     dispatch(updateFormData("des", data.selectedProduct.des));
     dispatch(updateFormData("image", data.selectedProduct.image));
@@ -61,13 +62,11 @@ export const Card = ({
     dispatch(updateFormData("pDes2", data.selectedProduct.pDes2));
     dispatch(updateFormData("pImage", data.selectedProduct.pImage));
     dispatch(updateFormData("pAltText", data.selectedProduct.pAltText));
-    dispatch(updateFormData("domainName", data.selectedProduct.domainName))
+    dispatch(updateFormData("domainName", data.selectedProduct.domainName));
     dispatch(updateFormData("heading", data.selectedProduct.title));
-    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag))
+    dispatch(updateFormData("hashTag", data.selectedProduct.hashTag));
     history(`/admin/Product/EditProduct/${id}`);
   };
-
-  
 
   return (
     <>
@@ -147,13 +146,10 @@ export const Card = ({
         ) : (
           <div
             ref={(node) => drag(drop(node))}
-            style={{ width: "100%", position: "relative", display: "flex" }}>
+            style={{ width: "100%", position: "relative", display: "flex" }}
+          >
             <div style={{ padding: "12px 22px", width: "238px" }}>
-              <img
-                src={dragAndDrop}
-                alt=""
-                style={{ cursor: "move" }}
-              />
+              <img src={dragAndDrop} alt="" style={{ cursor: "move" }} />
 
               <div
                 style={{
@@ -220,7 +216,11 @@ export const Card = ({
                   height: "75%",
                 }}
               >
-                <img src={card.image} alt="ProductImage"  style={{ width: "10.439rem" }}/>
+                <img
+                  src={card.image}
+                  alt="ProductImage"
+                  style={{ width: "10.439rem" }}
+                />
               </div>
               <div
                 style={{
@@ -251,7 +251,6 @@ export const Card = ({
                       fixHandelClick(card);
                     }}
                   />
-
                 </div>
               </div>
             </div>

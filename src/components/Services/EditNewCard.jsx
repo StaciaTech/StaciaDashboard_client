@@ -7,7 +7,7 @@ import Backicon from "../../assets/Backicon.svg";
 import Trash from "../../assets/Trash.svg";
 import DefaultProductIcon from "../../assets/DefaultProductIcon.svg";
 import successful from "../../assets/successful.svg";
-import close from '../../assets/close.svg'
+import close from "../../assets/close.svg";
 import serviceImgIcon from "../../assets/ProductImgIcon.svg";
 import DefaultserviceIcon from "../../assets/DefaultProductIcon.svg";
 import NotificationIcon from "../../assets/NotificationIcon.svg";
@@ -18,45 +18,54 @@ import { ServiceContext } from "../../context/ServiceContext";
 import { updateServiceFormData } from "../../redux/action";
 
 const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const fileInputRef = useRef(null);
   const history = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const { showModel, setShowModel, showCardSuccessfull, setShowCardSuccessfull, imageOverlayShow, setImageOverlayShow, btnStatus } = useContext(ServiceContext);
-  //drag and drop image 
+  const {
+    showModel,
+    setShowModel,
+    showCardSuccessfull,
+    setShowCardSuccessfull,
+    imageOverlayShow,
+    setImageOverlayShow,
+    btnStatus,
+  } = useContext(ServiceContext);
+  //drag and drop image
   const handleDragOver = (e) => {
-    e.preventDefault()
-    setImageOverlayShow(true)
-  }
+    e.preventDefault();
+    setImageOverlayShow(true);
+  };
 
   const handleDrop = async (e) => {
-    setImageOverlayShow(false)
+    setImageOverlayShow(false);
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', e.dataTransfer.files[0]);
-    const res = await fetch("http://localhost:8000/upload", {
+    formData.append("image", e.dataTransfer.files[0]);
+    const res = await fetch(`${apiUrl}/upload`, {
       method: "POST",
-      body: formData
-    })
+      body: formData,
+    });
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
+    formik.setFieldValue("image", resData.signedUrl);
     dispatch(updateServiceFormData("image", resData.signedUrl));
-  }
+  };
   //onchange image
   const onChange = async (e) => {
     const formData = new FormData();
-    formData.append('image', e.target.files[0]);
+    formData.append("image", e.target.files[0]);
     // formData.append("image", "")
-    const res = await fetch("http://localhost:8000/upload", {
+    const res = await fetch(`${apiUrl}/upload`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
     const resData = await res.json();
-    formik.setFieldValue("image", resData.signedUrl)
+    formik.setFieldValue("image", resData.signedUrl);
     dispatch(updateServiceFormData("image", resData.signedUrl));
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     formik.setFieldValue(name, value);
     dispatch(updateServiceFormData(name, value));
@@ -91,49 +100,49 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       width: "38.813rem",
-      height: '28.625rem'
+      height: "28.625rem",
     },
     overlay: {
       background: "rgba(0,0,0,0.25)",
-    }
-  }
+    },
+  };
 
   const handelBack = () => {
     if (formik.dirty) {
-      setShowModel(true)
+      setShowModel(true);
     } else {
       //all  values being empty
-      history("/admin/Service/AllService")
-      removeRedux()
+      history(-1);
+      removeRedux();
     }
-  }
+  };
 
   //Filled Value save As Draft
   const saveAsDraftbtn = async () => {
-    const res = await fetch("http://localhost:8000/service/addDraft", {
+    const res = await fetch(`${apiUrl}/service/addDraft`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formik.values)
+      body: JSON.stringify(formik.values),
     });
     // if (res.status === 200) {
-    setShowCardSuccessfull(true)
-    setShowModel(false)
+    setShowCardSuccessfull(true);
+    setShowModel(false);
     // }
-  }
+  };
   //Successfull Draft Button
   const createDraft = () => {
-    history("/ServicePage/AllService")
-    setShowCardSuccessfull(false)
-    removeRedux()
-  }
+    history("/ServicePage/AllService");
+    setShowCardSuccessfull(false);
+    removeRedux();
+  };
   //UnSaved Back
   const backbtn = () => {
-    history("/ServicePage/AllService")
-    setShowModel(false)
-    removeRedux()
-  }
+    history("/ServicePage/AllService");
+    setShowModel(false);
+    removeRedux();
+  };
   return (
     <>
       <div>
@@ -142,26 +151,44 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }} className="cursor" onClick={() => setShowModel(!showModel)}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+            className="cursor"
+            onClick={() => setShowModel(!showModel)}
+          >
             <img src={close} alt="closebtn" />
           </div>
-          <div
-          >
-            <p style={{ width: "100%", textAlign: "left", fontFamily: "EuclidMedium", fontSize: "18px" }}>
-              You have unsaved changes. Leaving this page
-              will discard them
+          <div>
+            <p
+              style={{
+                width: "100%",
+                textAlign: "left",
+                fontFamily: "EuclidMedium",
+                fontSize: "18px",
+              }}
+            >
+              You have unsaved changes. Leaving this page will discard them
             </p>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-              columnGap: "1rem",
-            }}
-              className="popupbtns">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "100%",
+                columnGap: "1rem",
+              }}
+              className="popupbtns"
+            >
               <button
                 className="popupbtn colour cursor"
-                onClick={() => backbtn()}>Okay</button>
+                onClick={() => backbtn()}
+              >
+                Okay
+              </button>
               <button
                 className="popupbtn cursor"
                 onClick={() => saveAsDraftbtn()}
@@ -190,8 +217,8 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
             <img src={successful} alt="successfull" />
             <h1>Saved as Draft</h1>
             <p style={{ width: "25.075rem", textAlign: "center" }}>
-              Your edits have been successfully saved as a draft.
-              Take your time to review and refine your work.
+              Your edits have been successfully saved as a draft. Take your time
+              to review and refine your work.
             </p>
             <button
               style={{
@@ -330,7 +357,6 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
                     >
                       {formik.values.des.length}/ 250
                     </span>
-
                   </div>
                 </div>
                 <div style={{ width: "849px" }}>
@@ -346,34 +372,33 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
                       marginTop: "15px",
                       color: "#787878",
                       display: "flex",
-                      filter: imageOverlayShow && 'blur(0.8px)',
-                      justifyContent: 'center',
-                      position: 'relative',
+                      filter: imageOverlayShow && "blur(0.8px)",
+                      justifyContent: "center",
+                      position: "relative",
                       // backgroundColor:"red"
                     }}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    {imageOverlayShow &&
+                    {imageOverlayShow && (
                       <>
                         <div
                           style={{
-                            position: 'absolute',
-                            width: '98%',
-                            height: '98%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.56)',
-                            border: '2px dashed #fff',
-                            borderRadius: '5px',
+                            position: "absolute",
+                            width: "98%",
+                            height: "98%",
+                            backgroundColor: "rgba(0, 0, 0, 0.56)",
+                            border: "2px dashed #fff",
+                            borderRadius: "5px",
                             zIndex: 9999,
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
                           }}
                           onDragLeave={() => setImageOverlayShow(false)}
-                        >
-                        </div>
+                        ></div>
                       </>
-                    }
+                    )}
                     <div
                       style={{
                         width: "50px",
@@ -384,15 +409,23 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
                         marginRight: "36px",
                       }}
                     >
-                      {formik.values.image &&
+                      {formik.values.image && (
                         <img
                           src={Trash}
                           alt="deletebutton"
                           onClick={() => formik.setFieldValue("image", "")}
-                        />}
+                        />
+                      )}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center' }}
-                      onClick={() => { fileInputRef.current.click(); }}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      onClick={() => {
+                        fileInputRef.current.click();
+                      }}
                     >
                       {formik.values.image ? (
                         <div
@@ -424,29 +457,47 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
                             flexDirection: "column",
                           }}
                         >
-                          <div style={{
-                            width: "608px",
-                            height: "420px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                          }}
+                          <div
+                            style={{
+                              width: "608px",
+                              height: "420px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column",
+                            }}
                           >
                             <img
                               src={DefaultProductIcon}
                               alt="DefaultProductIcon"
                             />
-                            <input type="file" style={{ width: "100%", height: "100%", display: "none" }} ref={fileInputRef} onChange={(e) => onChange(e)} />
+                            <input
+                              type="file"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "none",
+                              }}
+                              ref={fileInputRef}
+                              onChange={(e) => onChange(e)}
+                            />
                             <p
                               style={{
                                 maxWidth: "299px",
                                 lineHeight: "200%",
-                                textAlign: "center"
-                              }}>
-                              <div style={{ fontFamily: "EuclidSemiBold" }}>Click or drag <span style={{ color: "blue", cursor: "pointer" }}>file</span> to this area to upload</div>
+                                textAlign: "center",
+                              }}
+                            >
+                              <div style={{ fontFamily: "EuclidSemiBold" }}>
+                                Click or drag{" "}
+                                <span
+                                  style={{ color: "blue", cursor: "pointer" }}
+                                >
+                                  file
+                                </span>{" "}
+                                to this area to upload
+                              </div>
                               <div>upload image “1920 x 1080” size</div>
-
                             </p>
                           </div>
                         </div>
@@ -538,44 +589,40 @@ const EditNewCard = ({ onNext, formik, removeRedux, changeandupdate }) => {
               marginTop: "33px",
             }}
           >
-            <div
-              className="save_button"
-              onClick={() => handelBack()}
-            >
+            <div className="save_button" onClick={() => handelBack()}>
               Cancel
             </div>
-            {
-              formik.values.image !== "" &&
-                formik.values.des !== "" &&
-                formik.values.altText !== "" ? (
-                <div
-                  className="save_button"
-                  style={{
-                    backgroundColor: "#0044FF",
-                    color: "#ffff",
-                  }}
-                  onClick={onNext}
-                >
-                  Next
-                </div>
-              ) : (
-                <div
-                  className="save_button"
-                  style={{
-                    // width: "141px",
-                    background: "#0044FF",
-                    color: "#FFFFFF",
-                    opacity: 0.2,
-                    cursor: "default",
-                    // height: "3.5rem",
-                  }}
-                >
-                  Next
-                </div>
-              )}
+            {formik.values.image !== "" &&
+            formik.values.des !== "" &&
+            formik.values.altText !== "" ? (
+              <div
+                className="save_button"
+                style={{
+                  backgroundColor: "#0044FF",
+                  color: "#ffff",
+                }}
+                onClick={onNext}
+              >
+                Next
+              </div>
+            ) : (
+              <div
+                className="save_button"
+                style={{
+                  // width: "141px",
+                  background: "#0044FF",
+                  color: "#FFFFFF",
+                  opacity: 0.2,
+                  cursor: "default",
+                  // height: "3.5rem",
+                }}
+              >
+                Next
+              </div>
+            )}
           </div>
-        </Container >
-      </AddNewserviceContainer >
+        </Container>
+      </AddNewserviceContainer>
     </>
   );
 };

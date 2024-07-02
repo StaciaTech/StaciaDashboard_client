@@ -19,6 +19,7 @@ export const Card = ({
   fixHandelClick,
   redioButtonHandel,
 }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const history = useNavigate();
   const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(
@@ -35,7 +36,7 @@ export const Card = ({
   const [, drop] = useDrop(
     () => ({
       accept: "card",
-      hover(item) { },
+      hover(item) {},
       drop: (item) => {
         moveCard(item.position, position);
       },
@@ -81,7 +82,7 @@ export const Card = ({
   // };
 
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+    const res = await fetch(`${apiUrl}/service/findService/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +125,7 @@ export const Card = ({
           border: "1px solid #0000001A",
           display: "flex",
           background: "#ffffff",
-          flexDirection: "column"
+          flexDirection: "column",
           // position: "relative",
         }}
         className={achieved ? "freeze-card" : ""}
@@ -157,9 +158,14 @@ export const Card = ({
         </div>
       )} */}
 
-
-
-        <div style={{ width: "100%", height: '145px', backgroundImage: "url(" + card.image + ")", borderRadius: "10px 10px 0px 0px", }}>
+        <div
+          style={{
+            width: "100%",
+            height: "145px",
+            backgroundImage: "url(" + card.image + ")",
+            borderRadius: "10px 10px 0px 0px",
+          }}
+        >
           <div style={{ padding: "12px 22px", width: "100%" }}>
             <img
               ref={(node) => drag(drop(node))}
@@ -198,8 +204,6 @@ export const Card = ({
               {card.description}
             </div>
           </div>
-
-
         </div>
         <div
           style={{
@@ -210,12 +214,13 @@ export const Card = ({
             // alignItems:"center"
           }}
         >
-
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            paddingLeft:"10px",
-          }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingLeft: "10px",
+            }}
+          >
             <label className="circular-checkbox">
               <input
                 type="checkbox"
@@ -232,7 +237,7 @@ export const Card = ({
               display: "flex",
               // position: "absolute",
               gap: "5px",
-              paddingRight: "10px"
+              paddingRight: "10px",
             }}
           >
             <img
@@ -251,19 +256,18 @@ export const Card = ({
               }}
             />
           </div>
-
         </div>
       </div>
-
     </>
   );
 };
 
 export const ArchiveCard = ({ key, card, fixHandelClick }) => {
-  const dispatch = useDispatch()
-  const history = useNavigate()
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const dispatch = useDispatch();
+  const history = useNavigate();
   const handle_edit = async (id) => {
-    const res = await fetch(`http://localhost:8000/service/findService/${id}`, {
+    const res = await fetch(`${apiUrl}/service/findService/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -310,9 +314,9 @@ export const ArchiveCard = ({ key, card, fixHandelClick }) => {
             top: "166px",
             bottom: "200px",
           }}
-        // onClick={() => {
-        //   setFreezeCardOff(false);
-        // }}
+          // onClick={() => {
+          //   setFreezeCardOff(false);
+          // }}
         >
           <img
             src={Edit}

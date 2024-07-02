@@ -176,6 +176,7 @@ const averageLoadingData = [
 ];
 
 const OverViewPage = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [trafficSourceModal, setTrafficSourceModal] = useState(false);
   const [uptimeModal, setUptimeModal] = useState(false);
@@ -197,9 +198,7 @@ const OverViewPage = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/dashboard/getDashBoard"
-        );
+        const response = await axios.get(`${apiUrl}/dashboard/getDashBoard`);
         setDashboardData(response.data);
       } catch (error) {
         console.log(error);
@@ -220,37 +219,37 @@ const OverViewPage = () => {
       Math.min(dashboardData.goals.length, prevIndex + 1)
     );
   };
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState("");
 
   const options = [
-    'Total Views',
-    'New Users',
-    'Bounce Rate',
-    'Avg Time Spent',
-    'Mail Received',
-    'Instagram',
-    'X',
-    'Facebook',
-    'LinkedIn',
-    'Page1 view',
-    'Page 100 view',
-    'Uptime',
-    'Real Time Users',
-    'Direct Traffic',
-    'Email Marketing',
-    'Social Media Traffic',
-    'Online Forum',
-    'Search Engine',
-    'Free Quote - Machine Design',
-    'Free Quote - Project Documentation',
-    'Free Quote - Cad Modeling',
-    'Free Quote - Ansys',
-    'Free Quote - 3D Modeling',
-    'Avg Loading Time',
-    'Pop Up Banner Interaction',
-    'Information Technology - Mail',
-    'Agri Industries - Mail',
-    'Food Porcessing - Mail'
+    "Total Views",
+    "New Users",
+    "Bounce Rate",
+    "Avg Time Spent",
+    "Mail Received",
+    "Instagram",
+    "X",
+    "Facebook",
+    "LinkedIn",
+    "Page1 view",
+    "Page 100 view",
+    "Uptime",
+    "Real Time Users",
+    "Direct Traffic",
+    "Email Marketing",
+    "Social Media Traffic",
+    "Online Forum",
+    "Search Engine",
+    "Free Quote - Machine Design",
+    "Free Quote - Project Documentation",
+    "Free Quote - Cad Modeling",
+    "Free Quote - Ansys",
+    "Free Quote - 3D Modeling",
+    "Avg Loading Time",
+    "Pop Up Banner Interaction",
+    "Information Technology - Mail",
+    "Agri Industries - Mail",
+    "Food Porcessing - Mail",
   ];
 
   const handleSelectChange = (e) => {
@@ -377,31 +376,37 @@ const OverViewPage = () => {
                 <>
                   <div className="addgoalformholder">
                     <form className="addgoalform">
-                      
-                      <select className="goalfield goaldropdown" id="options" value={selectedOption} onChange={handleSelectChange}>
-        <option value="">Select Your Source</option>
-        {options.map((option, index) => (
-          <option key={index} value={option}>{option}</option>
-        ))}
-      </select>
-     <div style={{display:"flex", gap:"1rem"}}>
-      <input
-                        className="goalfield goalfield-col1"
-                        type=""
-                        name="goaldesc"
-                        id=""
-                        placeholder="Enter Your Goal"
-                        required
-                      />
-                      
-                      <input
-                        className="goalfield goalfield-col2"
-                        type="text"
-                        name="Goal Target"
-                        id=""
-                        placeholder="Enter Your Target"
-                        required
-                      />
+                      <select
+                        className="goalfield goaldropdown"
+                        id="options"
+                        value={selectedOption}
+                        onChange={handleSelectChange}
+                      >
+                        <option value="">Select Your Source</option>
+                        {options.map((option, index) => (
+                          <option key={index} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <div style={{ display: "flex", gap: "1rem" }}>
+                        <input
+                          className="goalfield goalfield-col1"
+                          type=""
+                          name="goaldesc"
+                          id=""
+                          placeholder="Enter Your Goal"
+                          required
+                        />
+
+                        <input
+                          className="goalfield goalfield-col2"
+                          type="text"
+                          name="Goal Target"
+                          id=""
+                          placeholder="Enter Your Target"
+                          required
+                        />
                       </div>
                       <input className="formbtn" type="submit" value="Save" />
                     </form>
